@@ -1,0 +1,14 @@
+<resources>
+    <!-- Tab names -->
+    <string name="app_name">ListaDLC</string>
+    <string name="tab_text_1">Principal</string>
+    <string name="tab_text_2">Otros</string>
+    <string name="tab_text_3">Comidas</string>
+    <!-- Settings literals -->
+    <string name="settings_text_title">Opciones</string>
+    <string name="settings_text_user">¿Quién eres?</string>
+    <string name="settings_summary_show_load_messages">¿Mostrar los mensajes de carga?</string>
+    <string name="settings_text_show_load_messages">Mensajes de carga</string>
+    <!-- Settings keys -->
+    <string name="show_load_messages">show_load_messages</string>
+</resources>
