@@ -13,10 +13,6 @@ class PageViewModel : ViewModel() {
         "Hello world from section: $it"
     }
 
-    val ingredientListMock: MutableList<String> = mutableListOf<String>("Arroz", "Papas", "Beicon", "Fideos")
-    val otherListMock: MutableList<String> = mutableListOf<String>("Cianoacrilato", "Skuffen")
-    val mealListMock: MutableList<String> = mutableListOf("Arverjas", "Perritos")
-
     fun setIndex(index: Int) {
         _index.value = index
     }

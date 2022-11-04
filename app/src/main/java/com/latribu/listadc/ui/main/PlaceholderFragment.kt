@@ -11,9 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.latribu.listadc.R
 import com.latribu.listadc.databinding.FragmentMainBinding
 
-/**
- * A placeholder fragment containing a simple view.
- */
 class PlaceholderFragment : Fragment() {
 
     private lateinit var pageViewModel: PageViewModel
