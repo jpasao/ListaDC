@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.databinding.FragmentListBinding
 import com.latribu.listadc.ui.main.MainViewModel
 
@@ -24,17 +26,17 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
+        val recyclerview = view.findViewById<RecyclerView>(R.id.listRecyclerview)
+        recyclerview.layoutManager = LinearLayoutManager(this.context)
+
+        val adapter = RecyclerAdapter(
+            ProductListener { id -> mainViewModel.onProductClicked(id) },
+            ImageListener { id -> mainViewModel.onImageClicked(id) }
+        )
+        binding.listRecyclerview.adapter = adapter
+
         mainViewModel.arrayListLiveData.observe(viewLifecycleOwner) { arrayList ->
-            var texto: StringBuilder = java.lang.StringBuilder("Lista")
-            if (arrayList != null) {
-                arrayList.forEach {
-                    texto.append("Nombre: ${it.name}\n")
-                }
-                binding.test.text = texto.toString()
-            }
-            else {
-                binding.test.text = "No llegó nada"
-            }
+            adapter.submitList(arrayList)
         }
     }
 

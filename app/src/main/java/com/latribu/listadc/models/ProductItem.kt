@@ -11,6 +11,3 @@ data class ProductItem(
     val isChecked: String,
     @SerializedName("quantity")
     val quantity: Int)
-{
-    var checked: Boolean = isChecked == "1"
-}

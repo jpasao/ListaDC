@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".ListFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Lista de la compra"
-        android:id="@+id/test" />
+        android:orientation="vertical"
+        tools:listitem="@layout/list_item_design" />
 
 </FrameLayout>
