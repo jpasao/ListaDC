@@ -29,9 +29,14 @@ class ListFragment : Fragment() {
         val recyclerview = view.findViewById<RecyclerView>(R.id.listRecyclerview)
         recyclerview.layoutManager = LinearLayoutManager(this.context)
 
+        val adapter = RecyclerAdapter(
+            ProductListener { id -> mainViewModel.onProductClicked(id) },
+            ImageListener { id -> mainViewModel.onImageClicked(id) }
+        )
+        binding.listRecyclerview.adapter = adapter
+
         mainViewModel.arrayListLiveData.observe(viewLifecycleOwner) { arrayList ->
-            val adapter = RecyclerAdapter(arrayList)
-            recyclerview.adapter = adapter
+            adapter.submitList(arrayList)
         }
     }
 

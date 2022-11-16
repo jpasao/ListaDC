@@ -12,5 +12,4 @@
         android:orientation="vertical"
         tools:listitem="@layout/list_item_design" />
 
-
 </FrameLayout>

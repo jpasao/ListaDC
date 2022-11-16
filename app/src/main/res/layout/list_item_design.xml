@@ -1,38 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <CheckBox
-        android:id="@+id/check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="product"
+            type="com.latribu.listadc.models.ProductItem" />
+        <variable
+            name="clickListener"
+            type="com.latribu.listadc.ProductListener" />
+        <variable
+            name="imageClickListener"
+            type="com.latribu.listadc.ImageListener" />
+    </data>
 
-    <Button
-        android:id="@+id/quantity"
-        android:layout_width="30dp"
-        android:layout_height="45dp"
-        android:paddingLeft="8dp"
-        android:paddingTop="8dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="8dp"
-        tools:text="1"
-        app:layout_constraintStart_toEndOf="@+id/check"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:text="Arándanos"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/quantity"
-        app:layout_constraintTop_toTopOf="parent" />
+            <CheckBox
+                android:id="@+id/check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClick="@{() -> clickListener.onClick(product)}"
+                app:setChecked="@{product}" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/quantity"
+                android:layout_width="22dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="7dp"
+                android:checkable="false"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                app:layout_constraintStart_toEndOf="@+id/check"
+                app:layout_constraintTop_toTopOf="parent"
+                app:setQuantity="@{product}"
+                tools:text="12"
+                android:enabled="false"/>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintStart_toEndOf="@+id/quantity"
+                app:layout_constraintTop_toTopOf="parent"
+                app:setText="@{product}"/>
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_twotone_photo_camera_24"
+                android:onClick="@{() -> imageClickListener.onImageClick(product)}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

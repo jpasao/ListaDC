@@ -1,39 +1,64 @@
 package com.latribu.listadc
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.latribu.listadc.models.Product
 
-class RecyclerAdapter(private val productList: Product) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+import android.graphics.Color
+import android.view.LayoutInflater
+
+import android.view.ViewGroup
+
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.latribu.listadc.databinding.ListItemDesignBinding
+import com.latribu.listadc.generated.callback.OnClickListener
+import com.latribu.listadc.models.ProductItem
+
+class RecyclerAdapter(
+    val clickListener: ProductListener,
+    val imageClickListener: ImageListener
+) : ListAdapter<ProductItem, RecyclerAdapter.ViewHolder>(ProductDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.list_item_design, parent, false)
-
-        return ViewHolder(view)
+        return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = productList[position]
-        holder.checkBoxView.isChecked = item.checked
-        holder.buttonView.text = item.quantity.toString()
-        holder.textView.text = item.name
+        holder.bind(getItem(position)!!, clickListener, imageClickListener)
     }
 
-    override fun getItemCount(): Int {
-        return productList.size
+    class ViewHolder private constructor(val binding: ListItemDesignBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ProductItem, clickListener: ProductListener, imageClickListener: ImageListener) {
+            binding.product = item
+            binding.clickListener = clickListener
+            binding.imageClickListener = imageClickListener
+
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ListItemDesignBinding.inflate(layoutInflater, parent, false)
+                return ViewHolder(binding)
+            }
+        }
+    }
+}
+
+class ProductDiffCallback : DiffUtil.ItemCallback<ProductItem>() {
+    override fun areItemsTheSame(oldItem: ProductItem, newItem: ProductItem): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val checkBoxView: CheckBox = view.findViewById(R.id.check)
-        val buttonView: Button = view.findViewById(R.id.quantity)
-        val textView: TextView = view.findViewById(R.id.name)
+    override fun areContentsTheSame(oldItem: ProductItem, newItem: ProductItem): Boolean {
+        return oldItem == newItem
     }
+}
+
+class ProductListener(val clickListener: (id: Int) -> Unit) {
+    fun onClick(product: ProductItem) = clickListener(product.id)
+}
+
+class ImageListener(val imageClickListener: (id: Int) -> Unit) {
+    fun onImageClick(product: ProductItem) = imageClickListener(product.id)
 }

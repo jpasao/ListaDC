@@ -1,15 +1,19 @@
 package com.latribu.listadc
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageButton
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
+import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.ui.main.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
 import com.latribu.listadc.models.Product
@@ -19,7 +23,6 @@ import com.latribu.listadc.ui.main.MainViewModel
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsButton: ImageButton
 
