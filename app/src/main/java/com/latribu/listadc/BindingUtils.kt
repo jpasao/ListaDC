@@ -1,20 +1,19 @@
 package com.latribu.listadc
 
-import android.graphics.Color
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.latribu.listadc.models.ProductItem
 
-fun isItemChecked(item: ProductItem?): Boolean = item?.isChecked == "1"
+fun isChecked(item: ProductItem?): Boolean = item?.isChecked == "1"
 
 @BindingAdapter("setText")
 fun TextView.setText(item: ProductItem?) {
     item?.let {
         text = item.name
-        val checked = isItemChecked(item)
-        setTextColor(if (checked) Color.LTGRAY else Color.GRAY)
+        val transparency = if (isChecked(item)) 0.54f else 0.87f
+        alpha = transparency
     }
 }
 
@@ -25,5 +24,5 @@ fun Button.setText(item: ProductItem?) {
 
 @BindingAdapter("setChecked")
 fun CheckBox.setChecked(item: ProductItem?) {
-    isChecked = isItemChecked(item)
+    isChecked = isChecked(item)
 }
