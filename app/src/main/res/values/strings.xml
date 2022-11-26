@@ -11,4 +11,16 @@
     <string name="settings_text_show_load_messages">Mensajes de carga</string>
     <!-- Settings keys -->
     <string name="show_load_messages">show_load_messages</string>
+    <!-- FAB -->
+    <string name="FAB_description">Añadir producto</string>
+    <!-- Save product literals -->
+    <string name="title_activity_add">Añadir</string>
+    <string name="save_title">Añade algo...</string>
+    <string name="save_name_hint">¿Qué es?</string>
+    <string name="save_quantity_hint">¿Cuántos?</string>
+    <string name="save_comments_hint">Pero que sea...</string>
+    <string name="save_photo_literal">A lo mejor hace falta una foto para entenderlo...</string>
+    <string name="save_save_button">Guardar</string>
+    <string name="settings_fragment_label">Settings</string>
+    <string name="list_fragment_label">List Fragment</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.latribu.listadc.ui.main.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
 import com.latribu.listadc.models.Product
@@ -22,9 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsButton: ImageButton
-
+    private lateinit var fabButton: FloatingActionButton
     private lateinit var mainViewModel: MainViewModel
-
     private lateinit var retrofitInstance: ProductService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,12 +39,19 @@ class MainActivity : AppCompatActivity() {
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
 
+        // Buttons
         settingsButton = binding.settingsButton
-
         settingsButton.setOnClickListener {
             val i = Intent(this@MainActivity, SettingsActivity::class.java)
             startActivity(i)
         }
+
+        fabButton = binding.fab
+        fabButton.setOnClickListener{
+            val i = Intent(this@MainActivity, AddActivity::class.java)
+            startActivity(i)
+        }
+
         retrofitInstance = RetrofitInstance
             .getRetrofitInstance()
             .create(ProductService::class.java)
