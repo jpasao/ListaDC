@@ -1,4 +1,6 @@
 <resources>
+    <!-- General strings -->
+    <string name="uselessContent">Deco button</string>
     <!-- Tab names -->
     <string name="app_name">ListaDLC</string>
     <string name="tab_text_1">Principal</string>
@@ -15,12 +17,13 @@
     <string name="FAB_description">Añadir producto</string>
     <!-- Save product literals -->
     <string name="title_activity_add">Añadir</string>
-    <string name="save_title">Añade algo...</string>
+    <string name="save_title">Añade algo…</string>
     <string name="save_name_hint">¿Qué es?</string>
     <string name="save_quantity_hint">¿Cuántos?</string>
-    <string name="save_comments_hint">Pero que sea...</string>
-    <string name="save_photo_literal">A lo mejor hace falta una foto para entenderlo...</string>
+    <string name="save_comments_hint">Pero que sea…</string>
+    <string name="save_photo_literal">A lo mejor hace falta una foto para entenderlo…</string>
     <string name="save_save_button">Guardar</string>
     <string name="settings_fragment_label">Settings</string>
     <string name="list_fragment_label">List Fragment</string>
+    <string name="validationErrorName">¿Y el nombre?</string>
 </resources>

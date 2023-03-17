@@ -27,28 +27,30 @@
             app:textAllCaps="false" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtName"
+            android:id="@+id/loName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblAddProduct">
+            app:layout_constraintTop_toBottomOf="@id/lblAddProduct"
+            android:hint="@string/save_name_hint">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/save_name_hint" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtQuantity"
+            android:id="@+id/loQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtName">
+            app:layout_constraintTop_toBottomOf="@+id/loName">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtQuantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/save_quantity_hint"
@@ -56,13 +58,14 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtComments"
+            android:id="@+id/loComments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/txtQuantity">
+            app:layout_constraintTop_toBottomOf="@+id/loQuantity">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/save_comments_hint" />
@@ -75,7 +78,7 @@
             android:layout_marginTop="24dp"
             android:text="@string/save_photo_literal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtComments" />
+            app:layout_constraintTop_toBottomOf="@+id/loComments" />
 
         <ImageButton
             android:id="@+id/btnPhoto"
@@ -83,8 +86,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtComments"
-            app:srcCompat="@drawable/ic_twotone_photo_camera_24" />
+            app:layout_constraintTop_toBottomOf="@+id/loComments"
+            app:srcCompat="@drawable/ic_twotone_photo_camera_24"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no" />
 
         <ImageView
             android:id="@+id/imgPhoto"
@@ -92,13 +97,16 @@
             android:layout_height="250dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnPhoto"
-            app:srcCompat="@drawable/ic_twotone_photo_camera_24" />
+            app:srcCompat="@drawable/ic_twotone_photo_camera_24"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no" />
 
         <Button
             android:id="@+id/btnSaveProduct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save_save_button"
+            android:enabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

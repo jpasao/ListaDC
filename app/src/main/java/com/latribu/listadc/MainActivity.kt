@@ -14,8 +14,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.latribu.listadc.ui.main.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
 import com.latribu.listadc.models.Product
-import com.latribu.listadc.network.ProductService
-import com.latribu.listadc.network.RetrofitInstance
+import com.latribu.listadc.network.IRestApi
+import com.latribu.listadc.network.RestApiManager
 import com.latribu.listadc.ui.main.MainViewModel
 import retrofit2.Response
 
@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var settingsButton: ImageButton
     private lateinit var fabButton: FloatingActionButton
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var retrofitInstance: ProductService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val apiService = RestApiManager()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -52,19 +52,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(i)
         }
 
-        retrofitInstance = RetrofitInstance
-            .getRetrofitInstance()
-            .create(ProductService::class.java)
 
         val mainResponse: LiveData<Response<Product>> = liveData{
-            val response = retrofitInstance.getProducts()
+            val response = apiService.getProducts("")
             emit(response)
         }
 
-        mainResponse.observe(this, Observer{
+        mainResponse.observe(this) {
             val response = it.body()
             mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
             mainViewModel.arrayListLiveData.postValue(response)
-        })
+        }
     }
 }

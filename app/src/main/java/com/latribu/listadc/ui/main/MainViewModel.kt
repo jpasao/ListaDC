@@ -10,15 +10,15 @@ class MainViewModel: ViewModel() {
     // Share data between MainActivity and Fragments
     val arrayListLiveData = MutableLiveData<Product>()
 
-    private val _productId = MutableLiveData<Int>()
+    private val _productId = MutableLiveData<Int?>()
     val productId get() = _productId
 
-    fun onProductClicked(id: Int) {
+    fun onProductClicked(id: Int?) {
         _productId.value = id
         Log.d("pruebas", "onproductClicked!, id ${id}")
     }
 
-    fun onImageClicked(id: Int) {
+    fun onImageClicked(id: Int?) {
         _productId.value = id
         Log.d("pruebas", "onImageClicked!, id ${id}")
     }

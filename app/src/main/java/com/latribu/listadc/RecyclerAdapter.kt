@@ -55,10 +55,10 @@ class ProductDiffCallback : DiffUtil.ItemCallback<ProductItem>() {
     }
 }
 
-class ProductListener(val clickListener: (id: Int) -> Unit) {
+class ProductListener(val clickListener: (id: Int?) -> Unit) {
     fun onClick(product: ProductItem) = clickListener(product.id)
 }
 
-class ImageListener(val imageClickListener: (id: Int) -> Unit) {
+class ImageListener(val imageClickListener: (id: Int?) -> Unit) {
     fun onImageClick(product: ProductItem) = imageClickListener(product.id)
 }
