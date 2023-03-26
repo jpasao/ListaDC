@@ -1,8 +1,6 @@
 package com.latribu.listadc.network
 
-import android.database.Observable
 import com.latribu.listadc.models.Product
-import com.latribu.listadc.models.ProductItem
 import com.latribu.listadc.models.ResponseModel
 import retrofit2.Call
 import retrofit2.Response
