@@ -26,4 +26,6 @@
     <string name="settings_fragment_label">Settings</string>
     <string name="list_fragment_label">List Fragment</string>
     <string name="validationErrorName">¿Y el nombre?</string>
+    <string name="saveOk">Se ha guardado</string>
+    <string name="saveError">Ups… algo ha salido mal</string>
 </resources>

@@ -1,14 +1,13 @@
 package com.latribu.listadc
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isEmpty
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.liveData
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -23,8 +22,8 @@ class AddActivity : AppCompatActivity() {
     private lateinit var quantity: TextInputEditText
     private lateinit var comments: TextInputEditText
     private lateinit var saveButton: Button
-    private val apiService = RestApiManager()    
-    
+    private val apiService = RestApiManager()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,15 +65,16 @@ class AddActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    fun addProduct(product: ProductItem) {
+    private fun addProduct(product: ProductItem) {
         apiService.addProduct(product) {
-            val message: String = if (it != null) {
-                "Se ha guardado"
+            if (it != null) {
+                val i = Intent(this, MainActivity::class.java)
+                startActivity(i)
             } else {
-                "Ups... algo ha salido mal"
+                val message: String = R.string.saveError.toString()
+                val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
+                snack.show()
             }
-            val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
-            snack.show()
         }
     }
 }

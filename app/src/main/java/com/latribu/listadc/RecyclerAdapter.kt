@@ -1,21 +1,16 @@
 package com.latribu.listadc
 
-
-import android.graphics.Color
 import android.view.LayoutInflater
-
 import android.view.ViewGroup
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.databinding.ListItemDesignBinding
-import com.latribu.listadc.generated.callback.OnClickListener
 import com.latribu.listadc.models.ProductItem
 
 class RecyclerAdapter(
-    val clickListener: ProductListener,
-    val imageClickListener: ImageListener
+    private val clickListener: ProductListener,
+    private val imageClickListener: ImageListener
 ) : ListAdapter<ProductItem, RecyclerAdapter.ViewHolder>(ProductDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

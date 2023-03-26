@@ -7,14 +7,12 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageButton
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.latribu.listadc.ui.main.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
 import com.latribu.listadc.models.Product
-import com.latribu.listadc.network.IRestApi
 import com.latribu.listadc.network.RestApiManager
 import com.latribu.listadc.ui.main.MainViewModel
 import retrofit2.Response
@@ -51,7 +49,6 @@ class MainActivity : AppCompatActivity() {
             val i = Intent(this@MainActivity, AddActivity::class.java)
             startActivity(i)
         }
-
 
         val mainResponse: LiveData<Response<Product>> = liveData{
             val response = apiService.getProducts("")
