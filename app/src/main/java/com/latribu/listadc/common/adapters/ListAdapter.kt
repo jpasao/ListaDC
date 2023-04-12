@@ -1,12 +1,12 @@
-package com.latribu.listadc.adapters
+package com.latribu.listadc.common.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.databinding.ListItemDesignBinding
-import com.latribu.listadc.models.Product
-import com.latribu.listadc.models.ProductItem
+import com.latribu.listadc.common.models.Product
+import com.latribu.listadc.common.models.ProductItem
 
 // With the help of https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
 class ProductAdapter(

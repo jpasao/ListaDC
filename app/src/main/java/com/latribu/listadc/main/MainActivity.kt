@@ -1,4 +1,4 @@
-package com.latribu.listadc
+package com.latribu.listadc.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.latribu.listadc.ui.main.SectionsPagerAdapter
+import com.latribu.listadc.common.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
-import com.latribu.listadc.models.Product
-import com.latribu.listadc.network.RestApiManager
-import com.latribu.listadc.ui.main.MainViewModel
+import com.latribu.listadc.common.models.Product
+import com.latribu.listadc.common.network.RestApiManager
+import com.latribu.listadc.common.MainViewModel
+import com.latribu.listadc.common.settings.SettingsActivity
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         fabButton = binding.fab
         fabButton.setOnClickListener{
-            val i = Intent(this@MainActivity, AddActivity::class.java)
+            val i = Intent(this@MainActivity, AddProductActivity::class.java)
             startActivity(i)
         }
 

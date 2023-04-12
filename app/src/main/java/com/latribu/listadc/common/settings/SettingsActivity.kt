@@ -1,8 +1,9 @@
-package com.latribu.listadc
+package com.latribu.listadc.common.settings
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.latribu.listadc.R
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -5,7 +5,7 @@
     android:id="@+id/app_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme">
@@ -40,6 +40,7 @@
                 android:paddingEnd="@dimen/SettingsIconPadding"
                 android:scaleX="1"
                 android:scaleY="1"
+                android:contentDescription="@string/uselessContent"
                 app:srcCompat="@drawable/ic_twotone_settings_24" />
         </androidx.appcompat.widget.Toolbar>
 

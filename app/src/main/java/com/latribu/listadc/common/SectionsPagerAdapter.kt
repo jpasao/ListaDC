@@ -1,12 +1,12 @@
-package com.latribu.listadc.ui.main
+package com.latribu.listadc.common
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.latribu.listadc.ListFragment
-import com.latribu.listadc.MealFragment
-import com.latribu.listadc.OtherFragment
+import com.latribu.listadc.main.ListFragment
+import com.latribu.listadc.meals.MealFragment
+import com.latribu.listadc.others.OtherFragment
 import com.latribu.listadc.R
 
 private val TAB_TITLES = arrayOf(

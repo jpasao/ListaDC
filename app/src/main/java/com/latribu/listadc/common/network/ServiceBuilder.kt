@@ -1,4 +1,4 @@
-package com.latribu.listadc.network
+package com.latribu.listadc.common.network
 
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient

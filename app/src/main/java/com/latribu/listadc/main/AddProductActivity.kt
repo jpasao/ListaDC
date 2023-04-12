@@ -1,4 +1,4 @@
-package com.latribu.listadc
+package com.latribu.listadc.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,16 +6,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.latribu.listadc.R
 import com.latribu.listadc.databinding.ActivityAddBinding
-import com.latribu.listadc.models.ProductItem
-import com.latribu.listadc.network.RestApiManager
+import com.latribu.listadc.common.models.ProductItem
+import com.latribu.listadc.common.network.RestApiManager
 
-class AddActivity : AppCompatActivity() {
+class AddProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
     private lateinit var name: TextInputEditText
     private lateinit var nameLayout: TextInputLayout

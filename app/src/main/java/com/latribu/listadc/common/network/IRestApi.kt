@@ -1,7 +1,7 @@
-package com.latribu.listadc.network
+package com.latribu.listadc.common.network
 
-import com.latribu.listadc.models.Product
-import com.latribu.listadc.models.ResponseModel
+import com.latribu.listadc.common.models.Product
+import com.latribu.listadc.common.models.ResponseModel
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*

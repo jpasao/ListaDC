@@ -1,4 +1,4 @@
-package com.latribu.listadc
+package com.latribu.listadc.main
 
 import android.os.Bundle
 import android.util.Log
@@ -9,10 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.latribu.listadc.adapters.ProductAdapter
+import com.latribu.listadc.R
+import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.databinding.FragmentListBinding
-import com.latribu.listadc.models.ProductItem
-import com.latribu.listadc.ui.main.MainViewModel
+import com.latribu.listadc.common.models.ProductItem
+import com.latribu.listadc.common.MainViewModel
 
 class ListFragment : Fragment() {
 
