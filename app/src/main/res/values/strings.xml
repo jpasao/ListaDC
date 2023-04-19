@@ -17,7 +17,8 @@
     <string name="FAB_description">Añadir producto</string>
     <!-- Save product literals -->
     <string name="title_activity_add">Añadir</string>
-    <string name="save_title">Añade algo…</string>
+    <string name="save_add_title">Añade algo…</string>
+    <string name="save_save_title">Modificando %1$s</string>
     <string name="save_name_hint">¿Qué es?</string>
     <string name="save_quantity_hint">¿Cuántos?</string>
     <string name="save_comments_hint">Pero que sea…</string>
@@ -28,4 +29,5 @@
     <string name="validationErrorName">¿Y el nombre?</string>
     <string name="saveOk">Se ha guardado</string>
     <string name="saveError">Ups… algo ha salido mal</string>
+    <string name="cancel">Cancelar</string>
 </resources>

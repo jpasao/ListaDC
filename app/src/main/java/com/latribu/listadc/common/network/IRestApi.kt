@@ -16,5 +16,18 @@ interface IRestApi {
 
     @FormUrlEncoded
     @POST(Url.PRODUCT_ENDPOINT)
-    fun addProduct(@Field("name") name: String): Call<ResponseModel>
+    fun addProduct(
+        @Field("name") name: String,
+        @Field("quantity") quantity: Int,
+        @Field("comment") comment: String?
+    ): Call<ResponseModel>
+
+    @FormUrlEncoded
+    @PUT(Url.PRODUCT_ENDPOINT)
+    fun editProduct(
+        @Field("productId") productId: Int,
+        @Field("name") name: String,
+        @Field("quantity") quantity: Int,
+        @Field("comment") comment: String?
+    ): Call<ResponseModel>
 }

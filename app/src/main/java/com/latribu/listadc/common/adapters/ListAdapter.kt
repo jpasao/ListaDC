@@ -43,6 +43,7 @@ class ProductAdapter(
             binding.name.text = item.name
             val opacity = if (checked) 0.54f else 0.87f
             binding.name.alpha = opacity
+            binding.comment.text = item.comment
 
             binding.root.setOnLongClickListener {
                 longClickListener(item)

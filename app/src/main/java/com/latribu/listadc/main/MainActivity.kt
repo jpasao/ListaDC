@@ -10,11 +10,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.latribu.listadc.common.EXTRA_PRODUCT
 import com.latribu.listadc.common.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
 import com.latribu.listadc.common.models.Product
 import com.latribu.listadc.common.network.RestApiManager
 import com.latribu.listadc.common.MainViewModel
+import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.settings.SettingsActivity
 import retrofit2.Response
 
@@ -41,14 +43,17 @@ class MainActivity : AppCompatActivity() {
         // Buttons
         settingsButton = binding.settingsButton
         settingsButton.setOnClickListener {
-            val i = Intent(this@MainActivity, SettingsActivity::class.java)
-            startActivity(i)
+            val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+            startActivity(intent)
         }
 
         fabButton = binding.fab
         fabButton.setOnClickListener{
-            val i = Intent(this@MainActivity, AddProductActivity::class.java)
-            startActivity(i)
+            val intent = Intent(this@MainActivity, AddProductActivity::class.java)
+            val product = ProductItem(-1, "", "", -1, "")
+
+            intent.putExtra(EXTRA_PRODUCT, product)
+            startActivity(intent)
         }
 
         val mainResponse: LiveData<Response<Product>> = liveData{

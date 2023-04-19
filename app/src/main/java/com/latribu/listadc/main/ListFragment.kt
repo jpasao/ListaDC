@@ -1,5 +1,6 @@
 package com.latribu.listadc.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.R
+import com.latribu.listadc.common.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.databinding.FragmentListBinding
 import com.latribu.listadc.common.models.ProductItem
@@ -42,6 +44,9 @@ class ListFragment : Fragment() {
     }
 
     private fun itemLongPressed(listItem: ProductItem) {
+        val intent = Intent(requireContext(), AddProductActivity::class.java)
+        intent.putExtra(EXTRA_PRODUCT, listItem)
+        startActivity(intent)
         Log.d("pruebas", "longClicked!, id ${listItem.name}")
     }
     private fun itemChecked(listItem: ProductItem) {

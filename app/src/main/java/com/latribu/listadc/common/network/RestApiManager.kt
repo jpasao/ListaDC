@@ -15,16 +15,32 @@ class RestApiManager {
         return retrofitInstance.getProducts(filter)
     }
 
-    fun addProduct(productData: ProductItem, onResult: (ResponseModel?) -> Unit) {
-        retrofitInstance.addProduct(productData.name).enqueue(
-            object : Callback<ResponseModel> {
-                override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                    onResult(null)
+    fun saveProduct(productData: ProductItem, onResult: (ResponseModel?) -> Unit) {
+        if (productData.id != null) {
+            retrofitInstance.editProduct(productData.id, productData.name, productData.quantity!!, productData.comment).enqueue(
+                object : Callback<ResponseModel> {
+                    override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                        onResult(null)
+                    }
+
+                    override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                        onResult(response.body())
+                    }
                 }
-                override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
-                    onResult(response.body())
+            )
+        }
+        else {
+            retrofitInstance.addProduct(productData.name, productData.quantity!!, productData.comment).enqueue(
+                object : Callback<ResponseModel> {
+                    override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                        onResult(null)
+                    }
+
+                    override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                        onResult(response.body())
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="@string/save_title"
+            android:text="@string/save_add_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_anchorGravity="bottom|center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -101,15 +101,33 @@
             android:contentDescription="@null"
             android:importantForAccessibility="no" />
 
-        <Button
-            android:id="@+id/btnSaveProduct"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/save_save_button"
-            android:enabled="false"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:backgroundTint="@android:color/darker_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/btnSaveProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
+                android:text="@string/save_save_button" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
