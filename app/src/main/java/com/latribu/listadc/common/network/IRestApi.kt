@@ -30,4 +30,11 @@ interface IRestApi {
         @Field("quantity") quantity: Int,
         @Field("comment") comment: String?
     ): Call<ResponseModel>
+
+    @FormUrlEncoded
+    @PATCH(Url.PRODUCT_ENDPOINT)
+    fun checkProduct(
+        @Field("productId") productId: Int,
+        @Field("check") isChecked: String
+    ): Call<Product>
 }

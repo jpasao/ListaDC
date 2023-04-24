@@ -43,4 +43,18 @@ class RestApiManager {
             )
         }
     }
+
+    fun checkProduct(productData: ProductItem, onResult: (Product?) -> Unit) {
+        retrofitInstance.checkProduct(productData.id!!, productData.isChecked!!).enqueue(
+            object : Callback<Product> {
+                override fun onFailure(call: Call<Product>, t: Throwable) {
+                    onResult(null)
+                }
+
+                override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                    onResult(response.body())
+                }
+            }
+        )
+    }
 }
