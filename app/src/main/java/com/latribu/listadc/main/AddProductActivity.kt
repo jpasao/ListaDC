@@ -13,9 +13,10 @@ import com.google.android.material.textfield.TextInputLayout
 import com.latribu.listadc.R
 import com.latribu.listadc.common.EXTRA_PRODUCT
 import com.latribu.listadc.common.getSerializable
-import com.latribu.listadc.databinding.ActivityAddBinding
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.network.RestApiManager
+import com.latribu.listadc.databinding.ActivityAddBinding
+
 
 class AddProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
@@ -106,7 +107,7 @@ class AddProductActivity : AppCompatActivity() {
                 val i = Intent(this, MainActivity::class.java)
                 startActivity(i)
             } else {
-                val message: String = getString(R.string.saveError)
+                val message = getString(R.string.saveError, "al guardar")
                 val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
                 snack.show()
             }

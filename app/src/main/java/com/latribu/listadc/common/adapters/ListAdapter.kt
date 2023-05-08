@@ -2,6 +2,7 @@ package com.latribu.listadc.common.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.databinding.ListItemDesignBinding
@@ -12,7 +13,8 @@ import com.latribu.listadc.common.models.ProductItem
 class ProductAdapter(
     private val productItemList: Product,
     val checkBoxClickListener: (ProductItem) -> Unit,
-    val longClickListener: (ProductItem) -> Unit
+    val longClickListener: (ProductItem) -> Unit,
+    val quantityClickListener: (ProductItem) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,10 +33,14 @@ class ProductAdapter(
         holder.checkBox.setOnClickListener{
             checkBoxClickListener(item)
         }
+        holder.quantity.setOnClickListener {
+            quantityClickListener(item)
+        }
     }
 
     inner class ListViewHolder(private val binding: ListItemDesignBinding) : RecyclerView.ViewHolder(binding.root) {
         val checkBox: CheckBox = binding.check
+        val quantity: Button = binding.quantity
 
         fun bind(item: ProductItem, longClickListener: (ProductItem) -> Unit) {
             val checked = isChecked(item)

@@ -1,6 +1,8 @@
 <resources>
     <!-- General strings -->
     <string name="uselessContent">Deco button</string>
+    <string name="cancel_button_text">Cancelar</string>
+    <string name="ok_button_text">Aceptar</string>
     <!-- Tab names -->
     <string name="app_name">ListaDLC</string>
     <string name="tab_text_1">Principal</string>
@@ -28,6 +30,9 @@
     <string name="list_fragment_label">List Fragment</string>
     <string name="validationErrorName">¿Y el nombre?</string>
     <string name="saveOk">Se ha guardado</string>
-    <string name="saveError">Ups… algo ha salido mal</string>
+    <string name="saveError">Ups… algo ha salido mal %1$s</string>
     <string name="cancel">Cancelar</string>
+    <!-- Main List -->
+    <string name="getProductsError">Ups… algo ha salido mal al obtener la lista</string>
+    <string name="choose_quantity_message">¿Cuántos van a ser?</string>
 </resources>

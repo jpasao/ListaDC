@@ -6,5 +6,5 @@ data class ProductItem(
     val id: Int?,
     val name: String,
     val isChecked: String?,
-    val quantity: Int?,
+    var quantity: Int?,
     val comment: String?): Serializable

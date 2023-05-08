@@ -10,6 +10,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.latribu.listadc.R
 import com.latribu.listadc.common.EXTRA_PRODUCT
 import com.latribu.listadc.common.SectionsPagerAdapter
 import com.latribu.listadc.databinding.ActivityMainBinding
@@ -63,8 +65,13 @@ class MainActivity : AppCompatActivity() {
 
         mainResponse.observe(this) {
             val response = it.body()
-            mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-            mainViewModel.arrayListLiveData.postValue(response)
+            if (response is Product) {
+                mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+                mainViewModel.arrayListLiveData.postValue(response)
+            } else {
+                val snack = Snackbar.make(findViewById(R.id.app_container), R.string.getProductsError, Snackbar.LENGTH_SHORT)
+                snack.show()
+            }
         }
     }
 }
