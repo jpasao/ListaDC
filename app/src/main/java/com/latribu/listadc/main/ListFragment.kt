@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.latribu.listadc.R
 import com.latribu.listadc.common.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
@@ -28,6 +29,7 @@ class ListFragment : Fragment() {
     private lateinit var recyclerview: RecyclerView
     private lateinit var quantityAndItem: Pair<Int, ProductItem>
     private val apiService = RestApiManager()
+    private lateinit var fabToTop: FloatingActionButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
@@ -50,6 +52,24 @@ class ListFragment : Fragment() {
                     quantityClickListener = { listItem: ProductItem -> quantityClicked(listItem) })
             }
         }
+
+        fabToTop = binding.fabToTop
+        fabToTop.setOnClickListener{
+            recyclerview.smoothScrollToPosition(0)
+        }
+
+        recyclerview.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
+
+                if (firstVisiblePosition == 0)
+                    fabToTop.visibility = View.INVISIBLE
+                else
+                    fabToTop.visibility = View.VISIBLE
+            }
+        })
     }
 
     private fun quantityClicked(listItem: ProductItem) {
