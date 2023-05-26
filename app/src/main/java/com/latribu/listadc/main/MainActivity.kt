@@ -2,6 +2,7 @@ package com.latribu.listadc.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
@@ -11,7 +12,13 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
+import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
+import com.latribu.listadc.common.Constants.Companion.TOPIC_NAME
 import com.latribu.listadc.common.EXTRA_PRODUCT
 import com.latribu.listadc.common.MainViewModel
 import com.latribu.listadc.common.SectionsPagerAdapter
@@ -22,16 +29,17 @@ import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.databinding.ActivityMainBinding
 import retrofit2.Response
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsButton: ImageButton
     private lateinit var fabAddProduct: FloatingActionButton
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val apiService = RestApiManager()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -57,6 +65,25 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_PRODUCT, product)
             startActivity(intent)
         }
+
+        requestList()
+
+        // Authenticate to Firebase
+        auth = Firebase.auth
+
+        // Subscribe to Firebase notifications
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NAME)
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Subscribe failed"
+                }
+                Log.d(TAG, msg)
+            }
+    }
+
+    fun requestList() {
+        val apiService = RestApiManager()
 
         val mainResponse: LiveData<Response<Product>> = liveData{
             val response = apiService.getProducts("")

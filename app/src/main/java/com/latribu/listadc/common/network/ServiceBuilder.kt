@@ -1,6 +1,7 @@
 package com.latribu.listadc.common.network
 
 import com.google.gson.GsonBuilder
+import com.latribu.listadc.common.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,7 +18,7 @@ class ServiceBuilder {
         }.build()
 
         private val retrofit = Retrofit.Builder()
-            .baseUrl(Url.BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()

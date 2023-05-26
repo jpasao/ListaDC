@@ -1,5 +1,6 @@
 package com.latribu.listadc.common.network
 
+import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.models.Product
 import com.latribu.listadc.common.models.ResponseModel
 import retrofit2.Call
@@ -11,11 +12,11 @@ import retrofit2.http.*
 // and  https://androidstudioo.com/6-easy-steps-post-request-in-kotlin-with-retrofit/
 
 interface IRestApi {
-    @GET(Url.PRODUCT_ENDPOINT)
+    @GET(Constants.PRODUCT_ENDPOINT)
     suspend fun getProducts(@Query("filter") filter: String) : Response<Product>
 
     @FormUrlEncoded
-    @POST(Url.PRODUCT_ENDPOINT)
+    @POST(Constants.PRODUCT_ENDPOINT)
     fun addProduct(
         @Field("name") name: String,
         @Field("quantity") quantity: Int,
@@ -23,7 +24,7 @@ interface IRestApi {
     ): Call<ResponseModel>
 
     @FormUrlEncoded
-    @PUT(Url.PRODUCT_ENDPOINT)
+    @PUT(Constants.PRODUCT_ENDPOINT)
     fun editProduct(
         @Field("productId") productId: Int,
         @Field("name") name: String,
@@ -31,8 +32,11 @@ interface IRestApi {
         @Field("comment") comment: String?
     ): Call<ResponseModel>
 
+//    @Headers(
+//        "XDEBUG_SESSION_START: PHPSTORM"
+//    )
     @FormUrlEncoded
-    @PATCH(Url.PRODUCT_ENDPOINT)
+    @PATCH(Constants.PRODUCT_ENDPOINT)
     fun checkProduct(
         @Field("productId") productId: Int,
         @Field("check") isChecked: String

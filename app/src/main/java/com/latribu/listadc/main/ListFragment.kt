@@ -12,14 +12,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.EXTRA_PRODUCT
-import com.latribu.listadc.common.adapters.ProductAdapter
-import com.latribu.listadc.databinding.FragmentListBinding
-import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.MainViewModel
+import com.latribu.listadc.common.adapters.ProductAdapter
+import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.network.RestApiManager
-import com.google.android.material.snackbar.Snackbar
+import com.latribu.listadc.databinding.FragmentListBinding
 
 class ListFragment : Fragment() {
 
@@ -121,7 +121,7 @@ class ListFragment : Fragment() {
         val apiService = RestApiManager()
         apiService.checkProduct(listItem) {
             if (it == null) {
-                val message: String = getString(R.string.saveError)
+                val message: String = getString(R.string.saveError, "al marcar un elemento")
                 val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
                 snack.show()
             } else {
