@@ -26,4 +26,16 @@
         app:maxImageSize="36dp"
         app:srcCompat="@drawable/twotone_arrow_circle_up_24" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/FAB_description"
+        android:src="@drawable/ic_twotone_add_circle_24"
+        app:fabSize="normal"
+        app:maxImageSize="36dp" />
+
 </FrameLayout>

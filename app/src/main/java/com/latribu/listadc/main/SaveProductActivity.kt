@@ -6,19 +6,23 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.latribu.listadc.R
-import com.latribu.listadc.common.EXTRA_PRODUCT
+import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
+import com.latribu.listadc.common.factories.ViewModelFactory
 import com.latribu.listadc.common.getSerializable
 import com.latribu.listadc.common.models.ProductItem
-import com.latribu.listadc.common.network.RestApiManager
+import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.network.AppCreator
+import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.ActivityAddBinding
 
-
-class AddProductActivity : AppCompatActivity() {
+class SaveProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
     private lateinit var title: TextView
     private lateinit var name: TextInputEditText
@@ -28,23 +32,30 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
     private var product: ProductItem? = null
-    private val apiService = RestApiManager()
+    private lateinit var mProductViewModel: ProductViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         bindViews()
+        setListeners()
 
-        val editing: Boolean = getData()
-        saveButton.isEnabled = editing
+        setContentView(binding.root)
 
+        mProductViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(AppCreator.getApiHelperInstance())
+        )[ProductViewModel::class.java]
+    }
+
+    private fun setListeners() {
         name.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
             override fun afterTextChanged(s: Editable?) {
-                if (s != null && s.isNotEmpty()) {
+                if (!s.isNullOrEmpty()) {
                     saveButton.isEnabled = true
                 } else {
                     saveButton.isEnabled = false
@@ -53,11 +64,11 @@ class AddProductActivity : AppCompatActivity() {
             }
         })
 
+        val editing: Boolean = getData()
+        saveButton.isEnabled = editing
         saveButton.setOnClickListener { saveProduct(editing) }
 
         cancelButton.setOnClickListener { finish() }
-
-        setContentView(binding.root)
     }
 
     private fun saveProduct(editing: Boolean) {
@@ -87,7 +98,7 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     private fun getData(): Boolean {
-        // Check if getting data to fill the fields
+        // Check if exists sent data to fill the fields
         product = getSerializable(this, EXTRA_PRODUCT, ProductItem::class.java)
         val editing: Boolean = product != null && product!!.id != -1
 
@@ -102,15 +113,52 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     private fun saveProduct(product: ProductItem) {
-        apiService.saveProduct(product) {
-            if (it != null) {
-                val i = Intent(this, MainActivity::class.java)
-                startActivity(i)
-            } else {
-                val message = getString(R.string.saveError, "al guardar")
-                val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
-                snack.show()
-            }
+        if (product.id == null) {
+            addProduct(product)
+        } else {
+            editProduct(product)
         }
+    }
+
+    private fun addProduct(product: ProductItem) {
+        mProductViewModel
+            .addProduct(product)
+            .observe(this) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        val i = Intent(this@SaveProductActivity, MainActivity::class.java)
+                        startActivity(i)
+                    }
+                    Status.LOADING -> {
+                        Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al guardar: ${it.message}")
+                        val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+                    }
+                }
+            }
+    }
+
+    private fun editProduct(product: ProductItem) {
+        mProductViewModel
+            .editProduct(product)
+            .observe(this) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        val i = Intent(this@SaveProductActivity, MainActivity::class.java)
+                        startActivity(i)
+                    }
+                    Status.LOADING -> {
+                        Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al editar el elemento: ${it.message}")
+                        val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+                    }
+                }
+            }
     }
 }

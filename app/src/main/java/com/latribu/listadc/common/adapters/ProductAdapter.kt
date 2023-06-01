@@ -5,28 +5,26 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
-import com.latribu.listadc.databinding.ListItemDesignBinding
-import com.latribu.listadc.common.models.Product
 import com.latribu.listadc.common.models.ProductItem
+import com.latribu.listadc.databinding.ListItemDesignBinding
 
-// With the help of https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
 class ProductAdapter(
-    private val productItemList: Product,
     val checkBoxClickListener: (ProductItem) -> Unit,
     val longClickListener: (ProductItem) -> Unit,
     val quantityClickListener: (ProductItem) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val mProductList = ArrayList<ProductItem>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListItemDesignBinding.inflate(inflater, parent, false)
         return ListViewHolder(binding)
     }
 
-    override fun getItemCount() = productItemList.size
+    override fun getItemCount() = mProductList.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item: ProductItem = productItemList[position]
+        val item: ProductItem = mProductList[position]
         (holder as ListViewHolder).bind(item, longClickListener)
         holder.checkBox.isChecked = isChecked(item)
 
@@ -56,6 +54,19 @@ class ProductAdapter(
                 true
             }
         }
+    }
+
+    fun updateRecyclerData(productList: List<ProductItem>) {
+        mProductList.clear()
+        mProductList.addAll(productList)
+        notifyDataSetChanged()
+    }
+
+    fun updateRecyclerElement(product: ProductItem) {
+        val index = mProductList.indexOfFirst { it.id == product.id }
+        mProductList[index] = product
+        mProductList.sortWith(compareBy<ProductItem>{ it.isChecked }.thenBy { it.name })
+        notifyDataSetChanged()
     }
 
     fun isChecked(item: ProductItem) : Boolean {

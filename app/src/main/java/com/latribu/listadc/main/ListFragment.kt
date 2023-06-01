@@ -7,29 +7,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
-import com.latribu.listadc.common.EXTRA_PRODUCT
-import com.latribu.listadc.common.MainViewModel
+import com.latribu.listadc.common.Constants
+import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
+import com.latribu.listadc.common.factories.ViewModelFactory
+import com.latribu.listadc.common.models.NotificationModel
 import com.latribu.listadc.common.models.ProductItem
-import com.latribu.listadc.common.network.RestApiManager
+import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.network.AppCreator
+import com.latribu.listadc.common.network.FirebaseMessagingService
+import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.FragmentListBinding
 
 class ListFragment : Fragment() {
 
-    private lateinit var mainViewModel: MainViewModel
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private lateinit var recyclerview: RecyclerView
     private lateinit var quantityAndItem: Pair<Int, ProductItem>
-    private val apiService = RestApiManager()
     private lateinit var fabToTop: FloatingActionButton
+    private lateinit var fabAddProduct: FloatingActionButton
+    private lateinit var mProductViewModel: ProductViewModel
+    private lateinit var mRecyclerAdapter: ProductAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
@@ -38,38 +46,101 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        setButtonListeners()
+        setObserver()
+        initData()
+        setRecycler()
+        getProducts()
+    }
 
-        recyclerview = view.findViewById(R.id.listRecyclerview)
-        recyclerview.layoutManager = LinearLayoutManager(this.context)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-        mainViewModel.arrayListLiveData.observe(viewLifecycleOwner) { products ->
-            run {
-                binding.listRecyclerview.adapter = ProductAdapter(
-                    products,
-                    checkBoxClickListener = { listItem: ProductItem -> itemChecked(listItem) },
-                    longClickListener = { listItem: ProductItem -> itemLongPressed(listItem) },
-                    quantityClickListener = { listItem: ProductItem -> quantityClicked(listItem) })
-            }
-        }
-
+    private fun setButtonListeners() {
         fabToTop = binding.fabToTop
         fabToTop.setOnClickListener{
             recyclerview.smoothScrollToPosition(0)
         }
 
-        recyclerview.addOnScrollListener(object: RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
+        fabAddProduct = binding.fabAddProduct
+        fabAddProduct.setOnClickListener{
+            val intent = Intent(requireContext(), SaveProductActivity::class.java)
+            val product = ProductItem(-1, "", "", -1, "")
 
-                if (firstVisiblePosition == 0)
-                    fabToTop.visibility = View.INVISIBLE
-                else
-                    fabToTop.visibility = View.VISIBLE
+            intent.putExtra(EXTRA_PRODUCT, product)
+            startActivity(intent)
+        }
+    }
+
+    private fun initData() {
+        mProductViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(AppCreator.getApiHelperInstance())
+        )[ProductViewModel::class.java]
+
+        mRecyclerAdapter = ProductAdapter(
+            checkBoxClickListener = { listItem: ProductItem -> itemChecked(listItem) },
+            longClickListener = { listItem: ProductItem -> itemLongPressed(listItem) },
+            quantityClickListener = { listItem: ProductItem -> quantityClicked(listItem) })
+    }
+
+    private fun setObserver() {
+        val observer = Observer<NotificationModel> { data ->
+            when(data.operation) {
+                Constants.PATCH_OPERATION -> {
+                    mRecyclerAdapter.updateRecyclerElement(data.product)
+                }
+                Constants.POST_OPERATION -> {
+                    getProducts()
+                }
+                Constants.PUT_OPERATION -> {
+                    mRecyclerAdapter.updateRecyclerElement(data.product)
+                }
             }
-        })
+        }
+        FirebaseMessagingService.notification.observeForever(observer)
+    }
+
+    private fun setRecycler() {
+        recyclerview = requireView().findViewById(R.id.listRecyclerview)
+        with(recyclerview) {
+            layoutManager = LinearLayoutManager(this.context)
+            setHasFixedSize(false)
+            adapter = mRecyclerAdapter
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
+
+                    if (firstVisiblePosition == 0)
+                        fabToTop.visibility = View.INVISIBLE
+                    else
+                        fabToTop.visibility = View.VISIBLE
+                }
+            })
+        }
+    }
+
+    private fun getProducts() {
+        mProductViewModel
+            .getAllProducts()
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        mRecyclerAdapter.updateRecyclerData(it.data!!)
+                    }
+                    Status.LOADING -> {
+                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al obtener los elementos: ${it.message}")
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Toast.LENGTH_LONG).show()
+                    }
+                }
+        }
     }
 
     private fun quantityClicked(listItem: ProductItem) {
@@ -94,46 +165,52 @@ class ListFragment : Fragment() {
 
     private fun saveQuantity() {
         quantityAndItem.second.quantity = quantityAndItem.first
-        saveProduct(quantityAndItem.second)
+        editProduct(quantityAndItem.second)
     }
 
-    private fun saveProduct(product: ProductItem) {
-        apiService.saveProduct(product) {
-            if (it != null) {
-                val index = mainViewModel.arrayListLiveData.value?.indexOf(product)!!
-                mainViewModel.arrayListLiveData.value?.set(index, product)
-                binding.listRecyclerview.adapter?.notifyItemChanged(index)
-            } else {
-                val message = getString(R.string.saveError, "al actualizar la cantidad")
-                val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-                snack.show()
+    private fun editProduct(product: ProductItem) {
+        mProductViewModel
+            .editProduct(product)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        mRecyclerAdapter.updateRecyclerElement(it.data!!)
+                    }
+                    Status.LOADING -> {
+                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al editar el elemento: ${it.message}")
+                        val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+                    }
+                }
             }
-        }
     }
 
     private fun itemLongPressed(listItem: ProductItem) {
-        val intent = Intent(requireContext(), AddProductActivity::class.java)
+        val intent = Intent(requireContext(), SaveProductActivity::class.java)
         intent.putExtra(EXTRA_PRODUCT, listItem)
         startActivity(intent)
     }
 
     private fun itemChecked(listItem: ProductItem) {
-        val apiService = RestApiManager()
-        apiService.checkProduct(listItem) {
-            if (it == null) {
-                val message: String = getString(R.string.saveError, "al marcar un elemento")
-                val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-                snack.show()
-            } else {
-                mainViewModel.arrayListLiveData.value!!.clear()
-                mainViewModel.arrayListLiveData.value!!.addAll(it)
-                binding.listRecyclerview.adapter?.notifyDataSetChanged()
+        mProductViewModel
+            .checkProductItem(listItem)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        mRecyclerAdapter.updateRecyclerData(it.data!!)
+                    }
+                    Status.LOADING -> {
+                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al marcar un elemento: ${it.message}")
+                        val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+                    }
+                }
             }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
