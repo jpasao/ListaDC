@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,12 +20,15 @@ import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
-import com.latribu.listadc.common.factories.ViewModelFactory
-import com.latribu.listadc.common.models.NotificationModel
+import com.latribu.listadc.common.factories.ProductViewModelFactory
+import com.latribu.listadc.common.models.DataStoreManager
+import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
-import com.latribu.listadc.common.network.AppCreator
+import com.latribu.listadc.common.models.User
+import com.latribu.listadc.common.repositories.product.AppCreator
 import com.latribu.listadc.common.network.FirebaseMessagingService
+import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.FragmentListBinding
 
@@ -38,7 +42,13 @@ class ListFragment : Fragment() {
     private lateinit var fabAddProduct: FloatingActionButton
     private lateinit var mProductViewModel: ProductViewModel
     private lateinit var mRecyclerAdapter: ProductAdapter
+    private lateinit var dataStoreManager: DataStoreManager
+    private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var savedUser: User
 
+    companion object {
+        val user = MutableLiveData<User>()
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,8 +57,8 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setButtonListeners()
-        setObserver()
         initData()
+        setObservers()
         setRecycler()
         getProducts()
     }
@@ -74,11 +84,22 @@ class ListFragment : Fragment() {
         }
     }
 
+    private fun setObservers() {
+        getNotification()
+        getUser()
+    }
+
     private fun initData() {
         mProductViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(AppCreator.getApiHelperInstance())
+            ProductViewModelFactory(AppCreator.getApiHelperInstance())
         )[ProductViewModel::class.java]
+
+        preferencesViewModel = ViewModelProvider(
+            this
+        )[PreferencesViewModel::class.java]
+
+        dataStoreManager = DataStoreManager(this.requireContext().applicationContext)
 
         mRecyclerAdapter = ProductAdapter(
             checkBoxClickListener = { listItem: ProductItem -> itemChecked(listItem) },
@@ -86,21 +107,32 @@ class ListFragment : Fragment() {
             quantityClickListener = { listItem: ProductItem -> quantityClicked(listItem) })
     }
 
-    private fun setObserver() {
-        val observer = Observer<NotificationModel> { data ->
-            when(data.operation) {
-                Constants.PATCH_OPERATION -> {
-                    mRecyclerAdapter.updateRecyclerElement(data.product)
-                }
-                Constants.POST_OPERATION -> {
-                    getProducts()
-                }
-                Constants.PUT_OPERATION -> {
-                    mRecyclerAdapter.updateRecyclerElement(data.product)
+    private fun getNotification() {
+        val firebaseObserver = Observer<FirebaseData> { data ->
+            if (data.user != savedUser.id) {
+                when(data.operation) {
+                    Constants.PATCH_OPERATION -> {
+                        mRecyclerAdapter.updateRecyclerElement(data.product)
+                    }
+                    Constants.POST_OPERATION -> {
+                        getProducts()
+                    }
+                    Constants.PUT_OPERATION -> {
+                        mRecyclerAdapter.updateRecyclerElement(data.product)
+                    }
                 }
             }
         }
-        FirebaseMessagingService.notification.observeForever(observer)
+        FirebaseMessagingService.firebaseData.observeForever(firebaseObserver)
+    }
+
+    private fun getUser() {
+        binding.apply {
+            preferencesViewModel.getUser.observe(viewLifecycleOwner) { data ->
+                savedUser = data
+                user.postValue(data!!)
+            }
+        }
     }
 
     private fun setRecycler() {
@@ -170,7 +202,7 @@ class ListFragment : Fragment() {
 
     private fun editProduct(product: ProductItem) {
         mProductViewModel
-            .editProduct(product)
+            .editProduct(product, savedUser)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -196,7 +228,7 @@ class ListFragment : Fragment() {
 
     private fun itemChecked(listItem: ProductItem) {
         mProductViewModel
-            .checkProductItem(listItem)
+            .checkProductItem(listItem, savedUser)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

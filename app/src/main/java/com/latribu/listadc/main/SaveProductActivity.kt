@@ -14,11 +14,14 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
-import com.latribu.listadc.common.factories.ViewModelFactory
+import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.getSerializable
+import com.latribu.listadc.common.models.DataStoreManager
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
-import com.latribu.listadc.common.network.AppCreator
+import com.latribu.listadc.common.models.User
+import com.latribu.listadc.common.repositories.product.AppCreator
+import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.ActivityAddBinding
 
@@ -33,19 +36,31 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var cancelButton: Button
     private var product: ProductItem? = null
     private lateinit var mProductViewModel: ProductViewModel
+    private lateinit var dataStoreManager: DataStoreManager
+    private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var savedUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         bindViews()
+        initData()
+        getUser()
         setListeners()
-
         setContentView(binding.root)
+    }
 
+    private fun initData() {
         mProductViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(AppCreator.getApiHelperInstance())
+            ProductViewModelFactory(AppCreator.getApiHelperInstance())
         )[ProductViewModel::class.java]
+
+        preferencesViewModel = ViewModelProvider(
+            this
+        )[PreferencesViewModel::class.java]
+
+        dataStoreManager = DataStoreManager(this)
     }
 
     private fun setListeners() {
@@ -69,6 +84,14 @@ class SaveProductActivity : AppCompatActivity() {
         saveButton.setOnClickListener { saveProduct(editing) }
 
         cancelButton.setOnClickListener { finish() }
+    }
+
+    private fun getUser() {
+        binding.apply {
+            preferencesViewModel.getUser.observe(this@SaveProductActivity) {user ->
+                savedUser = user
+            }
+        }
     }
 
     private fun saveProduct(editing: Boolean) {
@@ -122,7 +145,7 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun addProduct(product: ProductItem) {
         mProductViewModel
-            .addProduct(product)
+            .addProduct(product, savedUser)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -143,7 +166,7 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun editProduct(product: ProductItem) {
         mProductViewModel
-            .editProduct(product)
+            .editProduct(product, savedUser)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {

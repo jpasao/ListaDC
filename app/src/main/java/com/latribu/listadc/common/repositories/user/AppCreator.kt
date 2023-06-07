@@ -1,4 +1,4 @@
-package com.latribu.listadc.common.network
+package com.latribu.listadc.common.repositories.user
 
 import android.app.Application
 import com.latribu.listadc.common.network.RetrofitClientCalling.client

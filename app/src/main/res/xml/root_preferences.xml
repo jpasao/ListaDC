@@ -1,11 +1,16 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/settings_text_title">
 
         <SwitchPreferenceCompat
-            app:key="@string/show_load_messages"
-            app:summary="@string/settings_summary_show_load_messages"
-            app:title="@string/settings_text_show_load_messages" />
+            android:key="@string/settings_buy_mode"
+            android:title="@string/settings_buy_mode_text"
+            android:summary="@string/settings_buy_mode_subtext" />
+
+        <ListPreference
+            android:key="@string/settings_user"
+
+            android:title="@string/settings_user_text" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

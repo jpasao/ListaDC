@@ -1,6 +1,8 @@
 package com.latribu.listadc.common.models
 
-data class Author(
+import java.io.Serializable
+
+data class User(
     val id: Int,
     val name: String,
-    val image: String)
+    val image: String): Serializable

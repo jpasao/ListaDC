@@ -10,11 +10,10 @@ data class Resource<out T>
         fun <T> success(data:T): Resource<T> =
             Resource(status = Status.SUCCESS, data = data, message = null)
 
-        fun <T> error(data:T?, message: String?):Resource<T> =
+        fun <T> error(data:T?, message: String?): Resource<T> =
             Resource(status = Status.FAILURE, data = data, message = message)
 
-        fun <T> loading(data:T?):Resource<T> =
+        fun <T> loading(data:T?): Resource<T> =
             Resource(status = Status.LOADING, data = data, message = null)
     }
-
 }
