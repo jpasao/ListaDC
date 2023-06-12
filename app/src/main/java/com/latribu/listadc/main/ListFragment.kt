@@ -48,6 +48,7 @@ class ListFragment : Fragment() {
 
     companion object {
         // Observed in FirebaseMessagingService.readPreferences()
+        // and MainActivity.readPreferences()
         val user = MutableLiveData<User>()
         val buyMode = MutableLiveData<Boolean>()
     }

@@ -11,7 +11,7 @@
     <!-- Settings literals -->
     <string name="settings_text_title">Opciones</string>
     <string name="settings_text_user">¿Quién eres?</string>
-    <string name="settings_text_user_not_defined">Aún no me he decidido</string>
+    <string name="settings_text_user_not_defined">No sé quién soy</string>
     <string name="settings_buy_mode_subtext">Con el modo he salido a comprar activado, recibirás una notificación cada vez que se modifique algo en la lista de la compra</string>
     <string name="settings_buy_mode_text">Modo he salido a comprar</string>
     <string name="settings_user_subtext">Sabiendo quién eres, el resto de la tribu sabrá quién ha hecho cambios. Además, no recibirás tus propias notificaciones</string>

@@ -2,7 +2,10 @@ package com.latribu.listadc.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -16,6 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.TOPIC_NAME
 import com.latribu.listadc.common.SectionsPagerAdapter
+import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.showMessage
@@ -36,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         setButtons(binding)
         setFirebase()
         readFirebaseMessage()
+        readPreferences(binding)
     }
 
     private fun setTabs(binding: ActivityMainBinding) {
@@ -74,5 +79,24 @@ class MainActivity : AppCompatActivity() {
             showMessage(findViewById(R.id.app_container), data)
         }
         FirebaseMessagingService.notificationMessage.observeForever(messageObserver)
+    }
+
+    private fun readPreferences(binding: ActivityMainBinding) {
+        val userObserver = Observer<User> { data ->
+            binding.userName.text = data.name
+        }
+        val buyModeObserver = Observer<Boolean> { data ->
+            if (data) {
+                binding.buymodeButton.visibility = View.VISIBLE
+                binding.buymodeButton.setBackgroundResource(R.drawable.twotone_buymode_on_24)
+            }
+            else
+                binding.buymodeButton.visibility = View.INVISIBLE
+
+        }
+        Handler(Looper.getMainLooper()).post {
+            ListFragment.user.observeForever(userObserver)
+            ListFragment.buyMode.observeForever(buyModeObserver)
+        }
     }
 }
