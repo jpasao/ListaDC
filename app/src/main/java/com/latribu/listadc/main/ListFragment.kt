@@ -47,7 +47,9 @@ class ListFragment : Fragment() {
     private lateinit var savedUser: User
 
     companion object {
+        // Observed in FirebaseMessagingService.readPreferences()
         val user = MutableLiveData<User>()
+        val buyMode = MutableLiveData<Boolean>()
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
@@ -131,6 +133,9 @@ class ListFragment : Fragment() {
             preferencesViewModel.getUser.observe(viewLifecycleOwner) { data ->
                 savedUser = data
                 user.postValue(data!!)
+            }
+            preferencesViewModel.getBuyMode.observe(viewLifecycleOwner) { data ->
+                buyMode.postValue(data!!)
             }
         }
     }

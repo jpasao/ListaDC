@@ -8,12 +8,10 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Handler
 import android.os.Looper
-import androidx.collection.SimpleArrayMap
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
 import com.latribu.listadc.R
 import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.User
@@ -22,33 +20,54 @@ import com.latribu.listadc.main.MainActivity
 
 class FirebaseMessagingService: FirebaseMessagingService() {
     private lateinit var savedUser: User
+    private var buyMode: Boolean = false
     private lateinit var notificationData: FirebaseData
     companion object {
+        // Observed in ListFragment.getNotification()
         val firebaseData = MutableLiveData<FirebaseData>()
+        // Observed in MainActivity.readFirebaseMessage()
+        val notificationMessage = MutableLiveData<String>()
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        readUser()
-        val hasData = remoteMessage.data.isNotEmpty()
-        val hasNotification = remoteMessage.notification != null
-        if (hasData) {
-            notificationData = FirebaseData(remoteMessage.data as SimpleArrayMap<String, String>)
-            firebaseData.postValue(notificationData)
-        }
+    override fun handleIntent(intent: Intent?) {
+        readPreferences()
+        try {
+            val body = intent!!.getStringExtra("gcm.notification.body").toString()
+            val title = intent!!.getStringExtra("gcm.notification.title").toString()
+            val hasData = intent!!.getStringExtra("productId")?.toIntOrNull() != null
 
-        if (hasData && hasNotification && notificationData.user!! != savedUser.id) {
-            sendNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!)
-        }
+            if (hasData) {
+                notificationData = FirebaseData(intent)
+                firebaseData.postValue(notificationData)
+            }
 
-        super.onMessageReceived(remoteMessage)
+            val sendNotification = hasData && notificationData.user != savedUser.id
+
+            if (sendNotification) {
+                if (buyMode) {
+                    sendNotification(title, body)
+                } else {
+                    notificationMessage.postValue(body)
+                }
+            }
+        } catch (e: Exception) {
+            super.handleIntent(intent)
+        }
     }
 
-    private fun readUser() {
+    private fun readPreferences() {
         val userObserver = Observer<User> { data ->
             savedUser = User(data.id, data.name, "")
         }
+        val buyModeObserver = Observer<Boolean> { data ->
+            buyMode = data
+        }
         Handler(Looper.getMainLooper()).post {
             ListFragment.user.observeForever(userObserver)
+            ListFragment.buyMode.observeForever(buyModeObserver)
+        }
+        if (!this::savedUser.isInitialized) {
+            savedUser = User(-1, "Alguien", "")
         }
     }
 

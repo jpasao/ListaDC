@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -12,9 +13,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
 import com.google.firebase.messaging.FirebaseMessaging
+import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.TOPIC_NAME
 import com.latribu.listadc.common.SectionsPagerAdapter
+import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.settings.SettingsActivity
+import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -28,10 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setTabs(binding)
         setButtons(binding)
-        setFireBase()
+        setFirebase()
+        readFirebaseMessage()
     }
 
     private fun setTabs(binding: ActivityMainBinding) {
@@ -50,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFireBase() {
+    private fun setFirebase() {
         auth = Firebase.auth
 
         FirebaseMessaging
@@ -65,4 +69,10 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    private fun readFirebaseMessage() {
+        val messageObserver = Observer<String> { data ->
+            showMessage(findViewById(R.id.app_container), data)
+        }
+        FirebaseMessagingService.notificationMessage.observeForever(messageObserver)
+    }
 }

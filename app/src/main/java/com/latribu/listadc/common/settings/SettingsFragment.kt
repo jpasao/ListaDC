@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.ListPreference
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.factories.UserViewModelFactory
@@ -30,6 +31,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         initData()
+        setListeners()
         getUsers()
     }
 
@@ -67,6 +69,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun saveUser(user: User) = runBlocking {
         binding.apply {
             preferencesViewModel.setUser(user)
+        }
+    }
+
+    private fun setBuyMode(buyMode: Boolean) = runBlocking {
+        binding.apply {
+            preferencesViewModel.setBuyMode(buyMode)
+        }
+    }
+
+    private fun setListeners() {
+        val buyModeSwitch: SwitchPreference? = findPreference(getString(R.string.settings_buy_mode))
+        buyModeSwitch?.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
+            if (newValue.toString().isNotEmpty()) {
+                setBuyMode(newValue.toString().toBooleanStrict())
+            }
+            true
         }
     }
 

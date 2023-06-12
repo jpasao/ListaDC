@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/settings_text_title">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="@string/settings_buy_mode"
             android:title="@string/settings_buy_mode_text"
             android:summary="@string/settings_buy_mode_subtext" />

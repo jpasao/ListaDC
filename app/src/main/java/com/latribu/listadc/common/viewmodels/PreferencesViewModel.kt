@@ -19,4 +19,12 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
             dataStore.saveUser(user)
         }
     }
+
+    val getBuyMode = dataStore.readBuyMode().asLiveData(Dispatchers.IO)
+
+    fun setBuyMode(buyMode: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.setBuyMode(buyMode)
+        }
+    }
 }
