@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
@@ -26,8 +27,8 @@ import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
-import com.latribu.listadc.common.repositories.product.AppCreator
 import com.latribu.listadc.common.network.FirebaseMessagingService
+import com.latribu.listadc.common.repositories.product.AppCreator
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.FragmentListBinding
@@ -45,6 +46,7 @@ class ListFragment : Fragment() {
     private lateinit var dataStoreManager: DataStoreManager
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
+    private lateinit var pullToRefresh: SwipeRefreshLayout
 
     companion object {
         // Observed in FirebaseMessagingService.readPreferences()
@@ -54,12 +56,13 @@ class ListFragment : Fragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
+        pullToRefresh = binding.listRVLayout
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setButtonListeners()
+        setListeners()
         initData()
         setObservers()
         setRecycler()
@@ -71,7 +74,7 @@ class ListFragment : Fragment() {
         _binding = null
     }
 
-    private fun setButtonListeners() {
+    private fun setListeners() {
         fabToTop = binding.fabToTop
         fabToTop.setOnClickListener{
             recyclerview.smoothScrollToPosition(0)
@@ -84,6 +87,11 @@ class ListFragment : Fragment() {
 
             intent.putExtra(EXTRA_PRODUCT, product)
             startActivity(intent)
+        }
+
+        pullToRefresh.setOnRefreshListener {
+            getProducts()
+            pullToRefresh.isRefreshing = false
         }
     }
 
