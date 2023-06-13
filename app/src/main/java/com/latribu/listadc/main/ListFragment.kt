@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import android.widget.Toast
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -47,6 +47,7 @@ class ListFragment : Fragment() {
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
     private lateinit var pullToRefresh: SwipeRefreshLayout
+    private lateinit var spinner: ProgressBar
 
     companion object {
         // Observed in FirebaseMessagingService.readPreferences()
@@ -56,7 +57,8 @@ class ListFragment : Fragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
-        pullToRefresh = binding.listRVLayout
+
+        spinner = binding.spinningHamburger
         return binding.root
     }
 
@@ -88,7 +90,7 @@ class ListFragment : Fragment() {
             intent.putExtra(EXTRA_PRODUCT, product)
             startActivity(intent)
         }
-
+        pullToRefresh = binding.swipeLayout
         pullToRefresh.setOnRefreshListener {
             getProducts()
             pullToRefresh.isRefreshing = false
@@ -177,13 +179,15 @@ class ListFragment : Fragment() {
                 when(it.status) {
                     Status.SUCCESS -> {
                         mRecyclerAdapter.updateRecyclerData(it.data!!)
+                        spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
-                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                        spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
                         val message: String = getString(R.string.saveError, "al obtener los elementos: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Toast.LENGTH_LONG).show()
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
                     }
                 }
         }
@@ -221,14 +225,16 @@ class ListFragment : Fragment() {
                 when(it.status) {
                     Status.SUCCESS -> {
                         mRecyclerAdapter.updateRecyclerElement(it.data!!)
+                        spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
-                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                        spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
                         val message: String = getString(R.string.saveError, "al editar el elemento: ${it.message}")
                         val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
                         snack.show()
+                        spinner.visibility = View.GONE
                     }
                 }
             }
@@ -247,14 +253,16 @@ class ListFragment : Fragment() {
                 when(it.status) {
                     Status.SUCCESS -> {
                         mRecyclerAdapter.updateRecyclerData(it.data!!)
+                        spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
-                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                        spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
                         val message: String = getString(R.string.saveError, "al marcar un elemento: ${it.message}")
                         val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
                         snack.show()
+                        spinner.visibility = View.GONE
                     }
                 }
             }

@@ -4,9 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -39,6 +40,7 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var dataStoreManager: DataStoreManager
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
+    private lateinit var spinner: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,8 +90,9 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun getUser() {
         binding.apply {
-            preferencesViewModel.getUser.observe(this@SaveProductActivity) {user ->
-                savedUser = user
+            preferencesViewModel.getUser.observe(this@SaveProductActivity) { data ->
+                savedUser = data
+                ListFragment.user.postValue(data!!)
             }
         }
     }
@@ -110,6 +113,8 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun bindViews() {
         binding = ActivityAddBinding.inflate(layoutInflater)
+        spinner = binding.spinningHamburger
+        spinner.visibility = View.GONE
 
         title = binding.lblAddProduct
         saveButton = binding.btnSaveProduct
@@ -151,11 +156,13 @@ class SaveProductActivity : AppCompatActivity() {
                     Status.SUCCESS -> {
                         val i = Intent(this@SaveProductActivity, MainActivity::class.java)
                         startActivity(i)
+                        spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
-                        Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+                        spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        spinner.visibility = View.GONE
                         val message: String = getString(R.string.saveError, "al guardar: ${it.message}")
                         val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
                         snack.show()
@@ -172,14 +179,16 @@ class SaveProductActivity : AppCompatActivity() {
                     Status.SUCCESS -> {
                         val i = Intent(this@SaveProductActivity, MainActivity::class.java)
                         startActivity(i)
+                        spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
-                        Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+                        spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
                         val message: String = getString(R.string.saveError, "al editar el elemento: ${it.message}")
                         val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
                         snack.show()
+                        spinner.visibility = View.GONE
                     }
                 }
             }
