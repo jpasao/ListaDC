@@ -22,7 +22,6 @@ import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.ProductViewModelFactory
-import com.latribu.listadc.common.models.DataStoreManager
 import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
@@ -43,7 +42,6 @@ class ListFragment : Fragment() {
     private lateinit var fabAddProduct: FloatingActionButton
     private lateinit var mProductViewModel: ProductViewModel
     private lateinit var mRecyclerAdapter: ProductAdapter
-    private lateinit var dataStoreManager: DataStoreManager
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
     private lateinit var pullToRefresh: SwipeRefreshLayout
@@ -111,8 +109,6 @@ class ListFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(
             this
         )[PreferencesViewModel::class.java]
-
-        dataStoreManager = DataStoreManager(this.requireContext().applicationContext)
 
         mRecyclerAdapter = ProductAdapter(
             checkBoxClickListener = { listItem: ProductItem -> itemChecked(listItem) },

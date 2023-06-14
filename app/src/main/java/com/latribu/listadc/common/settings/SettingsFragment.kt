@@ -1,7 +1,8 @@
 package com.latribu.listadc.common.settings
 
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
+import android.widget.ProgressBar
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +13,6 @@ import androidx.preference.SwitchPreference
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.factories.UserViewModelFactory
-import com.latribu.listadc.common.models.DataStoreManager
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.user.AppCreator
@@ -25,8 +25,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var mUserViewModel: UserViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
-    private lateinit var dataStoreManager: DataStoreManager
     private lateinit var savedUser: User
+    private lateinit var spinner: ProgressBar
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -44,7 +44,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             this
         )[PreferencesViewModel::class.java]
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        dataStoreManager = DataStoreManager(this.requireContext().applicationContext)
+        spinner = binding.spinningHamburger
     }
 
     private fun getUsers() {
@@ -54,13 +54,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 when(it.status) {
                     Status.SUCCESS -> {
                         loadOptions(it.data!!)
+                        spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
-                        Toast.makeText(this.context, "Loading...", Toast.LENGTH_LONG).show()
+                        spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
                         val message: String = getString(R.string.saveError, "al obtener los usuarios: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Toast.LENGTH_LONG).show()
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
                     }
                 }
             }
@@ -115,7 +117,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         } else {
             val message: String = getString(R.string.saveError, "al obtener los usuarios.")
-            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Toast.LENGTH_LONG).show()
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
         }
     }
 

@@ -10,4 +10,13 @@
         android:layout_height="match_parent"
         android:id="@+id/idFrameLayout" />
 
+    <ProgressBar
+        android:id="@+id/spinningHamburger"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminateDrawable="@drawable/rotating_icon"
+        android:scaleX=".2"
+        android:scaleY=".2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

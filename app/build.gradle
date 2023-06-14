@@ -85,4 +85,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    // Work manager to set buy mode off
+    def work_version = "2.8.1"
+    implementation("androidx.work:work-runtime-ktx:$work_version")
 }

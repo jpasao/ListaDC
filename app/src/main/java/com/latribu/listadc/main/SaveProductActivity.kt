@@ -17,7 +17,6 @@ import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.getSerializable
-import com.latribu.listadc.common.models.DataStoreManager
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
@@ -37,7 +36,6 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var cancelButton: Button
     private var product: ProductItem? = null
     private lateinit var mProductViewModel: ProductViewModel
-    private lateinit var dataStoreManager: DataStoreManager
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
     private lateinit var spinner: ProgressBar
@@ -61,8 +59,6 @@ class SaveProductActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(
             this
         )[PreferencesViewModel::class.java]
-
-        dataStoreManager = DataStoreManager(this)
     }
 
     private fun setListeners() {
