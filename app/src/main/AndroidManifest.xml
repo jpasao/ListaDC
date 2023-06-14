@@ -21,6 +21,7 @@
             android:name=".main.SaveProductActivity"
             android:exported="false"
             android:label="@string/title_activity_add"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ListaDC.NoActionBar" />
         <activity
             android:name=".common.settings.SettingsActivity"
