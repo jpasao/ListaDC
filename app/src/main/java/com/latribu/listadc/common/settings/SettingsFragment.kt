@@ -31,8 +31,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         initData()
-        setListeners()
         getUsers()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setListeners()
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initData() {
@@ -87,6 +91,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 setBuyMode(newValue.toString().toBooleanStrict())
             }
             true
+        }
+        binding.apply {
+            preferencesViewModel.getBuyMode.observe(viewLifecycleOwner){ buyMode ->
+                if (buyModeSwitch != null) {
+                    buyModeSwitch.isChecked = buyMode
+                }
+            }
         }
     }
 

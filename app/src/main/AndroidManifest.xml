@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,13 +20,13 @@
         tools:targetApi="31">
         <activity
             android:name=".main.SaveProductActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_add"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ListaDC.NoActionBar" />
         <activity
             android:name=".common.settings.SettingsActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
@@ -40,7 +41,7 @@
         </activity>
         <service
             android:name=".common.network.FirebaseMessagingService"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -52,7 +53,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/design_default_color_primary" />
         
-        <receiver android:name=".common.network.BuyMode" />
+        <receiver
+            android:name=".common.network.BuyMode"
+            android:exported="true" />
     </application>
 
 

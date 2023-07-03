@@ -7,10 +7,21 @@
     tools:context=".main.ListFragment"
     android:id="@+id/listRVLayout">
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/productSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textCursorDrawable="@null"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:theme="@style/AppSearchView"
+        app:queryHint="@string/search_menu_placeholder" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swipeLayout">
+        android:layout_marginTop="45dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listRecyclerview"
@@ -32,6 +43,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/noResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:text="@string/search_menu_noresults"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabToTop"

@@ -3,11 +3,15 @@ package com.latribu.listadc.main
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -18,7 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
-import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.ProductViewModelFactory
@@ -32,11 +35,13 @@ import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.FragmentListBinding
 
+
 class ListFragment : Fragment() {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private lateinit var recyclerview: RecyclerView
+    private lateinit var noResults: TextView
     private lateinit var quantityAndItem: Pair<Int, ProductItem>
     private lateinit var fabToTop: FloatingActionButton
     private lateinit var fabAddProduct: FloatingActionButton
@@ -46,6 +51,7 @@ class ListFragment : Fragment() {
     private lateinit var savedUser: User
     private lateinit var pullToRefresh: SwipeRefreshLayout
     private lateinit var spinner: ProgressBar
+    private lateinit var search: SearchView
 
     companion object {
         // Observed in FirebaseMessagingService.readPreferences()
@@ -55,8 +61,10 @@ class ListFragment : Fragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
-
+        search = binding.productSearch
         spinner = binding.spinningHamburger
+        noResults = binding.noResults
+
         return binding.root
     }
 
@@ -93,6 +101,30 @@ class ListFragment : Fragment() {
             getProducts()
             pullToRefresh.isRefreshing = false
         }
+
+        search.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                mRecyclerAdapter.filter.filter(newText)
+                return false
+            }
+        })
+
+        val emptyListObserver = Observer<Boolean> { data ->
+            if (data) {
+                recyclerview.visibility = View.GONE
+                noResults.visibility = View.VISIBLE
+            } else {
+                noResults.visibility = View.GONE
+                recyclerview.visibility = View.VISIBLE
+            }
+        }
+
+        Handler(Looper.getMainLooper()).post {
+            ProductAdapter.emptyList.observeForever(emptyListObserver)
+        }
     }
 
     private fun setObservers() {
@@ -119,17 +151,7 @@ class ListFragment : Fragment() {
     private fun getNotification() {
         val firebaseObserver = Observer<FirebaseData> { data ->
             if (data.user != savedUser.id) {
-                when(data.operation) {
-                    Constants.PATCH_OPERATION -> {
-                        mRecyclerAdapter.updateRecyclerElement(data.product)
-                    }
-                    Constants.POST_OPERATION -> {
-                        getProducts()
-                    }
-                    Constants.PUT_OPERATION -> {
-                        mRecyclerAdapter.updateRecyclerElement(data.product)
-                    }
-                }
+                getProducts()
             }
         }
         FirebaseMessagingService.firebaseData.observeForever(firebaseObserver)
@@ -220,7 +242,7 @@ class ListFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
-                        mRecyclerAdapter.updateRecyclerElement(it.data!!)
+                        mRecyclerAdapter.notifyDataSetChanged()
                         spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
@@ -248,6 +270,8 @@ class ListFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
+                        search.setQuery("", false)
+                        search.clearFocus()
                         mRecyclerAdapter.updateRecyclerData(it.data!!)
                         spinner.visibility = View.GONE
                     }

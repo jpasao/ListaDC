@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity() {
             }
             else
                 binding.buymodeButton.visibility = View.INVISIBLE
-
         }
         Handler(Looper.getMainLooper()).post {
             ListFragment.user.observeForever(userObserver)

@@ -39,4 +39,7 @@
     <!-- Main List -->
     <string name="getProductsError">Ups… algo ha salido mal al obtener la lista</string>
     <string name="choose_quantity_message">¿Cuántos van a ser?</string>
+    <!-- Search Menu -->
+    <string name="search_menu_placeholder">¿Qué estás buscando?</string>
+    <string name="search_menu_noresults">Aquí no hay nada de eso. Siga buscando</string>
 </resources>
