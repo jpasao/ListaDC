@@ -98,6 +98,7 @@ class ProductAdapter(
     fun updateRecyclerData(productList: List<ProductItem>) {
         this.productList.clear()
         this.productList.addAll(productList)
+        filteredProductList = this.productList
         notifyDataSetChanged()
     }
 

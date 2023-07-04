@@ -75,6 +75,7 @@ class ListFragment : Fragment() {
         setObservers()
         setRecycler()
         getProducts()
+        search.clearFocus()
     }
 
     override fun onDestroyView() {
@@ -108,6 +109,7 @@ class ListFragment : Fragment() {
             }
             override fun onQueryTextChange(newText: String?): Boolean {
                 mRecyclerAdapter.filter.filter(newText)
+                if (newText.isNullOrEmpty()) search.clearFocus()
                 return false
             }
         })
