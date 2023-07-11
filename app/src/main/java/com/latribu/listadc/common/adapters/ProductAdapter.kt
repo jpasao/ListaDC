@@ -9,8 +9,8 @@ import android.widget.Filterable
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.common.models.ProductItem
+import com.latribu.listadc.common.normalize
 import com.latribu.listadc.databinding.ListItemDesignBinding
-
 
 class ProductAdapter(
     val checkBoxClickListener: (ProductItem) -> Unit,
@@ -53,17 +53,20 @@ class ProductAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charSearch = constraint.toString()
+                val charSearch = normalize(constraint.toString())
 
                 filteredProductList = productList.filter { row ->
-                    (row.name.contains(charSearch, ignoreCase = true)) or
-                    (row.comment?.contains(charSearch, ignoreCase = true) ?: false)
+                    val normalizedName = normalize(row.name)
+                    val normalizedComment = normalize(row.comment)
+
+                    (normalizedName.contains(charSearch, ignoreCase = true)) or
+                    (normalizedComment?.contains(charSearch, ignoreCase = true) ?: false)
                 } as ArrayList<ProductItem>
 
                 val filterResults = FilterResults()
                 filterResults.values = filteredProductList
 
-                emptyList.postValue(filteredProductList.isEmpty())
+                emptyList.postValue(filteredProductList.isNullOrEmpty())
                 return filterResults
             }
 
@@ -98,7 +101,7 @@ class ProductAdapter(
     fun updateRecyclerData(productList: List<ProductItem>) {
         this.productList.clear()
         this.productList.addAll(productList)
-        filteredProductList = this.productList
+        this.filteredProductList = this.productList
         notifyDataSetChanged()
     }
 
