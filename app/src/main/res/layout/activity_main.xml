@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_container"
@@ -9,8 +9,9 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.ListaDC.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:theme="@style/Theme.ListaDC.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -32,6 +33,7 @@
                     android:background="#00FFFFFF"
                     android:contentDescription="@string/uselessContent"
                     android:paddingStart="@dimen/appbar_padding_top"
+                    android:paddingEnd="@dimen/appbar_padding_top"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -46,6 +48,7 @@
                     android:gravity="center"
                     android:minHeight="?actionBarSize"
                     android:paddingLeft="@dimen/SettingsIconPadding"
+                    android:paddingRight="@dimen/SettingsIconPadding"
                     android:text="@string/app_name"
                     android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                     app:layout_constraintStart_toEndOf="@+id/settingsButton"
@@ -57,6 +60,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/appbar_padding"
+                    android:paddingRight="@dimen/appbar_padding"
                     android:paddingEnd="@dimen/appbar_padding"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/userName"
@@ -64,6 +68,7 @@
 
                     <ImageButton
                         android:id="@+id/buymodeButton"
+                        android:contentDescription="@string/uselessContent"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="#00FFFFFF"
@@ -96,12 +101,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@id/tabs" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

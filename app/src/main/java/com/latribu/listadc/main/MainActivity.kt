@@ -10,8 +10,11 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Observer
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayout.Tab
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,7 +22,8 @@ import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
 import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.TOPIC_NAME
-import com.latribu.listadc.common.SectionsPagerAdapter
+import com.latribu.listadc.common.TAB_TITLES
+import com.latribu.listadc.common.TabsAdapter
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.settings.SettingsActivity
@@ -31,26 +35,44 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsButton: ImageButton
     private lateinit var auth: FirebaseAuth
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager2
+    private var previousTab: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         setTabs(binding)
+        setContentView(binding.root)
         setButtons(binding)
         setFirebase()
         readFirebaseMessage()
         readPreferences(binding)
     }
 
+    override fun onBackPressed() {
+        val tab: Tab = tabLayout.getTabAt(previousTab)!!
+        tab.select()
+    }
+
     private fun setTabs(binding: ActivityMainBinding) {
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = binding.viewPager
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = binding.tabs
-        tabs.setupWithViewPager(viewPager)
+        viewPager = binding.viewPager
+
+        tabLayout = binding.tabs
+        viewPager.adapter = TabsAdapter(supportFragmentManager, lifecycle)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = getString(TAB_TITLES[position])
+        }.attach()
+
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: Tab) { }
+            override fun onTabReselected(tab: Tab) { }
+            override fun onTabUnselected(tab: Tab) {
+                previousTab = tab.position
+            }
+        })
     }
 
     private fun setButtons(binding: ActivityMainBinding) {
