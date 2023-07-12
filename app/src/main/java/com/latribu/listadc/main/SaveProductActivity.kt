@@ -94,7 +94,7 @@ class SaveProductActivity : AppCompatActivity() {
     }
 
     private fun saveProduct(editing: Boolean) {
-        val quantity: Int? = quantity.text.toString().toIntOrNull()
+        val quantity: Int = quantity.text.toString().toIntOrNull() ?: 1
 
         ProductItem(
             id = if (editing) product?.id else null,

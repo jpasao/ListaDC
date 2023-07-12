@@ -60,19 +60,21 @@ class ProductAdapter(
                     val normalizedComment = normalize(row.comment)
 
                     (normalizedName.contains(charSearch, ignoreCase = true)) or
-                    (normalizedComment?.contains(charSearch, ignoreCase = true) ?: false)
+                        normalizedComment.contains(charSearch, ignoreCase = true)
                 } as ArrayList<ProductItem>
 
                 val filterResults = FilterResults()
                 filterResults.values = filteredProductList
 
-                emptyList.postValue(filteredProductList.isNullOrEmpty())
+                emptyList.postValue(filteredProductList.isEmpty())
                 return filterResults
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                filteredProductList = results?.values as ArrayList<ProductItem>
-                notifyDataSetChanged()
+                if (results?.values != null && results.values != 0) {
+                    filteredProductList = results.values as ArrayList<ProductItem>
+                    notifyDataSetChanged()
+                }
             }
         }
     }

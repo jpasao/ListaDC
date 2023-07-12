@@ -251,7 +251,9 @@ class ListFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
-                        mRecyclerAdapter.notifyDataSetChanged()
+                        search.setQuery("", false)
+                        search.clearFocus()
+                        getProducts()
                         spinner.visibility = View.GONE
                     }
                     Status.LOADING -> {
