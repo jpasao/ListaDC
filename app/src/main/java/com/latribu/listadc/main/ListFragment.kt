@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
+import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.ProductViewModelFactory
@@ -48,7 +49,7 @@ class ListFragment : Fragment() {
     private lateinit var mProductViewModel: ProductViewModel
     private lateinit var mRecyclerAdapter: ProductAdapter
     private lateinit var preferencesViewModel: PreferencesViewModel
-    private lateinit var savedUser: User
+    private var savedUser: User = DEFAULT_USER
     private lateinit var pullToRefresh: SwipeRefreshLayout
     private lateinit var spinner: ProgressBar
     private lateinit var search: SearchView
@@ -234,8 +235,14 @@ class ListFragment : Fragment() {
     }
 
     private fun saveQuantity() {
-        quantityAndItem.second.quantity = quantityAndItem.first
-        editProduct(quantityAndItem.second)
+        if (this::quantityAndItem.isInitialized) {
+            quantityAndItem.second.quantity = quantityAndItem.first
+            editProduct(quantityAndItem.second)
+        } else {
+            val message: String = getString(R.string.saveError, "al obtener los datos del elemento")
+            val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+            snack.show()
+        }
     }
 
     private fun editProduct(product: ProductItem) {
