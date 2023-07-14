@@ -2,10 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listRVLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.ListFragment"
-    android:id="@+id/listRVLayout">
+    android:background="?attr/colorOnPrimary"
+    tools:context=".main.ListFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/productSearch"
@@ -14,8 +15,8 @@
         android:textCursorDrawable="@null"
         app:iconifiedByDefault="false"
         app:queryBackground="@null"
-        app:theme="@style/AppSearchView"
-        app:queryHint="@string/search_menu_placeholder" />
+        app:queryHint="@string/search_menu_placeholder"
+        app:theme="@style/AppSearchView" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"
@@ -23,12 +24,24 @@
         android:layout_height="match_parent"
         android:layout_marginTop="45dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listRecyclerview"
+        <com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
+            android:id="@+id/fastscroller"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:listitem="@layout/list_item_design" />
+            app:handleDrawable="@drawable/fastscroller_handle"
+            app:popupDrawable="@drawable/fastscroller_popup"
+            app:popupTextStyle="@style/PopupTextViewStyle"
+            app:supportSwipeToRefresh="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="18dp"
+                android:orientation="vertical"
+                tools:listitem="@layout/list_item_design" />
+        </com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
@@ -58,9 +71,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginRight="100dp"
+        android:layout_marginRight="130dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
+        app:backgroundTint="@color/teal_700"
         app:layout_anchorGravity="center"
         app:maxImageSize="36dp"
         app:srcCompat="@drawable/twotone_arrow_circle_up_24" />
@@ -70,10 +84,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginRight="36dp"
+        android:layout_marginRight="66dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@string/FAB_description"
         android:src="@drawable/ic_twotone_add_circle_24"
+        app:backgroundTint="@color/teal_700"
         app:fabSize="normal"
         app:maxImageSize="36dp" />
 

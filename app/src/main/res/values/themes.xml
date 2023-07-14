@@ -29,6 +29,11 @@
         <item name="android:alpha">0.87</item>
     </style>
 
+    <style name="PopupTextViewStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="Theme.ListaDC.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.ListaDC.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

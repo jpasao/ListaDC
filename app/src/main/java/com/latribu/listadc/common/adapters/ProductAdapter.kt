@@ -6,17 +6,19 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.normalize
 import com.latribu.listadc.databinding.ListItemDesignBinding
+import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 
 class ProductAdapter(
     val checkBoxClickListener: (ProductItem) -> Unit,
     val longClickListener: (ProductItem) -> Unit,
     val quantityClickListener: (ProductItem) -> Unit
-): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable, RecyclerViewFastScroller.OnPopupViewUpdate {
     private var productList = ArrayList<ProductItem>()
     private var filteredProductList = ArrayList<ProductItem>()
 
@@ -79,6 +81,15 @@ class ProductAdapter(
         }
     }
 
+    override fun onUpdate(position: Int, popupTextView: TextView) {
+        val item = filteredProductList[position]
+        val header = " ${item.name[0]} "
+        with(popupTextView){
+            text = header.toString()
+            background.alpha = if (isChecked(item)) 230 else 255
+        }
+    }
+
     inner class ListViewHolder(private val binding: ListItemDesignBinding) : RecyclerView.ViewHolder(binding.root) {
         val checkBox: CheckBox = binding.check
         val quantity: Button = binding.quantity
@@ -88,7 +99,7 @@ class ProductAdapter(
             binding.check.isChecked = checked
             binding.quantity.text = item.quantity.toString()
             binding.name.text = item.name
-            val opacity = if (checked) 0.54f else 0.87f
+            val opacity = getOpacity(item)
             binding.name.alpha = opacity
             binding.comment.text = item.comment
             binding.comment.alpha = opacity
@@ -109,5 +120,9 @@ class ProductAdapter(
 
     fun isChecked(item: ProductItem) : Boolean {
         return item.isChecked == "1"
+    }
+
+    fun getOpacity(item: ProductItem) : Float {
+        return if (isChecked(item)) 0.54f else 0.87f
     }
 }
