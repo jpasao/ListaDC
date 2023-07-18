@@ -12,10 +12,12 @@ import android.widget.NumberPicker
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -24,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
+import com.latribu.listadc.common.RecyclerViewItemDecoration
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.models.FirebaseData
@@ -116,7 +119,8 @@ class ListFragment : Fragment() {
         })
 
         val emptyListObserver = Observer<Boolean> { data ->
-            if (data) {
+            val searchSomething = !search.query.isNullOrEmpty()
+            if (data && searchSomething) {
                 recyclerview.visibility = View.GONE
                 noResults.visibility = View.VISIBLE
             } else {
@@ -174,6 +178,9 @@ class ListFragment : Fragment() {
 
     private fun setRecycler() {
         recyclerview = requireView().findViewById(R.id.listRecyclerview)
+        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.list_divider)!!)
+
         with(recyclerview) {
             layoutManager = LinearLayoutManager(this.context)
             setHasFixedSize(false)
@@ -190,6 +197,7 @@ class ListFragment : Fragment() {
                         fabToTop.visibility = View.VISIBLE
                 }
             })
+            addItemDecoration(RecyclerViewItemDecoration(context, R.drawable.list_divider))
         }
     }
 

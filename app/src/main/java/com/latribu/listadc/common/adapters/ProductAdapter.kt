@@ -9,6 +9,8 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.latribu.listadc.common.Constants.Companion.REGULAR_ITEM
+import com.latribu.listadc.common.Constants.Companion.SEPARATOR_ITEM
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.normalize
 import com.latribu.listadc.databinding.ListItemDesignBinding
@@ -21,6 +23,7 @@ class ProductAdapter(
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable, RecyclerViewFastScroller.OnPopupViewUpdate {
     private var productList = ArrayList<ProductItem>()
     private var filteredProductList = ArrayList<ProductItem>()
+    private var LAST_UNCHECKED_ITEM = 0
 
     init {
         filteredProductList = productList
@@ -35,6 +38,10 @@ class ProductAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListItemDesignBinding.inflate(inflater, parent, false)
         return ListViewHolder(binding)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == LAST_UNCHECKED_ITEM) SEPARATOR_ITEM else REGULAR_ITEM
     }
 
     override fun getItemCount() = filteredProductList.size
@@ -75,6 +82,7 @@ class ProductAdapter(
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 if (results?.values != null && results.values != 0) {
                     filteredProductList = results.values as ArrayList<ProductItem>
+                    getLastUncheckedItemId()
                     notifyDataSetChanged()
                 }
             }
@@ -93,6 +101,7 @@ class ProductAdapter(
     inner class ListViewHolder(private val binding: ListItemDesignBinding) : RecyclerView.ViewHolder(binding.root) {
         val checkBox: CheckBox = binding.check
         val quantity: Button = binding.quantity
+        private val lastUncheckedItem: ProductItem? = filteredProductList[LAST_UNCHECKED_ITEM]
 
         fun bind(item: ProductItem, longClickListener: (ProductItem) -> Unit) {
             val checked = isChecked(item)
@@ -103,6 +112,9 @@ class ProductAdapter(
             binding.name.alpha = opacity
             binding.comment.text = item.comment
             binding.comment.alpha = opacity
+
+            val isLastUnchecked = lastUncheckedItem != null && item.id == lastUncheckedItem.id
+            if (isLastUnchecked) binding.root.setPadding(0, 0, 0, 50)
 
             binding.root.setOnLongClickListener {
                 longClickListener(item)
@@ -115,6 +127,7 @@ class ProductAdapter(
         this.productList.clear()
         this.productList.addAll(productList)
         this.filteredProductList = this.productList
+        getLastUncheckedItemId()
         notifyDataSetChanged()
     }
 
@@ -124,5 +137,11 @@ class ProductAdapter(
 
     fun getOpacity(item: ProductItem) : Float {
         return if (isChecked(item)) 0.54f else 0.87f
+    }
+
+    fun getLastUncheckedItemId() {
+        LAST_UNCHECKED_ITEM = filteredProductList.indexOfLast { product ->
+            !isChecked(product)
+        }
     }
 }
