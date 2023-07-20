@@ -6,10 +6,10 @@ import com.latribu.listadc.common.repositories.user.UserRepo
 import com.latribu.listadc.common.network.Resource
 
 class UserViewModel(private val mUserRepo: UserRepo) : ViewModel() {
-    fun getAllUsers() = liveData {
+    fun getAllUsers(installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mUserRepo.getAllUsers()))
+            emit(Resource.success(mUserRepo.getAllUsers(installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

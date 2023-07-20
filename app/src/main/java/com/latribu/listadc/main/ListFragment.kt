@@ -56,6 +56,7 @@ class ListFragment : Fragment() {
     private lateinit var pullToRefresh: SwipeRefreshLayout
     private lateinit var spinner: ProgressBar
     private lateinit var search: SearchView
+    private var installationId: String = ""
 
     companion object {
         // Observed in FirebaseMessagingService.readPreferences()
@@ -74,17 +75,27 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getInstallationId()
         setListeners()
         initData()
         setObservers()
         setRecycler()
-        getProducts()
         search.clearFocus()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getInstallationId() {
+        val firebaseInstance = Observer<String> { data ->
+            if (data.isNotEmpty()) {
+                installationId = data
+                getProducts()
+            }
+        }
+        MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
     }
 
     private fun setListeners() {
@@ -117,26 +128,12 @@ class ListFragment : Fragment() {
                 return false
             }
         })
-
-        val emptyListObserver = Observer<Boolean> { data ->
-            val searchSomething = !search.query.isNullOrEmpty()
-            if (data && searchSomething) {
-                recyclerview.visibility = View.GONE
-                noResults.visibility = View.VISIBLE
-            } else {
-                noResults.visibility = View.GONE
-                recyclerview.visibility = View.VISIBLE
-            }
-        }
-
-        Handler(Looper.getMainLooper()).post {
-            ProductAdapter.emptyList.observeForever(emptyListObserver)
-        }
     }
 
     private fun setObservers() {
         getNotification()
         getUser()
+        getListStatus()
     }
 
     private fun initData() {
@@ -176,6 +173,23 @@ class ListFragment : Fragment() {
         }
     }
 
+    private fun getListStatus() {
+        val emptyListObserver = Observer<Boolean> { data ->
+            val searchSomething = !search.query.isNullOrEmpty()
+            if (data && searchSomething) {
+                recyclerview.visibility = View.GONE
+                noResults.visibility = View.VISIBLE
+            } else {
+                noResults.visibility = View.GONE
+                recyclerview.visibility = View.VISIBLE
+            }
+        }
+
+        Handler(Looper.getMainLooper()).post {
+            ProductAdapter.emptyList.observeForever(emptyListObserver)
+        }
+    }
+
     private fun setRecycler() {
         recyclerview = requireView().findViewById(R.id.listRecyclerview)
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
@@ -203,7 +217,7 @@ class ListFragment : Fragment() {
 
     private fun getProducts() {
         mProductViewModel
-            .getAllProducts()
+            .getAllProducts(installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

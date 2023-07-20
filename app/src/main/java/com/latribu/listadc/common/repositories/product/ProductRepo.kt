@@ -4,7 +4,7 @@ import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.User
 
 class ProductRepo(private val apiHelper: RestApiHelper) {
-    suspend fun getAllProducts() = apiHelper.getAllProducts()
+    suspend fun getAllProducts(installationId: String) = apiHelper.getAllProducts(installationId)
 
     suspend fun checkProductItem(productData: ProductItem, author: User) =
         apiHelper.checkProductItem(productData.id!!, productData.isChecked!!, author)

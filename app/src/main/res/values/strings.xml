@@ -16,9 +16,11 @@
     <string name="settings_buy_mode_text">Modo he salido a comprar</string>
     <string name="settings_user_subtext">Sabiendo quién eres, el resto de la tribu sabrá quién ha hecho cambios. Además, no recibirás tus propias notificaciones</string>
     <string name="settings_user_text">¿Quién eres?</string>
+    <string name="settings_identificator_text">Ver el id de instalación</string>
     <!-- Settings keys -->
     <string name="settings_buy_mode">settings_buy_mode</string>
     <string name="settings_user">settings_user</string>
+    <string name="settings_installation_id">settings_installationId</string>
     <!-- FAB -->
     <string name="FAB_description">Añadir producto</string>
     <!-- Save product literals -->

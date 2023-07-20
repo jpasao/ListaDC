@@ -8,10 +8,10 @@ import com.latribu.listadc.common.repositories.product.ProductRepo
 import com.latribu.listadc.common.network.Resource
 
 class ProductViewModel(private val mProductRepo: ProductRepo) : ViewModel() {
-    fun getAllProducts() = liveData {
+    fun getAllProducts(installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mProductRepo.getAllProducts()))
+            emit(Resource.success(mProductRepo.getAllProducts(installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

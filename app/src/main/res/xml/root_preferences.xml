@@ -11,6 +11,21 @@
             android:key="@string/settings_user"
 
             android:title="@string/settings_user_text" />
+        <PreferenceCategory android:title="Id de instalación">
+
+            <EditTextPreference
+                android:defaultValue="Default value"
+                android:key="@string/settings_installation_id"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="Id de instalación"
+                app:enableCopying="true"
+                app:enabled="true"
+                app:negativeButtonText="@string/cancel_button_text"
+                app:persistent="true"
+                app:positiveButtonText="@string/ok_button_text"
+                app:selectable="true" />
+        </PreferenceCategory>
 
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

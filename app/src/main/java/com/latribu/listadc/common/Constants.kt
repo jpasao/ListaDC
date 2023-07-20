@@ -14,6 +14,7 @@ class Constants {
         const val BASE_URL = "http://pablosan.es/listacompra/api/"
         const val PRODUCT_ENDPOINT = "/listacompra/api/product"
         const val USER_ENDPOINT = "/listacompra/api/author"
+        const val INSTALLATION_HEADER = "INSTALLATIONID"
 
         // Firebase
         const val TOPIC_NAME = "MAIN_TOPIC"

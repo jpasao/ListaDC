@@ -5,7 +5,9 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
@@ -19,6 +21,7 @@ import com.latribu.listadc.common.repositories.user.AppCreator
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.UserViewModel
 import com.latribu.listadc.databinding.ActivitySettingsBinding
+import com.latribu.listadc.main.MainActivity
 import kotlinx.coroutines.runBlocking
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -27,6 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
     private lateinit var spinner: ProgressBar
+    private lateinit var installationId: String
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -49,11 +53,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
         )[PreferencesViewModel::class.java]
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         spinner = binding.spinningHamburger
+
+        val installationPreference: EditTextPreference? = findPreference(getString(R.string.settings_installation_id))
+        val firebaseInstance = Observer<String> { data ->
+            if (data.isNotEmpty()) {
+                if (installationPreference != null) {
+                    installationId = data
+                    installationPreference.text = data
+                }
+            }
+        }
+        MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
     }
 
     private fun getUsers() {
         mUserViewModel
-            .getAllUsers()
+            .getAllUsers(installationId)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {
