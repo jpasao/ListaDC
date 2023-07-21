@@ -14,6 +14,7 @@ import com.latribu.listadc.common.Constants.Companion.SEPARATOR_ITEM
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.normalize
 import com.latribu.listadc.databinding.ListItemDesignBinding
+import com.latribu.listadc.databinding.ListItemSeparatorBinding
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 
 class ProductAdapter(
@@ -34,10 +35,14 @@ class ProductAdapter(
         val emptyList = MutableLiveData<Boolean>()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemDesignBinding.inflate(inflater, parent, false)
-        return ListViewHolder(binding)
+        if (viewType == REGULAR_ITEM) {
+            val binding = ListItemDesignBinding.inflate(inflater, parent, false)
+            return ListViewHolder(binding)
+        }
+        val separatorBinding = ListItemSeparatorBinding.inflate(inflater, parent, false)
+        return SeparatorViewHolder(separatorBinding)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -48,14 +53,27 @@ class ProductAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item: ProductItem = filteredProductList[position]
-        (holder as ListViewHolder).bind(item, longClickListener)
-        holder.checkBox.isChecked = isChecked(item)
 
-        holder.checkBox.setOnClickListener{
-            checkBoxClickListener(item)
-        }
-        holder.quantity.setOnClickListener {
-            quantityClickListener(item)
+        if (holder.itemViewType == REGULAR_ITEM) {
+            (holder as ListViewHolder).bind(item, longClickListener)
+            holder.checkBox.isChecked = isChecked(item)
+
+            holder.checkBox.setOnClickListener{
+                checkBoxClickListener(item)
+            }
+            holder.quantity.setOnClickListener {
+                quantityClickListener(item)
+            }
+        } else {
+            (holder as SeparatorViewHolder).bind(item, longClickListener)
+            holder.checkBox.isChecked = isChecked(item)
+
+            holder.checkBox.setOnClickListener{
+                checkBoxClickListener(item)
+            }
+            holder.quantity.setOnClickListener {
+                quantityClickListener(item)
+            }
         }
     }
 
@@ -101,7 +119,6 @@ class ProductAdapter(
     inner class ListViewHolder(private val binding: ListItemDesignBinding) : RecyclerView.ViewHolder(binding.root) {
         val checkBox: CheckBox = binding.check
         val quantity: Button = binding.quantity
-        private val lastUncheckedItem: ProductItem? = filteredProductList[LAST_UNCHECKED_ITEM]
 
         fun bind(item: ProductItem, longClickListener: (ProductItem) -> Unit) {
             val checked = isChecked(item)
@@ -113,8 +130,26 @@ class ProductAdapter(
             binding.comment.text = item.comment
             binding.comment.alpha = opacity
 
-            val isLastUnchecked = lastUncheckedItem != null && item.id == lastUncheckedItem.id
-            if (isLastUnchecked) binding.root.setPadding(0, 0, 0, 50)
+            binding.root.setOnLongClickListener {
+                longClickListener(item)
+                true
+            }
+        }
+    }
+
+    inner class SeparatorViewHolder(private val binding: ListItemSeparatorBinding) : RecyclerView.ViewHolder(binding.root) {
+        val checkBox: CheckBox = binding.check
+        val quantity: Button = binding.quantity
+
+        fun bind(item: ProductItem, longClickListener: (ProductItem) -> Unit) {
+            val checked = isChecked(item)
+            binding.check.isChecked = checked
+            binding.quantity.text = item.quantity.toString()
+            binding.name.text = item.name
+            val opacity = getOpacity(item)
+            binding.name.alpha = opacity
+            binding.comment.text = item.comment
+            binding.comment.alpha = opacity
 
             binding.root.setOnLongClickListener {
                 longClickListener(item)
