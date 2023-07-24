@@ -80,11 +80,6 @@ class ListFragment : Fragment() {
         search.clearFocus()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun getInstallationId() {
         val firebaseInstance = Observer<String> { data ->
             if (data.isNotEmpty()) {
@@ -209,21 +204,23 @@ class ListFragment : Fragment() {
     }
 
     private fun getProducts() {
-        mProductViewModel
-            .getAllProducts(installationId)
-            .observe(viewLifecycleOwner) {
-                when(it.status) {
-                    Status.SUCCESS -> {
-                        mRecyclerAdapter.updateRecyclerData(it.data!!)
-                        spinner.visibility = View.GONE
-                    }
-                    Status.LOADING -> {
-                        spinner.visibility = View.VISIBLE
-                    }
-                    Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al obtener los elementos: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
-                        spinner.visibility = View.GONE
+        if (view != null){
+            mProductViewModel
+                .getAllProducts(installationId)
+                .observe(viewLifecycleOwner) {
+                    when(it.status) {
+                        Status.SUCCESS -> {
+                            mRecyclerAdapter.updateRecyclerData(it.data!!)
+                            spinner.visibility = View.GONE
+                        }
+                        Status.LOADING -> {
+                            spinner.visibility = View.VISIBLE
+                        }
+                        Status.FAILURE -> {
+                            val message: String = getString(R.string.saveError, "al obtener los elementos: ${it.message}")
+                            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                            spinner.visibility = View.GONE
+                        }
                     }
                 }
         }
@@ -290,9 +287,13 @@ class ListFragment : Fragment() {
         startActivity(intent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     private fun itemChecked(listItem: ProductItem) {
         mProductViewModel
-            .checkProductItem(listItem, savedUser)
+            .checkProductItem(listItem, savedUser, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

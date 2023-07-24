@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
 import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.TOPIC_NAME
@@ -98,19 +96,16 @@ class MainActivity : AppCompatActivity() {
             .getInstance()
             .subscribeToTopic(TOPIC_NAME)
             .addOnCompleteListener { task ->
-                var msg = "Subscribed"
                 if (!task.isSuccessful) {
-                    msg = "Subscribe failed"
+                    showMessage(findViewById(R.id.app_container), getString(R.string.firebase_not_subscribed))
                 }
-                Log.d(TAG, msg)
             }
 
         FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("Installations", "Installation ID: " + task.result)
                 firebaseInstanceId.postValue(task.result)
             } else {
-                Log.e("Installations", "Unable to get Installation ID")
+                showMessage(findViewById(R.id.app_container), getString(R.string.firebase_installation_id))
             }
         }
     }

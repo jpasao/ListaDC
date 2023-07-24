@@ -3,6 +3,9 @@
     <string name="uselessContent">Deco button</string>
     <string name="cancel_button_text">Cancelar</string>
     <string name="ok_button_text">Aceptar</string>
+    <!-- Firebase -->
+    <string name="firebase_not_subscribed">Firebase ha fallado, dicho de otra manera, no se están recibiendo los cambios que el resto de la tribu está haciendo a la lista</string>
+    <string name="firebase_installation_id">No se puede obtener el id de instalación de Firebase, con lo cual el servidor no sabrás que eres tú el que está haciendo cosas</string>
     <!-- Tab names -->
     <string name="app_name">ListaDLC</string>
     <string name="tab_text_1">Principal</string>
