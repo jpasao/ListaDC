@@ -17,10 +17,10 @@ class ProductViewModel(private val mProductRepo: ProductRepo) : ViewModel() {
         }
     }
 
-    fun checkProductItem(productData: ProductItem, author: User) = liveData {
+    fun checkProductItem(productData: ProductItem, author: User, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mProductRepo.checkProductItem(productData, author)))
+            emit(Resource.success(mProductRepo.checkProductItem(productData, author, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

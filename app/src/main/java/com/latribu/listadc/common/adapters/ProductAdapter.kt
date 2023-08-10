@@ -9,6 +9,8 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
+import com.latribu.listadc.common.Constants.Companion.OPACITY_NORMAL
 import com.latribu.listadc.common.Constants.Companion.REGULAR_ITEM
 import com.latribu.listadc.common.Constants.Companion.SEPARATOR_ITEM
 import com.latribu.listadc.common.models.ProductItem
@@ -111,7 +113,7 @@ class ProductAdapter(
         val item = filteredProductList[position]
         val header = " ${item.name[0]} "
         with(popupTextView){
-            text = header.toString()
+            text = header
             background.alpha = if (isChecked(item)) 230 else 255
         }
     }
@@ -171,7 +173,7 @@ class ProductAdapter(
     }
 
     fun getOpacity(item: ProductItem) : Float {
-        return if (isChecked(item)) 0.54f else 0.87f
+        return if (isChecked(item)) OPACITY_FADED else OPACITY_NORMAL
     }
 
     fun getLastUncheckedItemId() {

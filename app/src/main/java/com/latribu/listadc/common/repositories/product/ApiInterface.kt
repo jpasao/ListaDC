@@ -25,7 +25,8 @@ interface ApiInterface {
         @Field("productId") productId: Int,
         @Field("check") isChecked: String,
         @Field("authorId") authorId: Int,
-        @Field("authorName") authorName: String
+        @Field("authorName") authorName: String,
+        @Header(INSTALLATION_HEADER) installationId: String,
     ) : List<ProductItem>
 
     @FormUrlEncoded

@@ -1,59 +1,262 @@
 package com.latribu.listadc.meals
 
+import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
+import com.latribu.listadc.common.adapters.MealAdapter
+import com.latribu.listadc.common.factories.MealViewModelFactory
+import com.latribu.listadc.common.models.Meal
+import com.latribu.listadc.common.models.ParentData
+import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.repositories.meal.AppCreator
+import com.latribu.listadc.common.viewmodels.MealViewModel
+import com.latribu.listadc.databinding.FragmentMealBinding
+import com.latribu.listadc.main.MainActivity
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MealFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MealFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentMealBinding? = null
+    private var installationId: String = ""
+    private val binding get() = _binding!!
+    private lateinit var recyclerview: RecyclerView
+    private var initialized = false
+    private lateinit var mMealViewModel: MealViewModel
+    private lateinit var mRecyclerAdapter: MealAdapter
+    private lateinit var fabAddMeal: FloatingActionButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private lateinit var spinner: ProgressBar
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initData()
+        getInstallationId()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentMealBinding.inflate(inflater, container, false)
+        spinner = binding.spinningHamburger
+        fabAddMeal = binding.fabAddMeal
+        fabAddMeal.setOnClickListener {
+            val item = Meal(-1, "", 0, 0)
+            showDialog(item)
+        }
+        return binding.root
+    }
+
+    private fun initData() {
+        mMealViewModel = ViewModelProvider(
+            this,
+            MealViewModelFactory(AppCreator.getApiHelperInstance())
+        )[MealViewModel::class.java]
+
+        mRecyclerAdapter = MealAdapter(
+            checkBoxListener = { item: Meal -> itemChecked(item) },
+            longClickListener = { item: Meal -> showDialog(item) },
+            ingredientClickListener = { item: Meal -> ingredientPressed(item) }
+        )
+    }
+
+    private fun getInstallationId() {
+        val firebaseInstance = Observer<String> { data ->
+            if (data.isNotEmpty()) {
+                installationId = data
+                if (!initialized) setRecyclers()
+                getMeals()
+            }
+        }
+        MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
+    }
+
+    private fun getMeals() {
+        if (view != null) {
+            mMealViewModel
+                .getAllMeals(installationId)
+                .observe(viewLifecycleOwner) {
+                    when(it.status) {
+                        Status.SUCCESS -> {
+                            processMeals(it.data!!)
+                            spinner.visibility = View.GONE
+                        }
+                        Status.LOADING -> {
+                            spinner.visibility = View.VISIBLE
+                        }
+                        Status.FAILURE -> {
+                            val message: String = getString(R.string.saveError, "al obtener las comidas: ${it.message}")
+                            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                            spinner.visibility = View.GONE
+                        }
+                    }
+                }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meal, container, false)
+    private fun processMeals(meals: List<Meal>) {
+        val lunches = meals.filter {meal -> meal.isLunch == 1 }
+        val dinners = meals.filter { meal -> meal.isLunch == 0 }
+
+        // Filter the whole list by type and status
+        val currentLunches = ParentData(
+            parentTitle = getString(R.string.meal_lunch_name),
+            subList = lunches.filter { lunch -> lunch.isChecked == 0 } as ArrayList<Meal>
+        )
+        val currentDinners = ParentData(
+            parentTitle = getString(R.string.meal_dinner_name),
+            subList = dinners.filter { dinner -> dinner.isChecked == 0 } as ArrayList<Meal>
+        )
+        val checkedLunches = ParentData(
+            parentTitle = getString(R.string.meal_lunch_name_checked),
+            subList = lunches.filter { lunch -> lunch.isChecked == 1 } as ArrayList<Meal>
+        )
+        val checkedDinners = ParentData(
+            parentTitle = getString(R.string.meal_dinner_name_checked),
+            subList = dinners.filter { dinner -> dinner.isChecked == 1 } as ArrayList<Meal>
+        )
+
+        val mealsToAdd = ArrayList<ParentData<Meal>>()
+
+        mealsToAdd.add(currentLunches)
+        mealsToAdd.add(currentDinners)
+        mealsToAdd.add(checkedLunches)
+        mealsToAdd.add(checkedDinners)
+
+        // Feed the adapter
+        mRecyclerAdapter.updateRecyclerData(mealsToAdd)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MealFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MealFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun setRecyclers() {
+        recyclerview = requireView().findViewById(R.id.mealRecyclerview)
+        with(recyclerview) {
+            layoutManager = LinearLayoutManager(this.context)
+            adapter = mRecyclerAdapter
+        }
+        initialized = true
+    }
+
+    private fun itemChecked(item: Meal) {
+        mMealViewModel
+            .checkMeal(item.mealId, item.isChecked, installationId)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        processMeals(it.data!!)
+                        spinner.visibility = View.GONE
+                    }
+                    Status.LOADING -> {
+                        spinner.visibility = View.VISIBLE
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
+                    }
+                }
+            }
+    }
+
+    private fun showDialog(item: Meal) {
+        val builder = AlertDialog.Builder(context)
+            .create()
+        val view = layoutInflater.inflate(R.layout.dialog_parent_child_add,null)
+        val parents = arrayOf(getString(R.string.meal_lunch_name), getString(R.string.meal_dinner_name))
+        var selectedParent: Int = if (item.isLunch == 0) 1 else 0
+
+        val spinner: Spinner = view.findViewById(R.id.parentList)
+        val spAdapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, parents)
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        with(spinner) {
+            adapter = spAdapter
+            setSelection(selectedParent, false)
+            onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    selectedParent = position + 1
+                }
+            }
+        }
+        selectedParent += 1
+
+        val name: TextView = view.findViewById(R.id.childName)
+        name.text = item.name
+
+        val cancelButton: Button = view.findViewById(R.id.cancelButton)
+        cancelButton.setOnClickListener {
+            builder.dismiss()
+        }
+        val saveButton: Button = view.findViewById(R.id.saveButton)
+        saveButton.setOnClickListener {
+            val itemEdited = Meal(item.mealId, name.text.toString(), selectedParent, 1)
+            if (item.mealId == -1)
+                addMeal(itemEdited, builder)
+            else
+                editMeal(itemEdited, builder)
+        }
+
+        val title: String = if (item.mealId == -1) getString(R.string.meal_dialog_title_new) else getString(R.string.meal_dialog_title_edit, item.name)
+        builder.setTitle(title)
+        builder.setView(view)
+        builder.setCanceledOnTouchOutside(true)
+        builder.show()
+    }
+
+    private fun ingredientPressed(item: Meal) {
+
+    }
+
+    private fun addMeal(item: Meal, alertDialog: AlertDialog) {
+        mMealViewModel
+            .addMeal(item.name, item.isLunch)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        getMeals()
+                        alertDialog.dismiss()
+                        spinner.visibility = View.GONE
+                    }
+                    Status.LOADING -> {
+                        spinner.visibility = View.VISIBLE
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
+                    }
+                }
+            }
+    }
+
+    private fun editMeal(item: Meal, alertDialog: AlertDialog) {
+        mMealViewModel
+            .editMeal(item.mealId, item.name, item.isLunch)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        getMeals()
+                        alertDialog.dismiss()
+                        spinner.visibility = View.GONE
+                    }
+                    Status.LOADING -> {
+                        spinner.visibility = View.VISIBLE
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
+                    }
                 }
             }
     }

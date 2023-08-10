@@ -47,4 +47,14 @@
     <!-- Search Menu -->
     <string name="search_menu_placeholder">¿Qué estás buscando?</string>
     <string name="search_menu_noresults">Aquí no hay nada de eso. Siga buscando</string>
+    <!-- Meals -->
+    <string name="meal_lunch_name">Almuerzos</string>
+    <string name="meal_dinner_name">Cenas</string>
+    <string name="meal_lunch_name_checked">Posibles Almuerzos</string>
+    <string name="meal_dinner_name_checked">Posibles Cenas</string>
+    <string name="meal_dialog_parent">¿A qué lista pertenece esto?</string>
+    <string name="meal_dialog_name">¿Y cómo se llama?</string>
+    <string name="meal_dialog_name_placeholder">Ponle un nombre bonito</string>
+    <string name="meal_dialog_title_new">La nueva comida</string>
+    <string name="meal_dialog_title_edit">Hay que cambiar %1$s</string>
 </resources>
