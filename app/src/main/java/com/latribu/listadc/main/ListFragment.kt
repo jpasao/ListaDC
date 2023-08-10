@@ -297,10 +297,10 @@ class ListFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
-                        search.setQuery("", false)
-                        search.clearFocus()
                         mRecyclerAdapter.updateRecyclerData(it.data!!)
                         spinner.visibility = View.GONE
+                        search.setQuery("", false)
+                        search.clearFocus()
                     }
                     Status.LOADING -> {
                         spinner.visibility = View.VISIBLE
