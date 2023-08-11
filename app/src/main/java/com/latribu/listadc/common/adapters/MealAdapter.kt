@@ -20,6 +20,7 @@ class MealAdapter(
     val ingredientClickListener: (Meal) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var mealList = ArrayList<ParentData<Meal>>()
+    private var parentStatus = ArrayList<ParentData<Meal>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -45,14 +46,22 @@ class MealAdapter(
         if (item.type == Constants.PARENT) {
             holder as GroupViewHolder
             holder.apply {
+                val parentExpanded = parentStatus.find { element -> element.parentTitle == item.parentTitle }?.isExpanded
+                val arrowResource = if (parentExpanded == true) {
+                    R.drawable.baseline_arrow_drop_up_24
+                }
+                else {
+                    R.drawable.twotone_arrow_drop_down_24
+                }
+                image?.setImageResource(arrowResource)
                 image?.setOnClickListener {
-                    toggleParentItem(item, position, image)
+                    toggleParentItem(item, position)
                 }
 
                 name?.text = item.parentTitle
                 name?.alpha = if (item.parentTitle?.contains(" ") == true) OPACITY_FADED else OPACITY_NORMAL
                 name?.setOnClickListener {
-                    toggleParentItem(item, position, image)
+                    toggleParentItem(item, position)
                 }
             }
         } else {
@@ -78,18 +87,20 @@ class MealAdapter(
         }
     }
 
-    private fun toggleParentItem(singleBoarding: ParentData<Meal>, position: Int, element: ImageView?) {
-        if (singleBoarding.isExpanded) {
-            collapseParentRow(position, element)
+    private fun toggleParentItem(item: ParentData<Meal>, position: Int) {
+        val parentChanged = this.parentStatus.find { parent -> parent.parentTitle == item.parentTitle }
+        parentChanged?.isExpanded = !item.isExpanded
+
+        if (item.isExpanded) {
+            collapseParentRow(position)
         } else {
-            expandParentRow(position, element)
+            expandParentRow(position)
         }
     }
 
-    private fun collapseParentRow(position: Int, element: ImageView?) {
-        element?.setImageResource(R.drawable.twotone_arrow_drop_down_24)
-        val currentBoardingRow = mealList[position]
-        val elements = currentBoardingRow.subList
+    private fun collapseParentRow(position: Int) {
+        val currentRow = mealList[position]
+        val elements = currentRow.subList
         mealList[position].isExpanded = false
         if (mealList[position].type == Constants.PARENT) {
             elements.forEach {_ ->
@@ -99,13 +110,12 @@ class MealAdapter(
         }
     }
 
-    private fun expandParentRow(position: Int, element: ImageView?) {
-        element?.setImageResource(R.drawable.baseline_arrow_drop_up_24)
-        val currentBoardingRow = mealList[position]
-        val elements = currentBoardingRow.subList
-        currentBoardingRow.isExpanded = true
+    private fun expandParentRow(position: Int) {
+        val currentRow = mealList[position]
+        val elements = currentRow.subList
+        currentRow.isExpanded = true
         var nextPosition = position
-        if (currentBoardingRow.type == Constants.PARENT) {
+        if (currentRow.type == Constants.PARENT) {
             elements.forEach { meal ->
                 val subListToAdd: ArrayList<Meal> = ArrayList()
                 subListToAdd.add(meal)
@@ -131,7 +141,20 @@ class MealAdapter(
     fun updateRecyclerData(mealList: MutableList<ParentData<Meal>>) {
         this.mealList.clear()
         this.mealList.addAll(mealList)
-
-        notifyDataSetChanged()
+        if (this.parentStatus.isEmpty()) {
+            this.parentStatus.addAll(mealList
+                .filter { item -> item.type == Constants.PARENT }
+                .map {
+                        item -> ParentData(parentTitle = item.parentTitle, type = item.type, isExpanded = item.isExpanded, subList = ArrayList())
+                })
+            notifyDataSetChanged()
+        } else {
+            this.parentStatus.forEach { parent ->
+                val parentPosition = this.mealList.indexOfFirst { row -> row.parentTitle == parent.parentTitle }
+                if (parent.isExpanded) {
+                    expandParentRow(parentPosition)
+                }
+            }
+        }
     }
 }
