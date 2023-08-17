@@ -148,8 +148,9 @@ class MealFragment : Fragment() {
     }
 
     private fun itemChecked(item: Meal) {
+        val isChecked: Int = item.isChecked + 1
         mMealViewModel
-            .checkMeal(item.mealId, item.isChecked, installationId)
+            .checkMeal(item.mealId, isChecked, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

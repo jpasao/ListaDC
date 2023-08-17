@@ -145,7 +145,7 @@ class MealAdapter(
             this.parentStatus.addAll(mealList
                 .filter { item -> item.type == Constants.PARENT }
                 .map {
-                        item -> ParentData(parentTitle = item.parentTitle, type = item.type, isExpanded = item.isExpanded, subList = ArrayList())
+                    item -> ParentData(parentTitle = item.parentTitle, type = item.type, isExpanded = item.isExpanded, subList = ArrayList())
                 })
             notifyDataSetChanged()
         } else {
