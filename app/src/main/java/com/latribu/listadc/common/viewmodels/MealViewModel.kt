@@ -15,6 +15,15 @@ class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
         }
     }
 
+    fun getMeal(mealId: Int, installationId: String) = liveData {
+        emit(Resource.loading(null))
+        try {
+            emit(Resource.success(mMealRepo.getMeal(mealId, installationId)))
+        } catch (e: Exception) {
+            emit(Resource.error(null, e.message.toString()))
+        }
+    }
+
     fun checkMeal(mealId: Int, isChecked: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
@@ -37,6 +46,15 @@ class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
         emit(Resource.loading(null))
         try {
             emit(Resource.success(mMealRepo.editMeal(mealId, name, isLunch)))
+        } catch (e: Exception) {
+            emit(Resource.error(null, e.message.toString()))
+        }
+    }
+
+    fun saveMealIngredients(mealId: Int, ingredients: String) = liveData {
+        emit(Resource.loading(null))
+        try {
+            emit(Resource.success(mMealRepo.saveMealIngredients(mealId, ingredients)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

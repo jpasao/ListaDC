@@ -59,7 +59,7 @@ class MealAdapter(
                 }
 
                 name?.text = item.parentTitle
-                name?.alpha = if (item.parentTitle?.contains(" ") == true) OPACITY_FADED else OPACITY_NORMAL
+                name?.alpha = if (isMainList(item)) OPACITY_FADED else OPACITY_NORMAL
                 name?.setOnClickListener {
                     toggleParentItem(item, position)
                 }
@@ -86,6 +86,9 @@ class MealAdapter(
             }
         }
     }
+
+    private fun isMainList(item: ParentData<Meal>) : Boolean =
+        item.parentTitle?.contains(" ") == true
 
     private fun toggleParentItem(item: ParentData<Meal>, position: Int) {
         val parentChanged = this.parentStatus.find { parent -> parent.parentTitle == item.parentTitle }
@@ -145,9 +148,14 @@ class MealAdapter(
             this.parentStatus.addAll(mealList
                 .filter { item -> item.type == Constants.PARENT }
                 .map {
-                    item -> ParentData(parentTitle = item.parentTitle, type = item.type, isExpanded = item.isExpanded, subList = ArrayList())
+                    item -> ParentData(
+                        parentTitle = item.parentTitle,
+                        type = item.type,
+                        isExpanded = isMainList(item),
+                        subList = ArrayList())
                 })
-            notifyDataSetChanged()
+            expandParentRow(1)
+            expandParentRow(0)
         } else {
             this.parentStatus.forEach { parent ->
                 val parentPosition = this.mealList.indexOfFirst { row -> row.parentTitle == parent.parentTitle }

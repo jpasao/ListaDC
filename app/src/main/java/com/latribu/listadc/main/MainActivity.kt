@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         // Observed in SettingsFragment.initData() and
-        // getInstallationId() of ListFragment and MealFragment
+        // getInstallationId() of ListFragment and MealFragment and MealIngredientsActivity
         val firebaseInstanceId = MutableLiveData<String>()
     }
 

@@ -19,6 +19,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".meals.MealIngredientsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_meal_ingredients"
+            android:theme="@style/Theme.ListaDC.NoActionBar" />
+        <activity
             android:name=".main.SaveProductActivity"
             android:exported="true"
             android:label="@string/title_activity_add"
@@ -52,11 +57,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/design_default_color_primary" />
-        
+
         <receiver
             android:name=".common.network.BuyMode"
             android:exported="true" />
     </application>
-
 
 </manifest>

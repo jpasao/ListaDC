@@ -6,6 +6,7 @@ class Constants {
     companion object {
         // Common
         const val EXTRA_PRODUCT = "EXTRA_PRODUCT"
+        const val EXTRA_MEAL = "EXTRA_MEAL"
         val DEFAULT_USER: User = User(6, "Alguien", "")
         const val REGULAR_ITEM = 0
         const val SEPARATOR_ITEM = 1

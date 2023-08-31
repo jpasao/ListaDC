@@ -6,11 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".meals.MealFragment">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="45dp">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mealRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/spinningHamburger"

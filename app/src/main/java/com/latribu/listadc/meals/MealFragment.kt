@@ -1,6 +1,7 @@
 package com.latribu.listadc.meals
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +17,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
+import com.latribu.listadc.common.Constants.Companion.EXTRA_MEAL
 import com.latribu.listadc.common.adapters.MealAdapter
 import com.latribu.listadc.common.factories.MealViewModelFactory
 import com.latribu.listadc.common.models.Meal
@@ -36,6 +39,7 @@ class MealFragment : Fragment() {
     private lateinit var recyclerview: RecyclerView
     private var initialized = false
     private lateinit var mMealViewModel: MealViewModel
+    private lateinit var pullToRefresh: SwipeRefreshLayout
     private lateinit var mRecyclerAdapter: MealAdapter
     private lateinit var fabAddMeal: FloatingActionButton
 
@@ -49,13 +53,26 @@ class MealFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMealBinding.inflate(inflater, container, false)
+        bindElements(binding)
+        setListeners()
+        return binding.root
+    }
+
+    private fun bindElements(binding: FragmentMealBinding) {
         spinner = binding.spinningHamburger
         fabAddMeal = binding.fabAddMeal
+        pullToRefresh = binding.swipeLayout
+    }
+
+    private fun setListeners() {
         fabAddMeal.setOnClickListener {
             val item = Meal(-1, "", 0, 0)
             showDialog(item)
         }
-        return binding.root
+        pullToRefresh.setOnRefreshListener {
+            getMeals()
+            pullToRefresh.isRefreshing = false
+        }
     }
 
     private fun initData() {
@@ -134,7 +151,6 @@ class MealFragment : Fragment() {
         mealsToAdd.add(checkedLunches)
         mealsToAdd.add(checkedDinners)
 
-        // Feed the adapter
         mRecyclerAdapter.updateRecyclerData(mealsToAdd)
     }
 
@@ -215,7 +231,9 @@ class MealFragment : Fragment() {
     }
 
     private fun ingredientPressed(item: Meal) {
-
+        val intent = Intent(requireContext(), MealIngredientsActivity::class.java)
+        intent.putExtra(EXTRA_MEAL, item)
+        startActivity(intent)
     }
 
     private fun addMeal(item: Meal, alertDialog: AlertDialog) {
