@@ -27,6 +27,8 @@ class FirebaseMessagingService: FirebaseMessagingService() {
         val firebaseData = MutableLiveData<FirebaseData>()
         // Observed in MainActivity.readFirebaseMessage()
         val notificationMessage = MutableLiveData<String>()
+        // Observed in MealFragment.getNotification()
+        val mealNotificationMessage = MutableLiveData<Int>()
     }
 
     override fun handleIntent(intent: Intent?) {
@@ -39,6 +41,9 @@ class FirebaseMessagingService: FirebaseMessagingService() {
             if (hasData) {
                 notificationData = FirebaseData(intent)
                 firebaseData.postValue(notificationData)
+            } else {
+                val userId = body.toIntOrNull() ?: -1
+                if (userId != savedUser.id) mealNotificationMessage.postValue(userId)
             }
 
             val sendNotification = hasData && notificationData.user != savedUser.id
@@ -82,7 +87,7 @@ class FirebaseMessagingService: FirebaseMessagingService() {
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        val channelId = com.latribu.listadc.common.Constants.TOPIC_NAME
+        val channelId = com.latribu.listadc.common.Constants.MAIN_TOPIC
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.twotone_receipt_long_24)

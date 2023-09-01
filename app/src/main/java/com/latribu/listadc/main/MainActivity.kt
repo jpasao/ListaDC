@@ -21,7 +21,8 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
-import com.latribu.listadc.common.Constants.Companion.TOPIC_NAME
+import com.latribu.listadc.common.Constants.Companion.MAIN_TOPIC
+import com.latribu.listadc.common.Constants.Companion.MEAL_TOPIC
 import com.latribu.listadc.common.TAB_TITLES
 import com.latribu.listadc.common.TabsAdapter
 import com.latribu.listadc.common.models.User
@@ -94,10 +95,19 @@ class MainActivity : AppCompatActivity() {
 
         FirebaseMessaging
             .getInstance()
-            .subscribeToTopic(TOPIC_NAME)
+            .subscribeToTopic(MAIN_TOPIC)
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    showMessage(findViewById(R.id.app_container), getString(R.string.firebase_not_subscribed))
+                    showMessage(findViewById(R.id.app_container), getString(R.string.firebase_not_subscribed, "de la compra"))
+                }
+            }
+
+        FirebaseMessaging
+            .getInstance()
+            .subscribeToTopic(MEAL_TOPIC)
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    showMessage(findViewById(R.id.app_container), getString(R.string.firebase_not_subscribed, "de comidas"))
                 }
             }
 

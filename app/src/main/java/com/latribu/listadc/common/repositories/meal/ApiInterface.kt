@@ -30,6 +30,7 @@ interface ApiInterface {
     suspend fun checkMeal(
         @Field("mealId") mealId: Int,
         @Field("check") isChecked: Int,
+        @Field("authorId") authorId: Int,
         @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : List<Meal>
 
@@ -37,7 +38,8 @@ interface ApiInterface {
     @POST(Constants.MEAL_ENDPOINT)
     suspend fun addMeal(
         @Field("name") name: String,
-        @Field("isLunch") isLunch: Int
+        @Field("isLunch") isLunch: Int,
+        @Field("authorId") authorId: Int
     ) : Meal
 
     @FormUrlEncoded
@@ -45,7 +47,8 @@ interface ApiInterface {
     suspend fun editMeal(
         @Field("mealId") mealId: Int,
         @Field("name") name: String,
-        @Field("isLunch") isLunch: Int
+        @Field("isLunch") isLunch: Int,
+        @Field("authorId") authorId: Int
     ) : Meal
 
     @FormUrlEncoded
