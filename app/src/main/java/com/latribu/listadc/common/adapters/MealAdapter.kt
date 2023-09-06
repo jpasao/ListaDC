@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -13,13 +15,15 @@ import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
 import com.latribu.listadc.common.Constants.Companion.OPACITY_NORMAL
 import com.latribu.listadc.common.models.Meal
 import com.latribu.listadc.common.models.ParentData
+import com.latribu.listadc.common.normalize
 
 class MealAdapter(
     val checkBoxListener: (Meal) -> Unit,
     val longClickListener: (Meal) -> Unit,
     val ingredientClickListener: (Meal) -> Unit
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
     private var mealList = ArrayList<ParentData<Meal>>()
+    private var filteredMealList = ArrayList<ParentData<Meal>>()
     private var parentStatus = ArrayList<ParentData<Meal>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -33,16 +37,16 @@ class MealAdapter(
         }
     }
 
-    override fun getItemCount(): Int = mealList.size
+    override fun getItemCount(): Int = filteredMealList.size
 
-    override fun getItemViewType(position: Int): Int = mealList[position].type
+    override fun getItemViewType(position: Int): Int = filteredMealList[position].type
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = mealList[position]
+        val item = filteredMealList[position]
         if (item.type == Constants.PARENT) {
             holder as GroupViewHolder
             holder.apply {
@@ -87,8 +91,48 @@ class MealAdapter(
         }
     }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = normalize(constraint.toString())
+                filteredMealList.clear()
+                mealList
+                    .forEach { parent ->
+                        val childrenData = parent.subList
+                            .filter {
+                                row -> nameContains(row.name, charSearch)
+                            } as ArrayList<Meal>
+                        val parentData = ParentData(parent.parentTitle, parent.type, childrenData, true)
+
+                        filteredMealList.add(parentData)
+                    }
+
+                val filterResults = FilterResults()
+                filterResults.values = filteredMealList
+
+                ProductAdapter.emptyList.postValue(filteredMealList.isEmpty())
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                if (results?.values != null && results.values != 0) {
+                    filteredMealList = results.values as ArrayList<ParentData<Meal>>
+
+                    expandParentRow(3, false)
+                    expandParentRow(2, false)
+                    expandParentRow(1, false)
+                    expandParentRow(0, true)
+                }
+                updateParentStatus()
+            }
+        }
+    }
+
+    private fun nameContains(name: String, search: String) =
+        normalize(name).contains(search, ignoreCase = true)
+
     private fun isMainList(item: ParentData<Meal>) : Boolean =
-        item.parentTitle?.contains(" ") == true
+        item.parentTitle?.contains(" ") == false
 
     private fun toggleParentItem(item: ParentData<Meal>, position: Int) {
         val parentChanged = this.parentStatus.find { parent -> parent.parentTitle == item.parentTitle }
@@ -102,31 +146,34 @@ class MealAdapter(
     }
 
     private fun collapseParentRow(position: Int) {
-        val currentRow = mealList[position]
+        val currentRow = filteredMealList[position]
         val elements = currentRow.subList
-        mealList[position].isExpanded = false
-        if (mealList[position].type == Constants.PARENT) {
+        filteredMealList[position].isExpanded = false
+        if (filteredMealList[position].type == Constants.PARENT) {
             elements.forEach {_ ->
-                mealList.removeAt(position + 1)
+                if ((position + 1) < filteredMealList.size)
+                    filteredMealList.removeAt(position + 1)
             }
             notifyDataSetChanged()
         }
     }
 
-    private fun expandParentRow(position: Int) {
-        val currentRow = mealList[position]
-        val elements = currentRow.subList
-        currentRow.isExpanded = true
-        var nextPosition = position
-        if (currentRow.type == Constants.PARENT) {
-            elements.forEach { meal ->
-                val subListToAdd: ArrayList<Meal> = ArrayList()
-                subListToAdd.add(meal)
+    private fun expandParentRow(position: Int, notify: Boolean = true) {
+        if (position < filteredMealList.size){
+            val currentRow = filteredMealList[position]
+            val elements = currentRow.subList
+            currentRow.isExpanded = true
+            var nextPosition = position
+            if (currentRow.type == Constants.PARENT) {
+                elements.forEach { meal ->
+                    val subListToAdd: ArrayList<Meal> = ArrayList()
+                    subListToAdd.add(meal)
 
-                val parentModel = ParentData(type = Constants.CHILD, subList = subListToAdd)
-                mealList.add(++nextPosition, parentModel)
+                    val parentModel = ParentData(type = Constants.CHILD, subList = subListToAdd)
+                    filteredMealList.add(++nextPosition, parentModel)
+                }
+                if (notify) notifyDataSetChanged()
             }
-            notifyDataSetChanged()
         }
     }
 
@@ -143,26 +190,36 @@ class MealAdapter(
 
     fun updateRecyclerData(mealList: MutableList<ParentData<Meal>>) {
         this.mealList.clear()
+        this.filteredMealList.clear()
         this.mealList.addAll(mealList)
+        this.mealList.forEach {
+            this.filteredMealList.add(it)
+        }
         if (this.parentStatus.isEmpty()) {
-            this.parentStatus.addAll(mealList
-                .filter { item -> item.type == Constants.PARENT }
-                .map {
-                    item -> ParentData(
-                        parentTitle = item.parentTitle,
-                        type = item.type,
-                        isExpanded = isMainList(item),
-                        subList = ArrayList())
-                })
+            updateParentStatus()
             expandParentRow(1)
             expandParentRow(0)
         } else {
             this.parentStatus.forEach { parent ->
-                val parentPosition = this.mealList.indexOfFirst { row -> row.parentTitle == parent.parentTitle }
+                val parentPosition = this.filteredMealList.indexOfFirst { row -> row.parentTitle == parent.parentTitle }
                 if (parent.isExpanded) {
-                    expandParentRow(parentPosition)
+                    expandParentRow(parentPosition, false)
                 }
+                notifyDataSetChanged()
             }
         }
+    }
+
+    private fun updateParentStatus() {
+        this.parentStatus.clear()
+        this.parentStatus.addAll(this.filteredMealList
+            .filter { item -> item.type == Constants.PARENT }
+            .map {
+                item -> ParentData(
+                parentTitle = item.parentTitle,
+                type = item.type,
+                isExpanded = isMainList(item),
+                subList = ArrayList())
+            })
     }
 }

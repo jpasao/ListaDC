@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -49,6 +50,7 @@ class MealFragment : Fragment() {
     private lateinit var pullToRefresh: SwipeRefreshLayout
     private lateinit var mRecyclerAdapter: MealAdapter
     private lateinit var fabAddMeal: FloatingActionButton
+    private lateinit var search: SearchView
 
     private lateinit var spinner: ProgressBar
 
@@ -76,6 +78,7 @@ class MealFragment : Fragment() {
         spinner = binding.spinningHamburger
         fabAddMeal = binding.fabAddMeal
         pullToRefresh = binding.swipeLayout
+        search = binding.mealSearch
     }
 
     private fun setListeners() {
@@ -87,6 +90,16 @@ class MealFragment : Fragment() {
             getMeals()
             pullToRefresh.isRefreshing = false
         }
+        search.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                mRecyclerAdapter.filter.filter(newText)
+                if (newText.isNullOrEmpty()) search.clearFocus()
+                return false
+            }
+        })
     }
 
     private fun initData() {
@@ -207,6 +220,8 @@ class MealFragment : Fragment() {
                     Status.SUCCESS -> {
                         processMeals(it.data!!)
                         spinner.visibility = View.GONE
+                        search.setQuery("", false)
+                        search.clearFocus()
                     }
                     Status.LOADING -> {
                         spinner.visibility = View.VISIBLE
@@ -277,6 +292,8 @@ class MealFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
+                        search.setQuery("", false)
+                        search.clearFocus()
                         getMeals()
                         alertDialog.dismiss()
                         spinner.visibility = View.GONE
@@ -299,6 +316,8 @@ class MealFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
+                        search.setQuery("", false)
+                        search.clearFocus()
                         getMeals()
                         alertDialog.dismiss()
                         spinner.visibility = View.GONE

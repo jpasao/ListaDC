@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".meals.MealFragment">
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/mealSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textCursorDrawable="@null"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:queryHint="@string/search_menu_placeholder"
+        app:theme="@style/AppSearchView" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"

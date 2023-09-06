@@ -16,7 +16,7 @@ class Constants {
         const val OPACITY_FADED =  0.54f
 
         // Api
-        private const val server = "192.168.0.21"
+        private const val server = "pablosan.es"
         const val BASE_URL =  "http://${server}/listacompra/api/"
         const val PRODUCT_ENDPOINT = "/listacompra/api/product"
         const val USER_ENDPOINT = "/listacompra/api/author"
