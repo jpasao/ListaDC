@@ -21,10 +21,12 @@ class Constants {
         const val PRODUCT_ENDPOINT = "/listacompra/api/product"
         const val USER_ENDPOINT = "/listacompra/api/author"
         const val MEAL_ENDPOINT = "/listacompra/api/meal"
+        const val OTHER_ENDPOINT = "/listacompra/api/other"
         const val INSTALLATION_HEADER = "INSTALLATIONID"
 
         // Firebase
         const val MAIN_TOPIC = "MAIN_TOPIC"
         const val MEAL_TOPIC = "MEAL_TOPIC"
+        const val OTHER_TOPIC = "OTHER_TOPIC"
     }
 }

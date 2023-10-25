@@ -13,6 +13,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.latribu.listadc.R
+import com.latribu.listadc.common.Constants.Companion.MAIN_TOPIC
+import com.latribu.listadc.common.Constants.Companion.MEAL_TOPIC
+import com.latribu.listadc.common.Constants.Companion.OTHER_TOPIC
 import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.main.ListFragment
@@ -29,6 +32,8 @@ class FirebaseMessagingService: FirebaseMessagingService() {
         val notificationMessage = MutableLiveData<String>()
         // Observed in MealFragment.getNotification()
         val mealNotificationMessage = MutableLiveData<Int>()
+        // Observed in OtherFragment.getNotification()
+        val otherNotificationMessage = MutableLiveData<Int>()
     }
 
     override fun handleIntent(intent: Intent?) {
@@ -38,12 +43,19 @@ class FirebaseMessagingService: FirebaseMessagingService() {
             val title = intent!!.getStringExtra("gcm.notification.title").toString()
             val hasData = intent!!.getStringExtra("productId")?.toIntOrNull() != null
 
-            if (hasData) {
-                notificationData = FirebaseData(intent)
-                firebaseData.postValue(notificationData)
-            } else {
-                val userId = body.toIntOrNull() ?: -1
-                if (userId != savedUser.id) mealNotificationMessage.postValue(userId)
+            when (intent!!.getStringExtra("from").toString().substringAfterLast("/")) {
+                MAIN_TOPIC -> {
+                    notificationData = FirebaseData(intent)
+                    firebaseData.postValue(notificationData)
+                }
+                MEAL_TOPIC -> {
+                    val userId = body.toIntOrNull() ?: -1
+                    if (userId != savedUser.id) mealNotificationMessage.postValue(userId)
+                }
+                OTHER_TOPIC -> {
+                    val userId = body.toIntOrNull() ?: -1
+                    if (userId != savedUser.id) otherNotificationMessage.postValue(userId)
+                }
             }
 
             val sendNotification = hasData && notificationData.user != savedUser.id
@@ -87,7 +99,7 @@ class FirebaseMessagingService: FirebaseMessagingService() {
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        val channelId = com.latribu.listadc.common.Constants.MAIN_TOPIC
+        val channelId = MAIN_TOPIC
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.twotone_receipt_long_24)
