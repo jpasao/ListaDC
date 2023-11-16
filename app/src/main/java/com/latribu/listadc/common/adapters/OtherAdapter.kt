@@ -213,7 +213,7 @@ class OtherAdapter(
         if (this.parentStatus.isEmpty() || updateStatus) {
             setDefaultParentStatus()
         }
-        //expandAccordingToStatus()
+        expandAccordingToStatus()
     }
 
     fun getParentData() = this.parentStatus
