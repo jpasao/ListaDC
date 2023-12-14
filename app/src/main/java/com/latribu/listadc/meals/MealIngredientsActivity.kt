@@ -277,7 +277,7 @@ class MealIngredientsActivity : AppCompatActivity() {
             .joinToString(",")
 
         mMealViewModel
-            .saveMealIngredients(meal?.mealId!!, commaSeparatedValues)
+            .saveMealIngredients(meal?.mealId!!, commaSeparatedValues, installationId)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {

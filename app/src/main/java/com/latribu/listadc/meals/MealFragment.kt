@@ -288,7 +288,7 @@ class MealFragment : Fragment() {
 
     private fun addMeal(item: Meal, alertDialog: AlertDialog) {
         mMealViewModel
-            .addMeal(item.name, item.isLunch, savedUser.id)
+            .addMeal(item.name, item.isLunch, savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -312,7 +312,7 @@ class MealFragment : Fragment() {
 
     private fun editMeal(item: Meal, alertDialog: AlertDialog) {
         mMealViewModel
-            .editMeal(item.mealId, item.name, item.isLunch, savedUser.id)
+            .editMeal(item.mealId, item.name, item.isLunch, savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

@@ -36,7 +36,8 @@ interface ApiInterface {
         @Field("quantity") quantity: Int,
         @Field("comment") comment: String?,
         @Field("authorId") authorId: Int,
-        @Field("authorName") authorName: String
+        @Field("authorName") authorName: String,
+        @Header(INSTALLATION_HEADER) installationId: String,
     ) : ProductItem
 
     @FormUrlEncoded
@@ -47,6 +48,7 @@ interface ApiInterface {
         @Field("quantity") quantity: Int,
         @Field("comment") comment: String?,
         @Field("authorId") authorId: Int,
-        @Field("authorName") authorName: String
+        @Field("authorName") authorName: String,
+        @Header(INSTALLATION_HEADER) installationId: String,
     ) : ProductItem
 }

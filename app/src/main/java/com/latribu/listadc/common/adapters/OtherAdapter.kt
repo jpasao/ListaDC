@@ -53,7 +53,7 @@ class OtherAdapter(
         if (item.type == Constants.PARENT) {
             holder as GroupViewHolder
             holder.apply {
-                val parentExpanded = parentStatus.find { element -> element.parentTitle == item.parentTitle }?.isExpanded
+                val parentExpanded = filteredOtherList.find { element -> element.parentTitle == item.parentTitle }?.isExpanded
                 val arrowResource = if (parentExpanded == true) {
                     R.drawable.baseline_arrow_drop_up_24
                 }

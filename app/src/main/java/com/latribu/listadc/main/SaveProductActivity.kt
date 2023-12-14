@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -39,6 +40,7 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var savedUser: User
     private lateinit var spinner: ProgressBar
+    private var installationId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,7 @@ class SaveProductActivity : AppCompatActivity() {
         bindViews()
         initData()
         getUser()
+        getInstallationId()
         setListeners()
         setContentView(binding.root)
     }
@@ -91,6 +94,15 @@ class SaveProductActivity : AppCompatActivity() {
                 ListFragment.user.postValue(data!!)
             }
         }
+    }
+
+    private fun getInstallationId() {
+        val firebaseInstance = Observer<String> { data ->
+            if (data.isNotEmpty()) {
+                installationId = data
+            }
+        }
+        MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
     }
 
     private fun saveProduct(editing: Boolean) {
@@ -146,7 +158,7 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun addProduct(product: ProductItem) {
         mProductViewModel
-            .addProduct(product, savedUser)
+            .addProduct(product, savedUser, installationId)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -169,7 +181,7 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun editProduct(product: ProductItem) {
         mProductViewModel
-            .editProduct(product, savedUser)
+            .editProduct(product, savedUser, installationId)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {

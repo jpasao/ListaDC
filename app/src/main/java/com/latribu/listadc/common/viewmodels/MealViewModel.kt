@@ -33,28 +33,28 @@ class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
         }
     }
 
-    fun addMeal(name: String, isLunch: Int, authorId: Int) = liveData {
+    fun addMeal(name: String, isLunch: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.addMeal(name, isLunch, authorId)))
+            emit(Resource.success(mMealRepo.addMeal(name, isLunch, authorId, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }
     }
 
-    fun editMeal(mealId: Int, name: String, isLunch: Int, authorId: Int) = liveData {
+    fun editMeal(mealId: Int, name: String, isLunch: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.editMeal(mealId, name, isLunch, authorId)))
+            emit(Resource.success(mMealRepo.editMeal(mealId, name, isLunch, authorId, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }
     }
 
-    fun saveMealIngredients(mealId: Int, ingredients: String) = liveData {
+    fun saveMealIngredients(mealId: Int, ingredients: String, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.saveMealIngredients(mealId, ingredients)))
+            emit(Resource.success(mMealRepo.saveMealIngredients(mealId, ingredients, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

@@ -39,7 +39,8 @@ interface ApiInterface {
     suspend fun addMeal(
         @Field("name") name: String,
         @Field("isLunch") isLunch: Int,
-        @Field("authorId") authorId: Int
+        @Field("authorId") authorId: Int,
+        @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : Meal
 
     @FormUrlEncoded
@@ -48,13 +49,15 @@ interface ApiInterface {
         @Field("mealId") mealId: Int,
         @Field("name") name: String,
         @Field("isLunch") isLunch: Int,
-        @Field("authorId") authorId: Int
+        @Field("authorId") authorId: Int,
+        @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : Meal
 
     @FormUrlEncoded
     @PUT(Constants.MEAL_ENDPOINT)
     suspend fun saveMealIngredients(
         @Field("mealId") mealId: Int,
-        @Field("ingredients") ingredients: String
+        @Field("ingredients") ingredients: String,
+        @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : List<SelectedIngredient>
 }

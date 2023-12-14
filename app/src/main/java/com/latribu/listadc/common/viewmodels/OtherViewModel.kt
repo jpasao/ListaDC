@@ -15,7 +15,7 @@ class OtherViewModel(private val mOtherRepo: OtherRepo) : ViewModel() {
         }
     }
 
-    fun saveMeal(id: Int, parentId: Int, name: String, isChecked: Int, authorId: Int, installationId: String) = liveData {
+    fun saveOther(id: Int, parentId: Int, name: String, isChecked: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
             emit(Resource.success(mOtherRepo.saveOther(id, parentId, name, isChecked, authorId, installationId)))

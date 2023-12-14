@@ -259,7 +259,7 @@ class ListFragment : Fragment() {
 
     private fun editProduct(product: ProductItem) {
         mProductViewModel
-            .editProduct(product, savedUser)
+            .editProduct(product, savedUser, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

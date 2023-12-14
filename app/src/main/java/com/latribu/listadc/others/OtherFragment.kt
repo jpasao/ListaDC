@@ -174,7 +174,7 @@ class OtherFragment : Fragment() {
     private fun saveOthers(item: Other, alertDialog: AlertDialog? = null, updateStatus: Boolean = false) {
         val isChecked: Int = item.isChecked + 1
         mOtherViewModel
-            .saveMeal(item.id, item.parentId, item.name, isChecked, savedUser.id, installationId)
+            .saveOther(item.id, item.parentId, item.name.trim(), isChecked, savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
