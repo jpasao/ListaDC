@@ -248,11 +248,16 @@ class OtherFragment : Fragment() {
         val parents = mRecyclerAdapter
             .getParentData()
 
-        val parentTitles = parents
+        val tempParents = parents
             .map {
                 it.parentTitle?.replace(boughtLiteral, "")?.trim() ?: ""
-            }.distinct()  as ArrayList<String>
-
+            }.distinct()
+        val parentTitles = arrayListOf<String>()
+        if (tempParents.size == 1) {
+            parentTitles.add(tempParents.elementAt(0).toString())
+        } else {
+            parentTitles.addAll(tempParents)
+        }
         parentTitles.add(getString(R.string.others_new_parent_option))
         val parentFromList = parentTitles
             .find { it == item.parentName }
