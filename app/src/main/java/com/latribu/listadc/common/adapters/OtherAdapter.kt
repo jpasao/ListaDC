@@ -8,6 +8,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.R
@@ -90,6 +91,8 @@ class OtherAdapter(
                 check?.setOnClickListener {
                     checkBoxListener(item.subList?.first()!!)
                 }
+                lunch?.isVisible = false
+                dinner?.isVisible = false
             }
         }
     }
@@ -200,6 +203,8 @@ class OtherAdapter(
         val check = row.findViewById(R.id.check) as CheckBox?
         val name = row.findViewById(R.id.name) as TextView?
         val image = row.findViewById(R.id.ingredients) as ImageView?
+        val lunch = row.findViewById(R.id.lunch) as ImageView?
+        val dinner = row.findViewById(R.id.dinner) as ImageView?
     }
 
     fun updateRecyclerData(otherList: MutableList<ParentData<Other>>, updateStatus: Boolean = false) {

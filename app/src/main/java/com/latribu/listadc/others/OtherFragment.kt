@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -245,6 +247,8 @@ class OtherFragment : Fragment() {
         val builder = AlertDialog.Builder(context)
             .create()
         val view = layoutInflater.inflate(R.layout.dialog_parent_child_add,null)
+        val ingredientsLayout: LinearLayout = view.findViewById(R.id.loIngredients)
+        ingredientsLayout.isVisible = false
         val parents = mRecyclerAdapter
             .getParentData()
 

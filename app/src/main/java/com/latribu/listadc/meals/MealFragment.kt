@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
@@ -115,7 +116,8 @@ class MealFragment : Fragment() {
         mRecyclerAdapter = MealAdapter(
             checkBoxListener = { item: Meal -> itemChecked(item) },
             longClickListener = { item: Meal -> showDialog(item) },
-            ingredientClickListener = { item: Meal -> ingredientPressed(item) }
+            lunchClickListener = { item: Meal -> lunchPressed(item) },
+            dinnerClickListener = { item: Meal -> dinnerPressed(item) }
         )
     }
 
@@ -183,22 +185,18 @@ class MealFragment : Fragment() {
             parentTitle = getString(R.string.meal_dinner_name),
             subList = dinners.filter { dinner -> dinner.isChecked == 0 } as ArrayList<Meal>
         )
-        val checkedLunches = ParentData(
-            parentTitle = getString(R.string.meal_lunch_name_checked),
-            subList = lunches.filter { lunch -> lunch.isChecked == 1 } as ArrayList<Meal>
-        )
-        val checkedDinners = ParentData(
-            parentTitle = getString(R.string.meal_dinner_name_checked),
-            subList = dinners.filter { dinner -> dinner.isChecked == 1 } as ArrayList<Meal>
+        val sortedMeals = meals.sortedBy { it.name }
+        val checkedMeals = ParentData(
+            parentTitle = getString(R.string.meal_name_checked),
+            subList = sortedMeals
+                .filter { it.isChecked == 1 } as ArrayList<Meal>
         )
 
         val mealsToAdd = ArrayList<ParentData<Meal>>()
 
         mealsToAdd.add(currentLunches)
         mealsToAdd.add(currentDinners)
-        mealsToAdd.add(checkedLunches)
-        mealsToAdd.add(checkedDinners)
-
+        mealsToAdd.add(checkedMeals)
         mRecyclerAdapter.updateRecyclerData(mealsToAdd)
     }
 
@@ -213,8 +211,9 @@ class MealFragment : Fragment() {
 
     private fun itemChecked(item: Meal) {
         val isChecked: Int = item.isChecked + 1
+        val isLunch: Int = item.isLunch + 1
         mMealViewModel
-            .checkMeal(item.mealId, isChecked, savedUser.id, installationId)
+            .checkMeal(item.mealId, isChecked, isLunch, savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -260,6 +259,9 @@ class MealFragment : Fragment() {
         val name: TextView = view.findViewById(R.id.childName)
         name.text = item.name
 
+        val ingredients: ImageButton = view.findViewById(R.id.btnIngredients)
+        ingredients.setOnClickListener { ingredientPressed(item) }
+
         val cancelButton: Button = view.findViewById(R.id.cancelButton)
         cancelButton.setOnClickListener {
             builder.dismiss()
@@ -278,6 +280,16 @@ class MealFragment : Fragment() {
         builder.setView(view)
         builder.setCanceledOnTouchOutside(true)
         builder.show()
+    }
+
+    private fun lunchPressed(item: Meal) {
+        item.isLunch = 1
+        itemChecked(item)
+    }
+
+    private fun dinnerPressed(item: Meal) {
+        item.isLunch = 0
+        itemChecked(item)
     }
 
     private fun ingredientPressed(item: Meal) {

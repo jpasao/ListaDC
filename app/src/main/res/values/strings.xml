@@ -52,7 +52,9 @@
     <string name="meal_dinner_name">Cenas</string>
     <string name="meal_lunch_name_checked">Posibles Almuerzos</string>
     <string name="meal_dinner_name_checked">Posibles Cenas</string>
+    <string name="meal_name_checked">Posibles Comidas</string>
     <string name="meal_dialog_parent">¿A qué lista pertenece esto?</string>
+    <string name="meal_dialog_ingredients">¿Qué lleva?</string>
     <string name="meal_dialog_name">¿Y cómo se llama?</string>
     <string name="meal_dialog_name_placeholder">Ponle un nombre bonito</string>
     <string name="meal_dialog_title_new">La nueva comida</string>

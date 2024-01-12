@@ -24,10 +24,10 @@ class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
         }
     }
 
-    fun checkMeal(mealId: Int, isChecked: Int, authorId: Int, installationId: String) = liveData {
+    fun checkMeal(mealId: Int, isChecked: Int, isLunch: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.checkMeal(mealId, isChecked, authorId, installationId)))
+            emit(Resource.success(mMealRepo.checkMeal(mealId, isChecked, isLunch, authorId, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

@@ -8,6 +8,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.R
@@ -21,7 +22,8 @@ import com.latribu.listadc.common.normalize
 class MealAdapter(
     val checkBoxListener: (Meal) -> Unit,
     val longClickListener: (Meal) -> Unit,
-    val ingredientClickListener: (Meal) -> Unit
+    val lunchClickListener: (Meal) -> Unit,
+    val dinnerClickListener: (Meal) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
     private var mealList = ArrayList<ParentData<Meal>>()
     private var filteredMealList = ArrayList<ParentData<Meal>>()
@@ -79,18 +81,24 @@ class MealAdapter(
                 val singleElement = item.subList?.first()
                 val isChecked =  singleElement?.isChecked == 1
                 check?.isChecked = isChecked
+                check?.isVisible = !isChecked
+                check?.setOnClickListener {
+                    checkBoxListener(item.subList?.first()!!)
+                }
                 name?.text = singleElement?.name
+                name?.alpha = if (isChecked) OPACITY_FADED else OPACITY_NORMAL
                 name?.setOnLongClickListener {
                     longClickListener(singleElement!!)
                     true
                 }
-                name?.alpha = if (isChecked) OPACITY_FADED else OPACITY_NORMAL
-                image?.setOnClickListener {
-                    // Open screen in which user can choose ingredients for that element
-                    ingredientClickListener(item.subList?.first()!!)
+                image?.isVisible = false
+                lunch?.isVisible = isChecked
+                lunch?.setOnClickListener {
+                    lunchClickListener(item.subList?.first()!!)
                 }
-                check?.setOnClickListener {
-                    checkBoxListener(item.subList?.first()!!)
+                dinner?.isVisible = isChecked
+                dinner?.setOnClickListener {
+                    dinnerClickListener(item.subList?.first()!!)
                 }
             }
         }
@@ -190,6 +198,8 @@ class MealAdapter(
         val check = row.findViewById(R.id.check) as CheckBox?
         val name = row.findViewById(R.id.name) as TextView?
         val image = row.findViewById(R.id.ingredients) as ImageView?
+        val lunch = row.findViewById(R.id.lunch) as ImageView?
+        val dinner = row.findViewById(R.id.dinner) as ImageView?
     }
 
     fun updateRecyclerData(mealList: MutableList<ParentData<Meal>>) {

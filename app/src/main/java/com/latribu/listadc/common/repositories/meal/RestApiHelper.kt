@@ -7,8 +7,8 @@ class RestApiHelper (private val apiInterface: ApiInterface) {
     suspend fun getMeal(mealId: Int, installationId: String) =
         apiInterface.getMeal(mealId, installationId)
 
-    suspend fun checkMeal(mealId: Int, isChecked: Int, authorId: Int, installationId: String) =
-        apiInterface.checkMeal(mealId, isChecked, authorId, installationId)
+    suspend fun checkMeal(mealId: Int, isChecked: Int, isLunch: Int, authorId: Int, installationId: String) =
+        apiInterface.checkMeal(mealId, isChecked, isLunch, authorId, installationId)
 
     suspend fun addMeal(name: String, isLunch: Int, authorId: Int, installationId: String) =
         apiInterface.addMeal(name, isLunch, authorId, installationId)

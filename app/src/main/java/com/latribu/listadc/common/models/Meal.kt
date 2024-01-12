@@ -5,6 +5,6 @@ import java.io.Serializable
 data class Meal(
     val mealId: Int,
     val name: String,
-    val isLunch: Int,
+    var isLunch: Int,
     val isChecked: Int
 ) : Serializable

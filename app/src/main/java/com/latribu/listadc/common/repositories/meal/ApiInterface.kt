@@ -30,6 +30,7 @@ interface ApiInterface {
     suspend fun checkMeal(
         @Field("mealId") mealId: Int,
         @Field("check") isChecked: Int,
+        @Field("isLunch") isLunch: Int,
         @Field("authorId") authorId: Int,
         @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : List<Meal>

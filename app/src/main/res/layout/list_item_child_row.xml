@@ -16,20 +16,41 @@
         android:textSize="14sp"
         android:theme="@style/Checkbox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/name"
         style="@style/Widget.AppCompat.TextView.SpinnerItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:background="?android:attr/selectableItemBackground"
         android:paddingStart="10dp"
         android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/ingredients"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/lunch"
         app:layout_constraintStart_toEndOf="@+id/check"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/lunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/uselessContent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dinner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/twotone_light_mode_24" />
+
+    <ImageButton
+        android:id="@+id/dinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/uselessContent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ingredients"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/twotone_nightlight_24" />
 
     <ImageButton
         android:id="@+id/ingredients"
@@ -37,6 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
         android:contentDescription="@string/uselessContent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/twotone_receipt_long_bw_24" />
