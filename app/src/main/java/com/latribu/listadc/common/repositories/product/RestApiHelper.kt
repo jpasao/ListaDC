@@ -14,4 +14,7 @@ class RestApiHelper (private val apiInterface: ApiInterface) {
 
     suspend fun checkProductItem(productId: Int, isChecked: String, author: User, installationId: String) =
         apiInterface.checkProductItem(productId, isChecked, author.id, author.name, installationId)
+
+    suspend fun deleteProduct(productId: Int, author: User, installationId: String) =
+        apiInterface.deleteProduct(productId, author.id, installationId)
 }

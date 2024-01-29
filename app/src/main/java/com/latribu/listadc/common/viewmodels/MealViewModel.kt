@@ -59,4 +59,13 @@ class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
             emit(Resource.error(null, e.message.toString()))
         }
     }
+
+    fun deleteMeal(mealId: Int, authorId: Int, installationId: String) = liveData {
+        emit(Resource.loading(null))
+        try {
+            emit(Resource.success(mMealRepo.deleteMeal(mealId, authorId, installationId)))
+        } catch (e: Exception) {
+            emit(Resource.error(null, e.message.toString()))
+        }
+    }
 }

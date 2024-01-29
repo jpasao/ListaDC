@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -34,6 +35,7 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.meal.AppCreator
+import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.MealViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.databinding.FragmentMealBinding
@@ -274,6 +276,9 @@ class MealFragment : Fragment() {
             else
                 editMeal(itemEdited, builder)
         }
+        val deleteButton: Button = view.findViewById(R.id.btnDeleteChild)
+        deleteButton.setOnClickListener { askForConfirmation(item, builder) }
+        deleteButton.isVisible = item.mealId != -1
 
         val title: String = if (item.mealId == -1) getString(R.string.meal_dialog_title_new) else getString(R.string.meal_dialog_title_edit, item.name)
         builder.setTitle(title)
@@ -344,5 +349,37 @@ class MealFragment : Fragment() {
                     }
                 }
             }
+    }
+
+    private fun itemDeleted(item: Meal, alertDialog: AlertDialog) {
+        mMealViewModel
+            .deleteMeal(item.mealId, savedUser.id, installationId)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        search.setQuery("", false)
+                        search.clearFocus()
+                        getMeals()
+                        alertDialog.dismiss()
+                        spinner.visibility = View.GONE
+                    }
+                    Status.LOADING -> {
+                        spinner.visibility = View.VISIBLE
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
+                    }
+                }
+            }
+    }
+
+    private fun askForConfirmation(item: Meal, alertDialog: AlertDialog) {
+        showYesNoDialog(
+            requireContext(),
+            getString(R.string.delete_dialog_title),
+            getString(R.string.delete_dialog_message, item.name)
+        ) { _, _ -> itemDeleted(item, alertDialog) }
     }
 }

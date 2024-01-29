@@ -6,4 +6,7 @@ class OtherRepo(private val apiHelper: RestApiHelper) {
 
     suspend fun saveOther(id: Int, parentId: Int, name: String, isChecked: Int, authorId: Int, installationId: String) =
         apiHelper.saveOther(id, parentId, name, isChecked, authorId, installationId)
+
+    suspend fun deleteOther(id: Int, authorId: Int, installationId: String) =
+        apiHelper.deleteOther(id, authorId, installationId)
 }

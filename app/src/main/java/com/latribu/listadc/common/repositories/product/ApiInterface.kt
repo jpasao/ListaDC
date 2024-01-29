@@ -3,6 +3,7 @@ package com.latribu.listadc.common.repositories.product
 import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.Constants.Companion.INSTALLATION_HEADER
 import com.latribu.listadc.common.models.ProductItem
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -10,6 +11,7 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiInterface {
@@ -51,4 +53,11 @@ interface ApiInterface {
         @Field("authorName") authorName: String,
         @Header(INSTALLATION_HEADER) installationId: String,
     ) : ProductItem
+
+    @DELETE(Constants.PRODUCT_ENDPOINT + "/{productId}/{authorId}")
+    suspend fun deleteProduct(
+        @Path("productId") productId: Int,
+        @Path("authorId") authorId: Int,
+        @Header(INSTALLATION_HEADER) installationId: String,
+    ) : List<ProductItem>
 }

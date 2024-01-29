@@ -18,4 +18,7 @@ class MealRepo(private val apiHelper: RestApiHelper) {
 
     suspend fun saveMealIngredients(mealId: Int, ingredients: String, installationId: String) =
         apiHelper.saveMealIngredients(mealId, ingredients, installationId)
+
+    suspend fun deleteMeal(mealId: Int, authorId: Int, installationId: String) =
+        apiHelper.deleteMeal(mealId, authorId, installationId)
 }

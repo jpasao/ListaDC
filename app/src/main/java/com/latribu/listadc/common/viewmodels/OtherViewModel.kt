@@ -23,4 +23,13 @@ class OtherViewModel(private val mOtherRepo: OtherRepo) : ViewModel() {
             emit(Resource.error(null, e.message.toString()))
         }
     }
+
+    fun deleteOther(id: Int, authorId: Int, installationId: String) = liveData {
+        emit(Resource.loading(null))
+        try {
+            emit(Resource.success(mOtherRepo.deleteOther(id, authorId, installationId)))
+        } catch (e: Exception) {
+            emit(Resource.error(null, e.message.toString()))
+        }
+    }
 }

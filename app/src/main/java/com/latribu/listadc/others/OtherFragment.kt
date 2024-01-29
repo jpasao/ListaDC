@@ -33,6 +33,7 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.other.AppCreator
+import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.OtherViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.databinding.FragmentOtherBinding
@@ -315,6 +316,10 @@ class OtherFragment : Fragment() {
             val itemEdited = Other(item.id, parent?.parentId!!, parent.parentName, name.text.toString(), isChecked)
             saveOthers(itemEdited, builder, isNewParent)
         }
+        val deleteButton: Button = view.findViewById(R.id.btnDeleteChild)
+        deleteButton.setOnClickListener { askForConfirmation(item, builder) }
+        deleteButton.isVisible = item.id != 0
+
         val title: String = if (item.id == 0) getString(R.string.others_dialog_title_new) else getString(R.string.others_dialog_title_edit, item.name)
         builder.setTitle(title)
         builder.setView(view)
@@ -324,5 +329,37 @@ class OtherFragment : Fragment() {
 
     private fun itemChecked(item: Other) {
         saveOthers(item)
+    }
+
+    private fun itemDeleted(item: Other, alertDialog: AlertDialog? = null, updateStatus: Boolean = false) {
+        mOtherViewModel
+            .deleteOther(item.id, savedUser.id, installationId)
+            .observe(viewLifecycleOwner) {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        search.setQuery("", false)
+                        search.clearFocus()
+                        alertDialog?.dismiss()
+                        spinner.visibility = View.GONE
+                        getOthers(updateStatus)
+                    }
+                    Status.LOADING -> {
+                        spinner.visibility = View.VISIBLE
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al borrar el elemento: ${it.message}")
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        spinner.visibility = View.GONE
+                    }
+                }
+            }
+    }
+
+    private fun askForConfirmation(item: Other, alertDialog: AlertDialog) {
+        showYesNoDialog(
+            requireContext(),
+            getString(R.string.delete_dialog_title),
+            getString(R.string.delete_dialog_message, item.name)
+        ) { _, _ -> itemDeleted(item, alertDialog) }
     }
 }

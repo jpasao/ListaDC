@@ -18,4 +18,7 @@ class RestApiHelper (private val apiInterface: ApiInterface) {
 
     suspend fun saveMealIngredients(mealId: Int, ingredients: String, installationId: String) =
         apiInterface.saveMealIngredients(mealId, ingredients, installationId)
+
+    suspend fun deleteMeal(mealId: Int, authorId: Int, installationId: String) =
+        apiInterface.deleteMeal(mealId, authorId, installationId)
 }

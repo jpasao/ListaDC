@@ -14,4 +14,7 @@ class ProductRepo(private val apiHelper: RestApiHelper) {
 
     suspend fun editProduct(productData: ProductItem, author: User, installationId: String) =
         apiHelper.editProduct(productData.id!!, productData.name, productData.quantity!!, productData.comment, author, installationId)
+
+    suspend fun deleteProduct(productData: ProductItem, author: User, installationId: String) =
+        apiHelper.deleteProduct(productData.id!!, author, installationId)
 }

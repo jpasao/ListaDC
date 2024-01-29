@@ -103,6 +103,7 @@
             android:importantForAccessibility="no" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -111,13 +112,20 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/btnCancel"
-                android:backgroundTint="@android:color/darker_gray"
+                android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@string/delete_button_text" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@android:color/darker_gray"
                 android:text="@string/cancel" />
 
             <Button

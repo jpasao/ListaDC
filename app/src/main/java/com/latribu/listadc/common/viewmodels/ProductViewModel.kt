@@ -43,4 +43,13 @@ class ProductViewModel(private val mProductRepo: ProductRepo) : ViewModel() {
             emit(Resource.error(null, e.message.toString()))
         }
     }
+
+    fun deleteProduct(productData: ProductItem, author: User, installationId: String) = liveData {
+        emit(Resource.loading(null))
+        try {
+            emit(Resource.success(mProductRepo.deleteProduct(productData, author, installationId)))
+        } catch (e: Exception) {
+            emit(Resource.error(null, e.message.toString()))
+        }
+    }
 }

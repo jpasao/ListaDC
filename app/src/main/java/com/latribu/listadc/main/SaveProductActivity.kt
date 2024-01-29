@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +23,7 @@ import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.product.AppCreator
+import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.ActivityAddBinding
@@ -33,6 +35,7 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var nameLayout: TextInputLayout
     private lateinit var quantity: TextInputEditText
     private lateinit var comment: TextInputEditText
+    private lateinit var deleteButton: Button
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
     private var product: ProductItem? = null
@@ -85,6 +88,8 @@ class SaveProductActivity : AppCompatActivity() {
         saveButton.setOnClickListener { saveProduct(editing) }
 
         cancelButton.setOnClickListener { finish() }
+        deleteButton.setOnClickListener { askForConfirmation(product!!) }
+        deleteButton.isVisible = editing
     }
 
     private fun getUser() {
@@ -131,6 +136,7 @@ class SaveProductActivity : AppCompatActivity() {
         nameLayout = binding.loName
         quantity = binding.txtQuantity
         comment = binding.txtComments
+        deleteButton = binding.btnDelete
     }
 
     private fun getData(): Boolean {
@@ -144,7 +150,7 @@ class SaveProductActivity : AppCompatActivity() {
             comment.setText(product?.comment)
             title.text = getString(R.string.save_save_title, product?.name)
         }
-
+        deleteButton.isVisible = editing
         return editing
     }
 
@@ -200,5 +206,36 @@ class SaveProductActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+
+    private fun itemDeleted(listItem: ProductItem) {
+        mProductViewModel
+            .deleteProduct(listItem, savedUser, installationId)
+            .observe(this) {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        val i = Intent(this@SaveProductActivity, MainActivity::class.java)
+                        startActivity(i)
+                        spinner.visibility = View.GONE
+                    }
+                    Status.LOADING -> {
+                        spinner.visibility = View.VISIBLE
+                    }
+                    Status.FAILURE -> {
+                        val message: String = getString(R.string.saveError, "al borrar un elemento: ${it.message}")
+                        val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+                        spinner.visibility = View.GONE
+                    }
+                }
+            }
+    }
+
+    private fun askForConfirmation(item: ProductItem) {
+        showYesNoDialog(
+            this@SaveProductActivity,
+            getString(R.string.delete_dialog_title),
+            getString(R.string.delete_dialog_message, item.name)
+        ) { _, _ -> itemDeleted(item) }
     }
 }

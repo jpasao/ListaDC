@@ -6,4 +6,7 @@ class RestApiHelper(private val apiInterface: ApiInterface) {
 
     suspend fun saveOther(id: Int, parentId: Int, name: String, isChecked: Int, authorId: Int, installationId: String) =
         apiInterface.saveOther(id, parentId, name, isChecked, authorId, installationId)
+
+    suspend fun deleteOther(id: Int, authorId: Int, installationId: String) =
+        apiInterface.deleteOther(id, authorId, installationId)
 }
