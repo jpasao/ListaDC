@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.latribu.listadc.R
@@ -23,6 +22,7 @@ import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.product.AppCreator
+import com.latribu.listadc.common.sendEmail
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
@@ -177,9 +177,12 @@ class SaveProductActivity : AppCompatActivity() {
                     }
                     Status.FAILURE -> {
                         spinner.visibility = View.GONE
-                        val message: String = getString(R.string.saveError, "al guardar: ${it.message}")
-                        val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
-                        snack.show()
+                        sendEmail(this,
+                            this,
+                            findViewById(R.id.constraintLayout2),
+                            "Error en addProduct",
+                            getString(R.string.saveError, savedUser.name, "al guardar un elemento: ${it.message}"),
+                            installationId)
                     }
                 }
             }
@@ -199,9 +202,12 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al editar el elemento: ${it.message}")
-                        val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
-                        snack.show()
+                        sendEmail(this,
+                            this,
+                            findViewById(R.id.constraintLayout2),
+                            "Error en editProduct",
+                            getString(R.string.saveError, savedUser.name, "al editar un elemento: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -222,9 +228,12 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al borrar un elemento: ${it.message}")
-                        val snack = Snackbar.make(findViewById(R.id.constraintLayout2), message, Snackbar.LENGTH_SHORT)
-                        snack.show()
+                        sendEmail(this,
+                            this,
+                            findViewById(R.id.constraintLayout2),
+                            "Error en SaveProductActivity:itemDeleted",
+                            getString(R.string.saveError, savedUser.name, "al borrar un elemento: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }

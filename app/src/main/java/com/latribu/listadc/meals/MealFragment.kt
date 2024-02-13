@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.Constants.Companion.EXTRA_MEAL
@@ -35,6 +34,7 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.meal.AppCreator
+import com.latribu.listadc.common.sendEmail
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.MealViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
@@ -160,14 +160,17 @@ class MealFragment : Fragment() {
                         Status.SUCCESS -> {
                             processMeals(it.data!!)
                             spinner.visibility = View.GONE
-                            //sendEmail(this, viewLifecycleOwner,"Asunto de prueba", "Mensaje de prueba", installationId)
                         }
                         Status.LOADING -> {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
-                            val message: String = getString(R.string.saveError, "al obtener las comidas: ${it.message}")
-                            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                            sendEmail(this,
+                                viewLifecycleOwner,
+                                requireView(),
+                                "Error en getMeals",
+                                getString(R.string.saveError, savedUser.name, "al obtener las comidas: ${it.message}"),
+                                installationId)
                             spinner.visibility = View.GONE
                         }
                     }
@@ -229,8 +232,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en MealFragment:itemChecked",
+                            getString(R.string.saveError, savedUser.name, "al marcar una comida: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -320,8 +327,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en addMeal",
+                            getString(R.string.saveError, savedUser.name, "al añadir una comida: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -344,8 +355,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en editMeal",
+                            getString(R.string.saveError, savedUser.name, "al guardar una comida: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -368,8 +383,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al marcar una comida: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en MealFragment:itemDeleted",
+                            getString(R.string.saveError, savedUser.name, "al borrar una comida: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }

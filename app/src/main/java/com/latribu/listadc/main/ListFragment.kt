@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
@@ -32,6 +31,7 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.product.AppCreator
+import com.latribu.listadc.common.sendEmail
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.FragmentListBinding
@@ -217,8 +217,12 @@ class ListFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
-                            val message: String = getString(R.string.saveError, "al obtener los elementos: ${it.message}")
-                            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                            sendEmail(this,
+                                viewLifecycleOwner,
+                                requireView(),
+                                "Error en getProducts",
+                                getString(R.string.saveError, savedUser.name, "al obtener la lista: ${it.message}"),
+                                installationId)
                             spinner.visibility = View.GONE
                         }
                     }
@@ -251,9 +255,12 @@ class ListFragment : Fragment() {
             quantityAndItem.second.quantity = quantityAndItem.first
             editProduct(quantityAndItem.second)
         } else {
-            val message: String = getString(R.string.saveError, "al obtener los datos del elemento")
-            val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-            snack.show()
+            sendEmail(this,
+                viewLifecycleOwner,
+                requireView(),
+                "Error en saveQuantity",
+                getString(R.string.saveError, savedUser.name, "al obtener los datos del elemento"),
+                installationId)
         }
     }
 
@@ -272,9 +279,12 @@ class ListFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al editar el elemento: ${it.message}")
-                        val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-                        snack.show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en editProduct",
+                            getString(R.string.saveError, savedUser.name, "al editar el elemento: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -306,9 +316,12 @@ class ListFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al marcar un elemento: ${it.message}")
-                        val snack = Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-                        snack.show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en ListFragment:itemChecked",
+                            getString(R.string.saveError, savedUser.name, "al marcar un elemento: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }

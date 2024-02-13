@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Build
 import android.view.View
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
+import com.latribu.listadc.common.Constants.Companion.SNACKBAR_DURATION
 import com.latribu.listadc.common.factories.SharedViewModelFactory
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.repositories.shared.AppCreator
@@ -27,7 +29,7 @@ fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz:
 }
 
 fun showMessage(view: View, message: String) {
-    Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+    Snackbar.make(view, message, SNACKBAR_DURATION).show()
 }
 
 fun normalize(element: String?): String {
@@ -54,9 +56,15 @@ fun showYesNoDialog(context: Context, title: String, message: String, listener: 
     alert.show()
 }
 
-fun sendEmail(view: ViewModelStoreOwner, viewLifecycle: LifecycleOwner, page: String, message: String, installationId: String) {
+fun sendEmail(
+    viewModel: ViewModelStoreOwner,
+    viewLifecycle: LifecycleOwner,
+    originView: View,
+    page: String,
+    message: String,
+    installationId: String) {
     val mSharedViewModel = ViewModelProvider(
-        view,
+        viewModel,
         SharedViewModelFactory(AppCreator.getApiHelperInstance())
     )[SharedViewModel::class.java]
 
@@ -65,10 +73,10 @@ fun sendEmail(view: ViewModelStoreOwner, viewLifecycle: LifecycleOwner, page: St
         .observe(viewLifecycle) {
             when(it.status) {
                 Status.SUCCESS -> {
-
+                    showMessage(originView, getString(originView.context, R.string.mail_sent))
                 }
                 Status.FAILURE -> {
-
+                    showMessage(originView, getString(originView.context, R.string.mail_fail))
                 }
                 Status.LOADING -> { }
             }

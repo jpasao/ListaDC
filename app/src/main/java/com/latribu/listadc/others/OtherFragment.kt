@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.adapters.OtherAdapter
@@ -33,6 +32,7 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.other.AppCreator
+import com.latribu.listadc.common.sendEmail
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.OtherViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
@@ -165,8 +165,12 @@ class OtherFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
-                            val message: String = getString(R.string.saveError, "al obtener las otras cosas: ${it.message}")
-                            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                            sendEmail(this,
+                                viewLifecycleOwner,
+                                requireView(),
+                                "Error en getOthers",
+                                getString(R.string.saveError, savedUser.name, "al obtener las otras cosas: ${it.message}"),
+                                installationId)
                             spinner.visibility = View.GONE
                         }
                     }
@@ -191,8 +195,12 @@ class OtherFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "con lo que acabas de hacer: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en saveOthers",
+                            getString(R.string.saveError, savedUser.name, "con lo que acaba de hacer: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -282,9 +290,7 @@ class OtherFragment : Fragment() {
             setSelection(selectedParent, false)
             onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    //selectedParent = position + 1
-                }
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) { }
             }
         }
 
@@ -347,8 +353,12 @@ class OtherFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al borrar el elemento: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en OtherFragment:itemDeleted",
+                            getString(R.string.saveError, savedUser.name, "al borrar el elemento: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }

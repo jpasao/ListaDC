@@ -12,12 +12,13 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
+import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.factories.UserViewModelFactory
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.user.AppCreator
+import com.latribu.listadc.common.sendEmail
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.UserViewModel
 import com.latribu.listadc.databinding.ActivitySettingsBinding
@@ -79,8 +80,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val message: String = getString(R.string.saveError, "al obtener los usuarios: ${it.message}")
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        sendEmail(this,
+                            viewLifecycleOwner,
+                            requireView(),
+                            "Error en getUsers",
+                            getString(R.string.saveError, DEFAULT_USER.name, "al obtener los usuarios: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -142,8 +147,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 true
             }
         } else {
-            val message: String = getString(R.string.saveError, "al obtener los usuarios.")
-            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            sendEmail(this,
+                viewLifecycleOwner,
+                requireView(),
+                "Error en SettingsFragment:loadOptions",
+                getString(R.string.saveError, savedUser.name, "al obtener los usuarios"),
+                installationId)
         }
     }
 

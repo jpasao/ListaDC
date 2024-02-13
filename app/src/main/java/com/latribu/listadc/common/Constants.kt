@@ -14,6 +14,7 @@ class Constants {
         const val CHILD = 1
         const val OPACITY_NORMAL = 0.87f
         const val OPACITY_FADED =  0.54f
+        const val SNACKBAR_DURATION = 5000
 
         // Api
         private const val server = "pablosan.es"
