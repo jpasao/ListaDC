@@ -160,6 +160,7 @@ class MealFragment : Fragment() {
                         Status.SUCCESS -> {
                             processMeals(it.data!!)
                             spinner.visibility = View.GONE
+                            //sendEmail(this, viewLifecycleOwner,"Asunto de prueba", "Mensaje de prueba", installationId)
                         }
                         Status.LOADING -> {
                             spinner.visibility = View.VISIBLE

@@ -17,11 +17,13 @@ class Constants {
 
         // Api
         private const val server = "pablosan.es"
+        private const val apiPath = "/listacompra/api/"
         const val BASE_URL =  "http://${server}/listacompra/api/"
-        const val PRODUCT_ENDPOINT = "/listacompra/api/product"
-        const val USER_ENDPOINT = "/listacompra/api/author"
-        const val MEAL_ENDPOINT = "/listacompra/api/meal"
-        const val OTHER_ENDPOINT = "/listacompra/api/other"
+        const val PRODUCT_ENDPOINT = "${apiPath}product"
+        const val USER_ENDPOINT = "${apiPath}author"
+        const val MEAL_ENDPOINT = "${apiPath}meal"
+        const val OTHER_ENDPOINT = "${apiPath}other"
+        const val SYSTEM_ENDPOINT = "${apiPath}system"
         const val INSTALLATION_HEADER = "INSTALLATIONID"
 
         // Firebase

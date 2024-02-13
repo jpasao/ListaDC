@@ -6,8 +6,15 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Build
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
+import com.latribu.listadc.common.factories.SharedViewModelFactory
+import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.repositories.shared.AppCreator
+import com.latribu.listadc.common.viewmodels.SharedViewModel
 import java.io.Serializable
 import java.text.Normalizer
 
@@ -45,4 +52,26 @@ fun showYesNoDialog(context: Context, title: String, message: String, listener: 
         }
     val alert = builder.create()
     alert.show()
+}
+
+fun sendEmail(view: ViewModelStoreOwner, viewLifecycle: LifecycleOwner, page: String, message: String, installationId: String) {
+    val mSharedViewModel = ViewModelProvider(
+        view,
+        SharedViewModelFactory(AppCreator.getApiHelperInstance())
+    )[SharedViewModel::class.java]
+
+    mSharedViewModel
+        .sendMail(page, message, installationId)
+        .observe(viewLifecycle) {
+            when(it.status) {
+                Status.SUCCESS -> {
+
+                }
+                Status.FAILURE -> {
+
+                }
+                Status.LOADING -> { }
+            }
+        }
+
 }
