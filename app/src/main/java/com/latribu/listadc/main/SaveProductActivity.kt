@@ -176,12 +176,13 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         spinner.visibility = View.GONE
                         sendEmail(this,
                             this,
                             findViewById(R.id.constraintLayout2),
                             "Error en addProduct",
-                            getString(R.string.saveError, savedUser.name, "al guardar un elemento: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al guardar un elemento: ${it.message}"),
                             installationId)
                     }
                 }
@@ -202,11 +203,12 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             this,
                             findViewById(R.id.constraintLayout2),
                             "Error en editProduct",
-                            getString(R.string.saveError, savedUser.name, "al editar un elemento: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al editar un elemento: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -228,11 +230,12 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             this,
                             findViewById(R.id.constraintLayout2),
                             "Error en SaveProductActivity:itemDeleted",
-                            getString(R.string.saveError, savedUser.name, "al borrar un elemento: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al borrar un elemento: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }

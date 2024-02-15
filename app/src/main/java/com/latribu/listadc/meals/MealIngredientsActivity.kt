@@ -17,7 +17,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
-import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.Constants.Companion.EXTRA_MEAL
 import com.latribu.listadc.common.Constants.Companion.SNACKBAR_DURATION
 import com.latribu.listadc.common.adapters.IngredientsAdapter
@@ -189,7 +188,7 @@ class MealIngredientsActivity : AppCompatActivity() {
                             this,
                             findViewById(R.id.constraintLayout2),
                             "Error en MealIngredientsActivity:getProducts",
-                            getString(R.string.saveError, DEFAULT_USER.name, "al obtener los ingredientes: ${it.message}"),
+                            getString(R.string.saveError, installationId, "al obtener los ingredientes: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -214,6 +213,12 @@ class MealIngredientsActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        sendEmail(this,
+                            this,
+                            findViewById(R.id.constraintLayout2),
+                            "Error en MealIngredientsActivity:getMeals",
+                            getString(R.string.saveError, installationId, "al obtener las comidas: ${it.message}"),
+                            installationId)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -298,7 +303,7 @@ class MealIngredientsActivity : AppCompatActivity() {
                             this,
                             findViewById(R.id.constraintLayout2),
                             "Error en saveIngredients",
-                            getString(R.string.saveError, DEFAULT_USER.name, "al guardar los ingredientes: ${it.message}"),
+                            getString(R.string.saveError, installationId, "al guardar los ingredientes: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }

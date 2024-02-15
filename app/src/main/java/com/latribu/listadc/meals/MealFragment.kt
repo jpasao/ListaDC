@@ -165,11 +165,12 @@ class MealFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
+                            val savedUserName: String = savedUser.name.ifEmpty { installationId }
                             sendEmail(this,
                                 viewLifecycleOwner,
                                 requireView(),
                                 "Error en getMeals",
-                                getString(R.string.saveError, savedUser.name, "al obtener las comidas: ${it.message}"),
+                                getString(R.string.saveError, savedUserName, "al obtener las comidas: ${it.message}"),
                                 installationId)
                             spinner.visibility = View.GONE
                         }
@@ -232,11 +233,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en MealFragment:itemChecked",
-                            getString(R.string.saveError, savedUser.name, "al marcar una comida: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al marcar una comida: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -327,11 +329,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en addMeal",
-                            getString(R.string.saveError, savedUser.name, "al añadir una comida: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al añadir una comida: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -355,11 +358,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en editMeal",
-                            getString(R.string.saveError, savedUser.name, "al guardar una comida: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al guardar una comida: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -383,11 +387,12 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en MealFragment:itemDeleted",
-                            getString(R.string.saveError, savedUser.name, "al borrar una comida: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al borrar una comida: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }

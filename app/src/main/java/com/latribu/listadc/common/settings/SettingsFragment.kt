@@ -13,7 +13,6 @@ import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.latribu.listadc.R
-import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.factories.UserViewModelFactory
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
@@ -84,7 +83,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             viewLifecycleOwner,
                             requireView(),
                             "Error en getUsers",
-                            getString(R.string.saveError, DEFAULT_USER.name, "al obtener los usuarios: ${it.message}"),
+                            getString(R.string.saveError, installationId, "al obtener los usuarios: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }

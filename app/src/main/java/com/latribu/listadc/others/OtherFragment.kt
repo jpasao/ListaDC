@@ -165,11 +165,12 @@ class OtherFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
+                            val savedUserName: String = savedUser.name.ifEmpty { installationId }
                             sendEmail(this,
                                 viewLifecycleOwner,
                                 requireView(),
                                 "Error en getOthers",
-                                getString(R.string.saveError, savedUser.name, "al obtener las otras cosas: ${it.message}"),
+                                getString(R.string.saveError, savedUserName, "al obtener las otras cosas: ${it.message}"),
                                 installationId)
                             spinner.visibility = View.GONE
                         }
@@ -195,11 +196,12 @@ class OtherFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en saveOthers",
-                            getString(R.string.saveError, savedUser.name, "con lo que acaba de hacer: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "con lo que acaba de hacer: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -353,11 +355,12 @@ class OtherFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en OtherFragment:itemDeleted",
-                            getString(R.string.saveError, savedUser.name, "al borrar el elemento: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al borrar el elemento: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }

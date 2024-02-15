@@ -217,11 +217,12 @@ class ListFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
+                            val savedUserName: String = savedUser.name.ifEmpty { installationId }
                             sendEmail(this,
                                 viewLifecycleOwner,
                                 requireView(),
                                 "Error en getProducts",
-                                getString(R.string.saveError, savedUser.name, "al obtener la lista: ${it.message}"),
+                                getString(R.string.saveError, savedUserName, "al obtener la lista: ${it.message}"),
                                 installationId)
                             spinner.visibility = View.GONE
                         }
@@ -279,11 +280,12 @@ class ListFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en editProduct",
-                            getString(R.string.saveError, savedUser.name, "al editar el elemento: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al editar el elemento: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
@@ -316,11 +318,12 @@ class ListFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
+                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
                         sendEmail(this,
                             viewLifecycleOwner,
                             requireView(),
                             "Error en ListFragment:itemChecked",
-                            getString(R.string.saveError, savedUser.name, "al marcar un elemento: ${it.message}"),
+                            getString(R.string.saveError, savedUserName, "al marcar un elemento: ${it.message}"),
                             installationId)
                         spinner.visibility = View.GONE
                     }
