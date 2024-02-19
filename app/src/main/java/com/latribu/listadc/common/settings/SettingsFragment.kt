@@ -118,6 +118,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
             }
         }
+
+        val suggestionPreference: EditTextPreference? = findPreference(getString(R.string.settings_suggestion))
+        suggestionPreference?.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
+            if (newValue.toString().isNotEmpty()) {
+                val userName = savedUser.name.ifEmpty { installationId }
+                sendEmail(this,
+                    viewLifecycleOwner,
+                    requireView(),
+                    "Sugerencia para listaDLC",
+                    "$userName desearía lo siguiente: $newValue",
+                    installationId,
+                    false)
+            }
+            true
+        }
     }
 
     private fun loadOptions(users: List<User>) {

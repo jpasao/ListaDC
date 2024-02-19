@@ -62,7 +62,8 @@ fun sendEmail(
     originView: View,
     page: String,
     message: String,
-    installationId: String) {
+    installationId: String,
+    isErrorMessage: Boolean = true) {
     val mSharedViewModel = ViewModelProvider(
         viewModel,
         SharedViewModelFactory(AppCreator.getApiHelperInstance())
@@ -73,7 +74,8 @@ fun sendEmail(
         .observe(viewLifecycle) {
             when(it.status) {
                 Status.SUCCESS -> {
-                    showMessage(originView, getString(originView.context, R.string.mail_sent))
+                    val messageId = if (isErrorMessage) R.string.mail_sent else R.string.mail_sent_suggestion
+                    showMessage(originView, getString(originView.context, messageId))
                 }
                 Status.FAILURE -> {
                     showMessage(originView, getString(originView.context, R.string.mail_fail))

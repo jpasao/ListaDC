@@ -8,6 +8,7 @@
     <string name="delete_button_text">Borrar</string>
     <!-- Mail -->
     <string name="mail_sent">Ha ocurrido un error. Que no cunda el pánico, Pablito está al tanto del error</string>
+    <string name="mail_sent_suggestion">Ya se ha enviado el correo, a ver si Pablito se pone con ello</string>
     <string name="mail_fail">Ha ocurrido un error, pero no se ha enviado. Cuéntaselo tú a Pablito</string>
     <!-- Firebase -->
     <string name="firebase_not_subscribed">Firebase ha fallado, dicho de otra manera, no se están recibiendo los cambios que el resto de la tribu está haciendo a la lista %1$s</string>
@@ -26,10 +27,13 @@
     <string name="settings_user_subtext">Sabiendo quién eres, el resto de la tribu sabrá quién ha hecho cambios. Además, no recibirás tus propias notificaciones</string>
     <string name="settings_user_text">¿Quién eres?</string>
     <string name="settings_identificator_text">Ver el id de instalación</string>
+    <string name="settings_text_suggestion">Pide por esa boquita</string>
+    <string name="settings_placeholder_suggestion">Pablito tomará nota. Expláyate si quieres</string>
     <!-- Settings keys -->
     <string name="settings_buy_mode">settings_buy_mode</string>
     <string name="settings_user">settings_user</string>
     <string name="settings_installation_id">settings_installationId</string>
+    <string name="settings_suggestion">settings_suggestion</string>
     <!-- FAB -->
     <string name="FAB_description">Añadir producto</string>
     <!-- Save product literals -->

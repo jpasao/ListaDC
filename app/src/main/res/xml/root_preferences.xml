@@ -9,8 +9,21 @@
 
         <ListPreference
             android:key="@string/settings_user"
-
             android:title="@string/settings_user_text" />
+
+        <EditTextPreference
+            android:key="@string/settings_suggestion"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:title="@string/settings_text_suggestion"
+            app:enableCopying="true"
+            app:enabled="true"
+            app:negativeButtonText="@string/cancel_button_text"
+            app:persistent="false"
+            app:positiveButtonText="@string/ok_button_text"
+            app:selectable="true"
+            app:summary="@string/settings_placeholder_suggestion" />
+
         <PreferenceCategory android:title="Id de instalación">
 
             <EditTextPreference
