@@ -73,6 +73,7 @@
     <string name="meal_add_title">Qué hace falta para hacer %1$s</string>
     <string name="meal_no_meal_received">No se ha recibido ninguna comida</string>
     <string name="meals_no_ingredient_received">No se ha recibido ningún ingrediente</string>
+    <string name="meals_not_yet_created">Crea primero la comida, y luego elige los ingredientes</string>
     <!-- Others -->
     <string name="others_buyed_literal">comprados</string>
     <string name="others_new_parent_option">A ninguna, es un tipo nuevo</string>

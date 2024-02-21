@@ -35,6 +35,7 @@ import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.meal.AppCreator
 import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.MealViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
@@ -308,9 +309,13 @@ class MealFragment : Fragment() {
     }
 
     private fun ingredientPressed(item: Meal) {
-        val intent = Intent(requireContext(), MealIngredientsActivity::class.java)
-        intent.putExtra(EXTRA_MEAL, item)
-        startActivity(intent)
+        if (item.mealId == -1) {
+            showMessage(requireView(), getString(R.string.meals_not_yet_created))
+        } else {
+            val intent = Intent(requireContext(), MealIngredientsActivity::class.java)
+            intent.putExtra(EXTRA_MEAL, item)
+            startActivity(intent)
+        }
     }
 
     private fun addMeal(item: Meal, alertDialog: AlertDialog) {
