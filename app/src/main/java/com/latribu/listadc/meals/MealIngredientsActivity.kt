@@ -186,7 +186,7 @@ class MealIngredientsActivity : AppCompatActivity() {
                     Status.FAILURE -> {
                         sendEmail(this,
                             this,
-                            findViewById(R.id.constraintLayout2),
+                            findViewById(R.id.mealIngredientsActivity),
                             "Error en MealIngredientsActivity:getProducts",
                             getString(R.string.saveError, installationId, "al obtener los ingredientes: ${it.message}"),
                             installationId)
@@ -215,7 +215,7 @@ class MealIngredientsActivity : AppCompatActivity() {
                     Status.FAILURE -> {
                         sendEmail(this,
                             this,
-                            findViewById(R.id.constraintLayout2),
+                            findViewById(R.id.mealIngredientsActivity),
                             "Error en MealIngredientsActivity:getMeals",
                             getString(R.string.saveError, installationId, "al obtener las comidas: ${it.message}"),
                             installationId)
@@ -301,7 +301,7 @@ class MealIngredientsActivity : AppCompatActivity() {
                     Status.FAILURE -> {
                         sendEmail(this,
                             this,
-                            findViewById(R.id.constraintLayout2),
+                            findViewById(R.id.mealIngredientsActivity),
                             "Error en saveIngredients",
                             getString(R.string.saveError, installationId, "al guardar los ingredientes: ${it.message}"),
                             installationId)
