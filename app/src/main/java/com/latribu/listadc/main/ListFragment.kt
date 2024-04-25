@@ -23,15 +23,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.DEFAULT_USER
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
+import com.latribu.listadc.common.Constants.Companion.TAB_MAINLIST
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.models.Undo
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.product.AppCreator
 import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.FragmentListBinding
@@ -74,6 +77,7 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initData()
         getInstallationId()
+        getUndoAction()
         setListeners()
         setObservers()
         setRecycler()
@@ -88,6 +92,20 @@ class ListFragment : Fragment() {
             }
         }
         MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
+    }
+
+    private fun getUndoAction() {
+        val undoAction = Observer<Int> {tab ->
+            if (tab == TAB_MAINLIST) {
+                val elementToUndo = Undo.getElement(TAB_MAINLIST) as ProductItem?
+                if (elementToUndo !== null) {
+                    itemChecked(elementToUndo, false)
+                } else {
+                    showMessage(requireView(), getString(R.string.undo_max))
+                }
+            }
+        }
+        MainActivity.undoAction.observeForever(undoAction)
     }
 
     private fun setListeners() {
@@ -303,7 +321,9 @@ class ListFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun itemChecked(listItem: ProductItem) {
+    private fun itemChecked(listItem: ProductItem, undo: Boolean = true) {
+        if (undo) { Undo.addElement(listItem) }
+
         mProductViewModel
             .checkProductItem(listItem, savedUser, installationId)
             .observe(viewLifecycleOwner) {

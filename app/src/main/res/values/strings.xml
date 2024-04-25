@@ -6,6 +6,7 @@
     <string name="delete_dialog_title">Ojito con esto</string>
     <string name="delete_dialog_message">Vas a borrar %1$s.¿Estás seguro?</string>
     <string name="delete_button_text">Borrar</string>
+    <string name="undo_max">Ya no hay más que deshacer, tu acción se ha perdido en el tiempo y el espacio</string>
     <!-- Mail -->
     <string name="mail_sent">Ha ocurrido un error. Que no cunda el pánico, Pablito está al tanto del error</string>
     <string name="mail_sent_suggestion">Ya se ha enviado el correo, a ver si Pablito se pone con ello</string>

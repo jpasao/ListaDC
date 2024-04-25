@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -23,6 +24,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.MAIN_TOPIC
 import com.latribu.listadc.common.Constants.Companion.MEAL_TOPIC
+import com.latribu.listadc.common.Constants.Companion.TAB_MAINLIST
+import com.latribu.listadc.common.Constants.Companion.TAB_MEALS
+import com.latribu.listadc.common.Constants.Companion.TAB_OTHERS
 import com.latribu.listadc.common.TAB_TITLES
 import com.latribu.listadc.common.TabsAdapter
 import com.latribu.listadc.common.models.User
@@ -30,24 +34,32 @@ import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.databinding.ActivityMainBinding
+import com.latribu.listadc.meals.MealFragment
+import com.latribu.listadc.others.OtherFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsButton: ImageButton
+    private lateinit var undoButton: ImageButton
     private lateinit var auth: FirebaseAuth
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
+    private lateinit var selectedTab: Fragment
     private var previousTab: Int = 0
+    private var currentTab: Int = 0
 
     companion object {
         // Observed in SettingsFragment.initData() and
         // getInstallationId() of ListFragment and MealFragment and MealIngredientsActivity
         val firebaseInstanceId = MutableLiveData<String>()
+        // Observed in ListFragment, OtherFragment and MealFragment
+        val undoAction = MutableLiveData<Int>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        selectedTab = ListFragment()
         installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -74,7 +86,15 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: Tab) { }
+            override fun onTabSelected(tab: Tab) {
+                currentTab = tab.position
+                selectedTab = when(tab.position) {
+                    TAB_MAINLIST -> { ListFragment() }
+                    TAB_MEALS -> { MealFragment() }
+                    TAB_OTHERS -> { OtherFragment() }
+                    else -> { ListFragment() }
+                }
+            }
             override fun onTabReselected(tab: Tab) { }
             override fun onTabUnselected(tab: Tab) {
                 previousTab = tab.position
@@ -87,6 +107,10 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {
             val intent = Intent(this@MainActivity, SettingsActivity::class.java)
             startActivity(intent)
+        }
+        undoButton = binding.undoButton
+        undoButton.setOnClickListener {
+            undoAction.postValue(currentTab)
         }
     }
 

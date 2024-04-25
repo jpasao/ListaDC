@@ -29,10 +29,12 @@ import com.latribu.listadc.common.factories.OtherViewModelFactory
 import com.latribu.listadc.common.models.Other
 import com.latribu.listadc.common.models.ParentData
 import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.models.Undo
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.other.AppCreator
 import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.OtherViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
@@ -66,6 +68,7 @@ class OtherFragment : Fragment() {
         getUser()
         getNotification()
         getInstallationId()
+        getUndoAction()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -145,6 +148,20 @@ class OtherFragment : Fragment() {
             }
         }
         MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
+    }
+
+    private fun getUndoAction() {
+        val undoAction = Observer<Int> {tab ->
+            if (tab == Constants.TAB_OTHERS) {
+                val elementToUndo = Undo.getElement(Constants.TAB_OTHERS) as Other?
+                if (elementToUndo !== null) {
+                    itemChecked(elementToUndo, false)
+                } else {
+                    showMessage(requireView(), getString(R.string.undo_max))
+                }
+            }
+        }
+        MainActivity.undoAction.observeForever(undoAction)
     }
 
     private fun getOthers(updateStatus: Boolean = false) {
@@ -335,7 +352,8 @@ class OtherFragment : Fragment() {
         builder.show()
     }
 
-    private fun itemChecked(item: Other) {
+    private fun itemChecked(item: Other, undo: Boolean = true) {
+        if (undo) { Undo.addElement(item) }
         saveOthers(item)
     }
 

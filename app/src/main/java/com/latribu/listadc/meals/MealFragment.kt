@@ -31,6 +31,7 @@ import com.latribu.listadc.common.factories.MealViewModelFactory
 import com.latribu.listadc.common.models.Meal
 import com.latribu.listadc.common.models.ParentData
 import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.models.Undo
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.meal.AppCreator
@@ -69,6 +70,7 @@ class MealFragment : Fragment() {
         getUser()
         getNotification()
         getInstallationId()
+        getUndoAction()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -152,6 +154,20 @@ class MealFragment : Fragment() {
         MainActivity.firebaseInstanceId.observeForever(firebaseInstance)
     }
 
+    private fun getUndoAction() {
+        val undoAction = Observer<Int> {tab ->
+            if (tab == Constants.TAB_MEALS) {
+                val elementToUndo = Undo.getElement(Constants.TAB_MEALS) as Meal?
+                if (elementToUndo !== null) {
+                    itemChecked(elementToUndo, false)
+                } else {
+                    showMessage(requireView(), getString(R.string.undo_max))
+                }
+            }
+        }
+        MainActivity.undoAction.observeForever(undoAction)
+    }
+
     private fun getMeals() {
         if (view != null) {
             mMealViewModel
@@ -217,7 +233,9 @@ class MealFragment : Fragment() {
         initialized = true
     }
 
-    private fun itemChecked(item: Meal) {
+    private fun itemChecked(item: Meal, undo: Boolean = true) {
+        if (undo) { Undo.addElement(item) }
+
         val isChecked: Int = item.isChecked + 1
         val isLunch: Int = item.isLunch + 1
         mMealViewModel

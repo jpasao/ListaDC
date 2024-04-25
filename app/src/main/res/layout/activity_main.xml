@@ -48,49 +48,61 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:minHeight="?actionBarSize"
-                    android:paddingLeft="@dimen/SettingsIconPadding"
-                    android:paddingRight="@dimen/SettingsIconPadding"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
                     android:text="@string/app_name"
                     android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                     app:layout_constraintStart_toEndOf="@+id/settingsButton"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
-                    android:id="@+id/buymodeContainer"
+                    android:id="@+id/upperFunctionContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/appbar_padding"
-                    android:paddingRight="@dimen/appbar_padding"
                     android:paddingEnd="@dimen/appbar_padding"
+                    android:paddingRight="@dimen/appbar_padding"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/userName"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageButton
-                        android:id="@+id/buymodeButton"
-                        android:contentDescription="@string/uselessContent"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/undoButton"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/uselessContent"
+                        android:drawingCacheQuality="auto"
+                        android:rotation="-20"
+                        android:rotationY="0"
+                        android:scaleType="centerInside"
+                        android:scaleX="1"
+                        android:scaleY="1"
+                        android:src="@drawable/twotone_reply_24" />
+
+                    <ImageButton
+                        android:id="@+id/buymodeButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="#00FFFFFF"
+                        android:contentDescription="@string/uselessContent"
                         android:padding="@dimen/appbar_padding_top"
                         android:scaleX="1"
                         android:scaleY="1"
                         app:srcCompat="@drawable/twotone_buymode_on_24" />
-                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/userName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_text_user_not_defined"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.513" />
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:gravity="center_vertical"
+                        android:text="@string/settings_text_user_not_defined"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
