@@ -62,6 +62,8 @@ class MealFragment : Fragment() {
     companion object {
         // Observed in MainActivity.readPreferences()
         val user = MutableLiveData<User>()
+        // Observed in MainActivity
+        var mealFragmentBadge = MutableLiveData<Int>()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -221,7 +223,13 @@ class MealFragment : Fragment() {
         mealsToAdd.add(currentLunches)
         mealsToAdd.add(currentDinners)
         mealsToAdd.add(checkedMeals)
+        setTabBadge(meals)
         mRecyclerAdapter.updateRecyclerData(mealsToAdd)
+    }
+
+    private fun setTabBadge(meals: List<Meal>) {
+        val uncheckedItems = meals.count { it.isChecked == 0 }
+        mealFragmentBadge.postValue(uncheckedItems)
     }
 
     private fun setRecyclers() {

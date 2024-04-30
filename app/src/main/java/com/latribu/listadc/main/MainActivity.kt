@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         setFirebase()
         readFirebaseMessage()
         readPreferences(binding)
+        getBadges()
     }
 
     override fun onBackPressed() {
@@ -83,6 +84,10 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = TabsAdapter(supportFragmentManager, lifecycle)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = getString(TAB_TITLES[position])
+            tab.orCreateBadge.number = 0
+            tab.badge?.backgroundColor = resources.getColor(R.color.teal_700)
+            tab.badge?.clearNumber()
+            tab.badge?.horizontalOffset = -20
         }.attach()
 
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
@@ -166,6 +171,26 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).post {
             ListFragment.user.observeForever(userObserver)
             ListFragment.buyMode.observeForever(buyModeObserver)
+        }
+    }
+
+    private fun getBadges() {
+        val listObserver = Observer<Int> { number -> setBadges(number, TAB_MAINLIST) }
+        val mealObserver = Observer<Int> { number -> setBadges(number, TAB_MEALS) }
+        val otherObserver = Observer<Int> { number -> setBadges(number, TAB_OTHERS) }
+        ListFragment.listFragmentBadge.observeForever(listObserver)
+        MealFragment.mealFragmentBadge.observeForever(mealObserver)
+        OtherFragment.otherFragmentBadge.observeForever(otherObserver)
+    }
+
+    private fun setBadges(badgeValue: Int, selectedTab: Int) {
+        val tab = binding.tabs.getTabAt(selectedTab)
+        if (tab != null) {
+            if (badgeValue != 0) {
+                tab.orCreateBadge.number = badgeValue
+            } else {
+                tab.removeBadge()
+            }
         }
     }
 }

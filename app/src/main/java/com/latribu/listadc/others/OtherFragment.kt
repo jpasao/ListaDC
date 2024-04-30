@@ -60,6 +60,8 @@ class OtherFragment : Fragment() {
     companion object {
         // Observed in MainActivity.readPreferences()
         val user = MutableLiveData<User>()
+        // Observed in MainActivity
+        var otherFragmentBadge = MutableLiveData<Int>()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -196,6 +198,11 @@ class OtherFragment : Fragment() {
         }
     }
 
+    private fun setTabBadge(others: List<Other>) {
+        val uncheckedItems = others.count { it.isChecked == 0 }
+        otherFragmentBadge.postValue(uncheckedItems)
+    }
+
     private fun saveOthers(item: Other, alertDialog: AlertDialog? = null, updateStatus: Boolean = false) {
         val isChecked: Int = item.isChecked + 1
         mOtherViewModel
@@ -257,6 +264,7 @@ class OtherFragment : Fragment() {
             }
 
         othersToAdd.sortBy { it.parentTitle }
+        setTabBadge(others)
 
         mRecyclerAdapter.updateRecyclerData(othersToAdd, updateStatus)
     }

@@ -63,6 +63,8 @@ class ListFragment : Fragment() {
         // and MainActivity.readPreferences()
         val user = MutableLiveData<User>()
         val buyMode = MutableLiveData<Boolean>()
+        // Observed in MainActivity
+        var listFragmentBadge = MutableLiveData<Int>()
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
@@ -229,6 +231,7 @@ class ListFragment : Fragment() {
                     when(it.status) {
                         Status.SUCCESS -> {
                             mRecyclerAdapter.updateRecyclerData(it.data!!)
+                            setTabBadge(it.data!!)
                             spinner.visibility = View.GONE
                         }
                         Status.LOADING -> {
@@ -247,6 +250,11 @@ class ListFragment : Fragment() {
                     }
                 }
         }
+    }
+
+    private fun setTabBadge(productList: List<ProductItem>) {
+        val uncheckedItems = productList.count { it.isChecked == "0" }
+        listFragmentBadge.postValue(uncheckedItems)
     }
 
     private fun quantityClicked(listItem: ProductItem) {
@@ -329,6 +337,7 @@ class ListFragment : Fragment() {
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
+                        setTabBadge(it.data!!)
                         mRecyclerAdapter.updateRecyclerData(it.data!!)
                         spinner.visibility = View.GONE
                         search.setQuery("", false)
