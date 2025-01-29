@@ -80,4 +80,16 @@
     <string name="others_new_parent_option">A ninguna, es un tipo nuevo</string>
     <string name="others_dialog_title_new">La nueva cosa</string>
     <string name="others_dialog_title_edit">Hay que cambiar %1$s</string>
+    <!-- Historic -->
+    <string name="historic_title">Veamos qué ha pasado…</string>
+    <string name="historic_user_filter">Muestra lo que hizo…</string>
+    <string name="historic_date_filter">Pero solo…</string>
+    <string name="historic_header_user">¿Quién?</string>
+    <string name="historic_header_item">¿Qué?</string>
+    <string name="historic_header_date">¿Cuándo?</string>
+    <string name="historic_filter_all">Todos</string>
+    <string name="historic_filter_today">Hoy</string>
+    <string name="historic_filter_yesterday">Ayer</string>
+    <string name="historic_filter_week">Esta semana</string>
+    <string name="historic_filter_month">Este mes</string>
 </resources>

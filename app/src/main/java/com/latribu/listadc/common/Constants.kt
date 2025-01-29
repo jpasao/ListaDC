@@ -30,6 +30,7 @@ class Constants {
         const val MEAL_ENDPOINT = "${apiPath}meal"
         const val OTHER_ENDPOINT = "${apiPath}other"
         const val SYSTEM_ENDPOINT = "${apiPath}system"
+        const val HISTORIC_ENDPOINT = "${apiPath}historic"
         const val INSTALLATION_HEADER = "INSTALLATIONID"
 
         // Firebase

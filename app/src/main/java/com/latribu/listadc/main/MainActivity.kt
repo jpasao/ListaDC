@@ -34,6 +34,7 @@ import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.databinding.ActivityMainBinding
+import com.latribu.listadc.historic.HistoricActivity
 import com.latribu.listadc.meals.MealFragment
 import com.latribu.listadc.others.OtherFragment
 
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsButton: ImageButton
     private lateinit var undoButton: ImageButton
+    private lateinit var historicButton: ImageButton
     private lateinit var auth: FirebaseAuth
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
@@ -116,6 +118,11 @@ class MainActivity : AppCompatActivity() {
         undoButton = binding.undoButton
         undoButton.setOnClickListener {
             undoAction.postValue(currentTab)
+        }
+        historicButton = binding.historicButton
+        historicButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, HistoricActivity::class.java)
+            startActivity(intent)
         }
     }
 

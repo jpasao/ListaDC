@@ -19,9 +19,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".historic.HistoricActivity"
+            android:exported="false"
+            android:label="@string/historic_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.ListaDC.NoActionBar" />
+        <activity
             android:name=".meals.MealIngredientsActivity"
             android:exported="false"
             android:label="@string/title_activity_meal_ingredients"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ListaDC.NoActionBar" />
         <activity
             android:name=".main.SaveProductActivity"
@@ -32,6 +39,7 @@
         <activity
             android:name=".common.settings.SettingsActivity"
             android:exported="true"
+            android:theme="@style/Theme.ListaDC.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
@@ -44,6 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".common.network.FirebaseMessagingService"
             android:exported="true">
@@ -51,6 +60,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/twotone_receipt_long_24" />

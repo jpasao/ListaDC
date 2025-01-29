@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/operationIcon"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_gravity="center|top"
+        android:paddingStart="5dp"
+        app:srcCompat="@drawable/historic_selector" />
+
+    <TextView
+        android:id="@+id/operationUser"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="5dp"
+        android:text="User"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/operationElement"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="5dp"
+        android:text="Element"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/operationDate"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="5dp"
+        android:text="Date"
+        android:textSize="16sp"
+        android:visibility="visible" />
+</androidx.appcompat.widget.LinearLayoutCompat>

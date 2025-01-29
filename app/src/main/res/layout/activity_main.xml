@@ -42,18 +42,20 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/twotone_hamburguer_24" />
 
-                <TextView
-                    android:id="@+id/title"
+                <ImageButton
+                    android:id="@+id/historic_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:minHeight="?actionBarSize"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:text="@string/app_name"
-                    android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                    android:background="#00FFFFFF"
+                    android:contentDescription="@string/uselessContent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="@dimen/appbar_padding_top"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/settingsButton"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/twotone_history_24" />
 
                 <LinearLayout
                     android:id="@+id/upperFunctionContainer"
