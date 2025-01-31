@@ -54,6 +54,7 @@ class MealFragment : Fragment() {
     private var savedUser: User = Constants.DEFAULT_USER
     private lateinit var pullToRefresh: SwipeRefreshLayout
     private lateinit var mRecyclerAdapter: MealAdapter
+    private lateinit var fabToTop: FloatingActionButton
     private lateinit var fabAddMeal: FloatingActionButton
     private lateinit var search: SearchView
 
@@ -93,6 +94,10 @@ class MealFragment : Fragment() {
         fabAddMeal.setOnClickListener {
             val item = Meal(-1, "", 0, 0)
             showDialog(item)
+        }
+        fabToTop = binding.fabToTop
+        fabToTop.setOnClickListener{
+            recyclerview.smoothScrollToPosition(0)
         }
         pullToRefresh.setOnRefreshListener {
             getMeals()
@@ -237,6 +242,18 @@ class MealFragment : Fragment() {
         with(recyclerview) {
             layoutManager = LinearLayoutManager(this.context)
             adapter = mRecyclerAdapter
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
+
+                    if (firstVisiblePosition == 0)
+                        fabToTop.visibility = View.INVISIBLE
+                    else
+                        fabToTop.visibility = View.VISIBLE
+                }
+            })
         }
         initialized = true
     }

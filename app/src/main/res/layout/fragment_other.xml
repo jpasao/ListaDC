@@ -43,6 +43,19 @@ tools:context=".others.OtherFragment">
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabToTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="130dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        app:backgroundTint="@color/teal_700"
+        app:layout_anchorGravity="center"
+        app:maxImageSize="36dp"
+        app:srcCompat="@drawable/twotone_arrow_circle_up_24" />
+
 <com.google.android.material.floatingactionbutton.FloatingActionButton
     android:id="@+id/fabAddOther"
     android:layout_width="wrap_content"
