@@ -23,7 +23,8 @@ class MealAdapter(
     val checkBoxListener: (Meal) -> Unit,
     val longClickListener: (Meal) -> Unit,
     val lunchClickListener: (Meal) -> Unit,
-    val dinnerClickListener: (Meal) -> Unit
+    val dinnerClickListener: (Meal) -> Unit,
+    val ingredientsClickListener: (Meal) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
     private var mealList = ArrayList<ParentData<Meal>>()
     private var filteredMealList = ArrayList<ParentData<Meal>>()
@@ -91,7 +92,10 @@ class MealAdapter(
                     longClickListener(singleElement!!)
                     true
                 }
-                image?.isVisible = false
+                ingredients?.isVisible = !isChecked
+                ingredients?.setOnClickListener {
+                    item.subList?.first()?.let { it1 -> ingredientsClickListener(it1) }
+                }
                 lunch?.isVisible = isChecked
                 lunch?.setOnClickListener {
                     lunchClickListener(item.subList?.first()!!)
@@ -197,7 +201,7 @@ class MealAdapter(
     class ChildViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         val check = row.findViewById(R.id.check) as CheckBox?
         val name = row.findViewById(R.id.name) as TextView?
-        val image = row.findViewById(R.id.ingredients) as ImageView?
+        val ingredients = row.findViewById(R.id.ingredients) as ImageView?
         val lunch = row.findViewById(R.id.lunch) as ImageView?
         val dinner = row.findViewById(R.id.dinner) as ImageView?
     }

@@ -129,7 +129,8 @@ class MealFragment : Fragment() {
             checkBoxListener = { item: Meal -> itemChecked(item) },
             longClickListener = { item: Meal -> showDialog(item) },
             lunchClickListener = { item: Meal -> lunchPressed(item) },
-            dinnerClickListener = { item: Meal -> dinnerPressed(item) }
+            dinnerClickListener = { item: Meal -> dinnerPressed(item) },
+            ingredientsClickListener = { item: Meal -> ingredientPressed(item) }
         )
     }
 
