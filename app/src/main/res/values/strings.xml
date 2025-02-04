@@ -92,5 +92,9 @@
     <string name="historic_filter_yesterday">Ayer</string>
     <string name="historic_filter_week">Esta semana</string>
     <string name="historic_filter_month">Este mes</string>
-    <string name="historic_modal_title">Detalles de la operación</string>
+    <string name="historic_modal_title">Qué ocurrió con %1$s</string>
+    <string name="historic_notification_sent">Ya se envió la notificación</string>
+    <string name="historic_notification_not_sent">El resto de La Tribu aún no se ha enterado de esto</string>
+    <string name="historic_ip_sender">Se ha hecho desde %1$s</string>
+    <string name="historic_original_data">Antes era %1$s</string>
 </resources>

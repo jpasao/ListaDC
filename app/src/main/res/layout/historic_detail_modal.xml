@@ -16,7 +16,9 @@
             android:layout_height="56dp"
             android:firstBaselineToTopHeight="36dp"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/historic_modal_title"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -24,13 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:orientation="horizontal"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <ImageButton
                 android:id="@+id/message_icon"
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/uselessContent"
                 android:scaleX="1.7"
                 android:scaleY="1.7"
                 app:srcCompat="@drawable/twotone_message_24"
@@ -42,7 +46,9 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
-                android:text="TextView" />
+                android:paddingEnd="10dp"
+                android:text="TextView"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,13 +56,15 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:orientation="horizontal"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <ImageButton
                 android:id="@+id/ip_icon"
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/uselessContent"
                 android:scaleX="1.7"
                 android:scaleY="1.7"
                 app:srcCompat="@drawable/twotone_mail_24"
@@ -68,7 +76,39 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
-                android:text="TextView" />
+                android:paddingEnd="10dp"
+                android:text="TextView"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/original_data"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <ImageButton
+                android:id="@+id/original_icon"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/uselessContent"
+                android:scaleX="1.7"
+                android:scaleY="1.7"
+                app:srcCompat="@drawable/twotone_difference_24"
+                app:tint="@color/grey" />
+
+            <TextView
+                android:id="@+id/original_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="TextView"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

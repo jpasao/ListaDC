@@ -11,5 +11,6 @@ data class Historic(
     val operationId: Int,
     val createdAt: String,
     val firebaseSent: Int,
-    val remoteAddr: String
+    val remoteAddr: String,
+    val originalData: String?
 ) : Serializable

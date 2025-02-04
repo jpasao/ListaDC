@@ -161,8 +161,7 @@ class HistoricActivity : AppCompatActivity() {
     }
 
     private fun itemLongPressed(item: Historic) {
-        val sentText = if (item.firebaseSent == 1) "Ya se envió la notificación" else "Aún no ha salido la notificación"
-        val showDetails = HistoricDetailBottomFragment(sentText, item.remoteAddr)
+        val showDetails = HistoricDetailBottomFragment(item)
         supportFragmentManager.let { showDetails.show(it, HistoricDetailBottomFragment.TAG) }
     }
 
