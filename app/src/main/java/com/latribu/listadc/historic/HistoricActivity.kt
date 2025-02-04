@@ -16,6 +16,7 @@ import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.adapters.HistoricAdapter
 import com.latribu.listadc.common.factories.HistoricViewModelFactory
 import com.latribu.listadc.common.factories.UserViewModelFactory
+import com.latribu.listadc.common.models.Historic
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.historic.AppCreator
@@ -99,7 +100,9 @@ class HistoricActivity : AppCompatActivity() {
             this
         )[PreferencesViewModel::class.java]
 
-        mRecyclerAdapter = HistoricAdapter()
+        mRecyclerAdapter = HistoricAdapter(
+            longClickListener = { item: Historic -> itemLongPressed(item) }
+        )
     }
 
     private fun getUsers() {
@@ -155,6 +158,12 @@ class HistoricActivity : AppCompatActivity() {
             adapter = mRecyclerAdapter
         }
         initialized = true
+    }
+
+    private fun itemLongPressed(item: Historic) {
+        val sentText = if (item.firebaseSent == 1) "Ya se envió la notificación" else "Aún no ha salido la notificación"
+        val showDetails = HistoricDetailBottomFragment(sentText, item.remoteAddr)
+        supportFragmentManager.let { showDetails.show(it, HistoricDetailBottomFragment.TAG) }
     }
 
     private fun loadUserOptions(users: List<User>) {

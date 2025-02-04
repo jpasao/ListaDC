@@ -23,7 +23,10 @@
         android:id="@+id/outerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/filtersLayout"
@@ -88,7 +91,7 @@
 
             <TextView
                 android:id="@+id/operationUser"
-                android:layout_width="120dp"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingStart="5dp"
@@ -98,7 +101,7 @@
 
             <TextView
                 android:id="@+id/operationElement"
-                android:layout_width="120dp"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingStart="5dp"
@@ -108,7 +111,7 @@
 
             <TextView
                 android:id="@+id/operationDate"
-                android:layout_width="120dp"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingStart="5dp"
@@ -125,8 +128,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/historicRecyclerView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/fragment_historic_item" />
 

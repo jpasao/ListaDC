@@ -92,4 +92,5 @@
     <string name="historic_filter_yesterday">Ayer</string>
     <string name="historic_filter_week">Esta semana</string>
     <string name="historic_filter_month">Este mes</string>
+    <string name="historic_modal_title">Detalles de la operación</string>
 </resources>

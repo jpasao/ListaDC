@@ -20,7 +20,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-class HistoricAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+class HistoricAdapter(
+    val longClickListener: (Historic) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
     private var historicList = ArrayList<Historic>()
     private var filteredHistoricList = ArrayList<Historic>()
 
@@ -38,11 +40,11 @@ class HistoricAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filtera
         val item: Historic = filteredHistoricList[position]
         val color = if (position % 2 == 0) "#1A6200EE" else "#00000000"
         holder.itemView.setBackgroundColor(Color.parseColor(color))
-        (holder as HistoricViewHolder).bind(item)
+        (holder as HistoricViewHolder).bind(item, longClickListener)
     }
 
     inner class HistoricViewHolder(private val binding: FragmentHistoricItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Historic) {
+        fun bind(item: Historic, longClickListener: (Historic) -> Unit) {
             val code = item.operationId.toString()
             val iconName: Int = getIconName(code)
             val iconColor: Int = getIconColor(code)
@@ -51,6 +53,11 @@ class HistoricAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filtera
             binding.operationUser.text = item.userName
             binding.operationElement.text = item.itemName
             binding.operationDate.text = getDisplayDateTime(item.createdAt)
+
+            binding.root.setOnLongClickListener {
+                longClickListener(item)
+                true
+            }
         }
         private fun getIconName(operation: String): Int {
             return when(operation) {

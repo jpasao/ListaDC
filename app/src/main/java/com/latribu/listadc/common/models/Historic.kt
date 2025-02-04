@@ -9,5 +9,7 @@ data class Historic(
     val itemId: Int,
     val itemName: String,
     val operationId: Int,
-    val createdAt: String
+    val createdAt: String,
+    val firebaseSent: Int,
+    val remoteAddr: String
 ) : Serializable
