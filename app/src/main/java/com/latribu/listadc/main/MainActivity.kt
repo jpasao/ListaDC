@@ -1,5 +1,6 @@
 package com.latribu.listadc.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -67,13 +68,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setTabs(binding)
         setContentView(binding.root)
-        setButtons(binding)
+        setToolbarButtons(binding)
         setFirebase()
         readFirebaseMessage()
         readPreferences(binding)
         getBadges()
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val tab: Tab = tabLayout.getTabAt(previousTab)!!
         tab.select()
@@ -109,17 +112,17 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setButtons(binding: ActivityMainBinding) {
-        settingsButton = binding.settingsButton
+    private fun setToolbarButtons(binding: ActivityMainBinding) {
+        settingsButton = binding.toolbarContainer.settingsButton
         settingsButton.setOnClickListener {
             val intent = Intent(this@MainActivity, SettingsActivity::class.java)
             startActivity(intent)
         }
-        undoButton = binding.undoButton
+        undoButton = binding.toolbarContainer.undo
         undoButton.setOnClickListener {
             undoAction.postValue(currentTab)
         }
-        historicButton = binding.historicButton
+        historicButton = binding.toolbarContainer.historic
         historicButton.setOnClickListener {
             val intent = Intent(this@MainActivity, HistoricActivity::class.java)
             startActivity(intent)
@@ -165,15 +168,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun readPreferences(binding: ActivityMainBinding) {
         val userObserver = Observer<User> { data ->
-            binding.userName.text = data.name
+            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
         }
         val buyModeObserver = Observer<Boolean> { data ->
-            if (data) {
-                binding.buymodeButton.visibility = View.VISIBLE
-                binding.buymodeButton.setBackgroundResource(R.drawable.twotone_buymode_on_24)
-            }
-            else
-                binding.buymodeButton.visibility = View.INVISIBLE
+            val visible = if (data) View.VISIBLE else View.INVISIBLE
+            binding.toolbarContainer.buyMode.visibility = visible
         }
         Handler(Looper.getMainLooper()).post {
             ListFragment.user.observeForever(userObserver)

@@ -1,12 +1,13 @@
 <resources>
     <!-- General strings -->
-    <string name="uselessContent">Deco button</string>
+    <string name="uselessContent">Decoration item</string>
     <string name="cancel_button_text">Cancelar</string>
     <string name="ok_button_text">Aceptar</string>
     <string name="delete_dialog_title">Ojito con esto</string>
     <string name="delete_dialog_message">Vas a borrar %1$s.¿Estás seguro?</string>
     <string name="delete_button_text">Borrar</string>
     <string name="undo_max">Ya no hay más que deshacer, tu acción se ha perdido en el tiempo y el espacio</string>
+    <string name="default_user_initial">\?</string>
     <!-- Mail -->
     <string name="mail_sent">Ha ocurrido un error. Que no cunda el pánico, Pablito está al tanto del error</string>
     <string name="mail_sent_suggestion">Ya se ha enviado el correo, a ver si Pablito se pone con ello</string>
@@ -38,9 +39,8 @@
     <!-- FAB -->
     <string name="FAB_description">Añadir producto</string>
     <!-- Save product literals -->
-    <string name="title_activity_add">Añadir</string>
-    <string name="save_add_title">Añade algo…</string>
-    <string name="save_save_title">Modificando %1$s</string>
+    <string name="save_add">Añadir</string>
+    <string name="save_edit">Editar</string>
     <string name="save_name_hint">¿Qué es?</string>
     <string name="save_quantity_hint">¿Cuántos?</string>
     <string name="save_comments_hint">Pero que sea…</string>
@@ -81,7 +81,7 @@
     <string name="others_dialog_title_new">La nueva cosa</string>
     <string name="others_dialog_title_edit">Hay que cambiar %1$s</string>
     <!-- Historic -->
-    <string name="historic_title">Veamos qué ha pasado…</string>
+    <string name="historic_title">Historial</string>
     <string name="historic_user_filter">Muestra lo que hizo…</string>
     <string name="historic_date_filter">Pero solo…</string>
     <string name="historic_header_user">¿Quién?</string>

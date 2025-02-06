@@ -38,7 +38,7 @@ class HistoricAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item: Historic = filteredHistoricList[position]
-        val color = if (position % 2 == 0) "#1A6200EE" else "#00000000"
+        val color = if (position % 2 == 0) "#33BABABA" else "#00000000"
         holder.itemView.setBackgroundColor(Color.parseColor(color))
         (holder as HistoricViewHolder).bind(item, longClickListener)
     }

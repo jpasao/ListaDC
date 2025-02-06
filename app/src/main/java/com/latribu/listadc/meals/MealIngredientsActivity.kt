@@ -1,10 +1,12 @@
 package com.latribu.listadc.meals
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +20,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.EXTRA_MEAL
+import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
 import com.latribu.listadc.common.Constants.Companion.SNACKBAR_DURATION
 import com.latribu.listadc.common.adapters.IngredientsAdapter
 import com.latribu.listadc.common.adapters.ProductAdapter
@@ -28,13 +31,16 @@ import com.latribu.listadc.common.models.Meal
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.SelectedIngredient
 import com.latribu.listadc.common.models.Status
+import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.product.AppCreator
 import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.viewmodels.MealViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.ActivityMealIngredientsBinding
+import com.latribu.listadc.historic.HistoricActivity
+import com.latribu.listadc.main.ListFragment
 import com.latribu.listadc.main.MainActivity
-
 
 class MealIngredientsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMealIngredientsBinding
@@ -54,9 +60,15 @@ class MealIngredientsActivity : AppCompatActivity() {
     private lateinit var mMealViewModel: MealViewModel
     private var selectedIngredients: MutableList<SelectedIngredient> = mutableListOf()
     private lateinit var ingredients: List<ProductItem>
+    private lateinit var settingsButton: ImageButton
+    private lateinit var undoButton: ImageButton
+    private lateinit var historicButton: ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMealIngredientsBinding.inflate(layoutInflater)
+        setToolbarButtons(binding)
+        readPreferences(binding)
         setContentView(binding.root)
         initData()
         meal = getSerializable(this, EXTRA_MEAL, Meal::class.java)
@@ -84,6 +96,35 @@ class MealIngredientsActivity : AppCompatActivity() {
         search = binding.productSearch
         noResults = binding.noResults
         ingredientList = binding.ingredientList
+    }
+
+    private fun setToolbarButtons(binding: ActivityMealIngredientsBinding) {
+        settingsButton = binding.toolbarContainer.settingsButton
+        settingsButton.setOnClickListener {
+            val intent = Intent(this@MealIngredientsActivity, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        undoButton = binding.toolbarContainer.undo
+        undoButton.alpha = OPACITY_FADED
+        historicButton = binding.toolbarContainer.historic
+        historicButton.setOnClickListener {
+            val intent = Intent(this@MealIngredientsActivity, HistoricActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun readPreferences(binding: ActivityMealIngredientsBinding) {
+        val userObserver = Observer<User> { data ->
+            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+        }
+        val buyModeObserver = Observer<Boolean> { data ->
+            val visible = if (data) View.VISIBLE else View.INVISIBLE
+            binding.toolbarContainer.buyMode.visibility = visible
+        }
+        Handler(Looper.getMainLooper()).post {
+            ListFragment.user.observeForever(userObserver)
+            ListFragment.buyMode.observeForever(buyModeObserver)
+        }
     }
 
     private fun setListeners() {

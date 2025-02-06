@@ -2,12 +2,14 @@ package com.latribu.listadc.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -16,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
+import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
 import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.getSerializable
 import com.latribu.listadc.common.models.ProductItem
@@ -23,14 +26,15 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.product.AppCreator
 import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
 import com.latribu.listadc.databinding.ActivityAddBinding
+import com.latribu.listadc.historic.HistoricActivity
 
 class SaveProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
-    private lateinit var title: TextView
     private lateinit var name: TextInputEditText
     private lateinit var nameLayout: TextInputLayout
     private lateinit var quantity: TextInputEditText
@@ -44,11 +48,16 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var savedUser: User
     private lateinit var spinner: ProgressBar
     private var installationId: String = ""
+    private lateinit var settingsButton: ImageButton
+    private lateinit var undoButton: ImageButton
+    private lateinit var historicButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         bindViews()
+        setToolbarButtons()
+        readPreferences()
         initData()
         getUser()
         getInstallationId()
@@ -129,7 +138,6 @@ class SaveProductActivity : AppCompatActivity() {
         spinner = binding.spinningHamburger
         spinner.visibility = View.GONE
 
-        title = binding.lblAddProduct
         saveButton = binding.btnSaveProduct
         cancelButton = binding.btnCancel
         name = binding.txtName
@@ -137,6 +145,35 @@ class SaveProductActivity : AppCompatActivity() {
         quantity = binding.txtQuantity
         comment = binding.txtComments
         deleteButton = binding.btnDelete
+    }
+
+    private fun setToolbarButtons() {
+        settingsButton = binding.toolbarContainer.settingsButton
+        settingsButton.setOnClickListener {
+            val intent = Intent(this@SaveProductActivity, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        undoButton = binding.toolbarContainer.undo
+        undoButton.alpha = OPACITY_FADED
+        historicButton = binding.toolbarContainer.historic
+        historicButton.setOnClickListener {
+            val intent = Intent(this@SaveProductActivity, HistoricActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun readPreferences() {
+        val userObserver = Observer<User> { data ->
+            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+        }
+        val buyModeObserver = Observer<Boolean> { data ->
+            val visible = if (data) View.VISIBLE else View.INVISIBLE
+            binding.toolbarContainer.buyMode.visibility = visible
+        }
+        Handler(Looper.getMainLooper()).post {
+            ListFragment.user.observeForever(userObserver)
+            ListFragment.buyMode.observeForever(buyModeObserver)
+        }
     }
 
     private fun getData(): Boolean {
@@ -148,7 +185,9 @@ class SaveProductActivity : AppCompatActivity() {
             name.setText(product?.name)
             quantity.setText(product?.quantity.toString())
             comment.setText(product?.comment)
-            title.text = getString(R.string.save_save_title, product?.name)
+            binding.toolbarContainer.appName.text = getString(R.string.save_edit)
+        } else {
+            binding.toolbarContainer.appName.text = getString(R.string.save_add)
         }
         deleteButton.isVisible = editing
         return editing

@@ -1,8 +1,14 @@
 package com.latribu.listadc.historic
+import android.content.Intent
+import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants
+import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
 import com.latribu.listadc.common.adapters.HistoricAdapter
 import com.latribu.listadc.common.factories.HistoricViewModelFactory
 import com.latribu.listadc.common.factories.UserViewModelFactory
@@ -21,11 +28,14 @@ import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.historic.AppCreator
 import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.viewmodels.HistoricViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.UserViewModel
 import com.latribu.listadc.databinding.ActivityHistoricBinding
+import com.latribu.listadc.main.ListFragment
 import com.latribu.listadc.main.MainActivity
+
 
 class HistoricActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHistoricBinding
@@ -42,6 +52,9 @@ class HistoricActivity : AppCompatActivity() {
     private lateinit var userDropdown: Spinner
     private lateinit var dateDropdown: Spinner
     private var filterObject = FilterObject("0", "0")
+    private lateinit var settingsButton: ImageButton
+    private lateinit var undoButton: ImageButton
+    private lateinit var historicButton: ImageButton
 
     class FilterObject(days: String, user: String) {
         var daysBefore = days
@@ -69,6 +82,8 @@ class HistoricActivity : AppCompatActivity() {
         bindElements(binding)
         setListeners()
         setRecyclers(binding)
+        setToolbarButtons()
+        readPreferences()
     }
 
     private fun bindElements(binding: ActivityHistoricBinding) {
@@ -76,6 +91,48 @@ class HistoricActivity : AppCompatActivity() {
         spinner = binding.spinningList
         userDropdown = binding.userFilter
         dateDropdown = binding.dateFilter
+        val header = binding.headerElements
+        header.root.background = ColorDrawable(0x4DBABABA)
+        header.operationIcon.setImageResource(R.drawable.historic_selector)
+        with(header.operationUser) {
+            text = getString(R.string.historic_header_user)
+            setTypeface(this.typeface, Typeface.BOLD)
+        }
+        with(header.operationElement) {
+            text = getString(R.string.historic_header_item)
+            setTypeface(this.typeface, Typeface.BOLD)
+        }
+        with(header.operationDate) {
+            text = getString(R.string.historic_header_date)
+            setTypeface(this.typeface, Typeface.BOLD)
+        }
+    }
+
+    private fun setToolbarButtons() {
+        settingsButton = binding.toolbarContainer.settingsButton
+        settingsButton.setOnClickListener {
+            val intent = Intent(this@HistoricActivity, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        undoButton = binding.toolbarContainer.undo
+        undoButton.alpha = OPACITY_FADED
+        historicButton = binding.toolbarContainer.historic
+        historicButton.alpha = OPACITY_FADED
+        binding.toolbarContainer.appName.text = getString(R.string.historic_title)
+    }
+
+    private fun readPreferences() {
+        val userObserver = Observer<User> { data ->
+            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+        }
+        val buyModeObserver = Observer<Boolean> { data ->
+            val visible = if (data) View.VISIBLE else View.INVISIBLE
+            binding.toolbarContainer.buyMode.visibility = visible
+        }
+        Handler(Looper.getMainLooper()).post {
+            ListFragment.user.observeForever(userObserver)
+            ListFragment.buyMode.observeForever(buyModeObserver)
+        }
     }
 
     private fun setListeners() {
@@ -217,12 +274,14 @@ class HistoricActivity : AppCompatActivity() {
 
     private fun getHistoric() {
         mHistoricViewModel
-            .getHistoric(installationId, savedUser.id, -1)
+            .getHistoric(installationId, -1, -1)
             .observe(this) {
                 when(it.status) {
                     Status.SUCCESS -> {
                         mRecyclerAdapter.updateRecyclerData(it.data!!)
                         spinner.visibility = View.GONE
+                        dateDropdown.setSelection(3, false)
+                        userDropdown.setSelection(0, false)
                     }
                     Status.LOADING -> {
                         spinner.visibility = View.VISIBLE

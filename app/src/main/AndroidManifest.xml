@@ -33,7 +33,7 @@
         <activity
             android:name=".main.SaveProductActivity"
             android:exported="true"
-            android:label="@string/title_activity_add"
+            android:label="@string/save_add"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ListaDC.NoActionBar" />
         <activity

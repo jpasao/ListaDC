@@ -12,104 +12,14 @@
         android:layout_height="match_parent"
         android:theme="@style/Theme.ListaDC.AppBarOverlay"
         android:background="?colorOnPrimary"
+        app:navigationIcon="@drawable/twotone_question_mark_24"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolbar_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="?colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/settingsButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#00FFFFFF"
-                    android:contentDescription="@string/uselessContent"
-                    android:paddingStart="@dimen/appbar_padding_top"
-                    android:paddingEnd="@dimen/appbar_padding_top"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/twotone_hamburguer_24" />
-
-                <ImageButton
-                    android:id="@+id/historic_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#00FFFFFF"
-                    android:contentDescription="@string/uselessContent"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="@dimen/appbar_padding_top"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/settingsButton"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/twotone_history_24" />
-
-                <LinearLayout
-                    android:id="@+id/upperFunctionContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/appbar_padding"
-                    android:paddingEnd="@dimen/appbar_padding"
-                    android:paddingRight="@dimen/appbar_padding"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageButton
-                        android:id="@+id/undoButton"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="@string/uselessContent"
-                        android:drawingCacheQuality="auto"
-                        android:rotation="-20"
-                        android:rotationY="0"
-                        android:scaleType="centerInside"
-                        android:scaleX="1"
-                        android:scaleY="1"
-                        android:src="@drawable/twotone_reply_24" />
-
-                    <ImageButton
-                        android:id="@+id/buymodeButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#00FFFFFF"
-                        android:contentDescription="@string/uselessContent"
-                        android:padding="@dimen/appbar_padding_top"
-                        android:scaleX="1"
-                        android:scaleY="1"
-                        app:srcCompat="@drawable/twotone_buymode_on_24" />
-
-                    <TextView
-                        android:id="@+id/userName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:gravity="center_vertical"
-                        android:text="@string/settings_text_user_not_defined"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.appcompat.widget.Toolbar>
+            android:layout_height="wrap_content"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
