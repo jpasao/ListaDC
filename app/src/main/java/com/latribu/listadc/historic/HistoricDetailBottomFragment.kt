@@ -29,6 +29,7 @@ class HistoricDetailBottomFragment(val item: Historic) : BottomSheetDialogFragme
             getString(R.string.historic_notification_not_sent)
         binding.messageText.text = sentText
         binding.ipText.text = getString(R.string.historic_ip_sender, item.remoteAddr)
+        binding.userText.text = item.userName
         binding.originalData.isVisible = item.originalData.isNullOrEmpty() == false
         binding.originalText.text = getString(R.string.historic_original_data, item.originalData)
         binding.headerText.text = getString(R.string.historic_modal_title, item.itemName)

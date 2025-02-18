@@ -50,7 +50,6 @@ class HistoricAdapter(
             val iconColor: Int = getIconColor(code)
             binding.operationIcon.setImageState(intArrayOf(iconName), true)
             binding.operationIcon.setTint(iconColor)
-            binding.operationUser.text = item.userName
             binding.operationElement.text = item.itemName
             binding.operationDate.text = getDisplayDateTime(item.createdAt)
 

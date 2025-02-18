@@ -94,10 +94,6 @@ class HistoricActivity : AppCompatActivity() {
         val header = binding.headerElements
         header.root.background = ColorDrawable(0x4DBABABA)
         header.operationIcon.setImageResource(R.drawable.historic_selector)
-        with(header.operationUser) {
-            text = getString(R.string.historic_header_user)
-            setTypeface(this.typeface, Typeface.BOLD)
-        }
         with(header.operationElement) {
             text = getString(R.string.historic_header_item)
             setTypeface(this.typeface, Typeface.BOLD)
