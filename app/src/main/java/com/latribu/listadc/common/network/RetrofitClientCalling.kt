@@ -7,10 +7,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClientCalling {
-    var mHttpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-
-
-    var mOkHttpClient = OkHttpClient
+    private var mHttpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private var mOkHttpClient = OkHttpClient
         .Builder()
         .addInterceptor(mHttpLoggingInterceptor)
         .addInterceptor{chain ->
@@ -21,7 +19,7 @@ object RetrofitClientCalling {
         }
         .build()
 
-    var mRetrofit: Retrofit? = null
+    private var mRetrofit: Retrofit? = null
 
     val client: Retrofit?
         get() {

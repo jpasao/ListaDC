@@ -124,7 +124,7 @@ class OtherAdapter(
                     filteredOtherList = results.values as ArrayList<ParentData<Other>>
                     expandParentsWithContent(filteredOtherList, !constraint.isNullOrEmpty())
                     if (constraint.isNullOrEmpty()) {
-                        collapseParents(false)
+                        collapseParents()
                         setDefaultParentStatus()
                         expandAccordingToStatus()
                     }
@@ -200,11 +200,11 @@ class OtherAdapter(
     }
 
     class ChildViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val check = row.findViewById(R.id.check) as CheckBox?
-        val name = row.findViewById(R.id.name) as TextView?
-        val image = row.findViewById(R.id.ingredients) as ImageView?
-        val lunch = row.findViewById(R.id.lunch) as ImageView?
-        val dinner = row.findViewById(R.id.dinner) as ImageView?
+        val check: CheckBox? = row.findViewById(R.id.check)
+        val name: TextView? = row.findViewById(R.id.name)
+        val image: ImageView? = row.findViewById(R.id.ingredients)
+        val lunch: ImageView? = row.findViewById(R.id.lunch)
+        val dinner: ImageView? = row.findViewById(R.id.dinner)
     }
 
     fun updateRecyclerData(otherList: MutableList<ParentData<Other>>, updateStatus: Boolean = false) {
@@ -250,11 +250,10 @@ class OtherAdapter(
         notifyDataSetChanged()
     }
 
-    private fun collapseParents(notify: Boolean = true) {
+    private fun collapseParents() {
         this.parentStatus.forEach {parent ->
             val parentPosition = this.filteredOtherList.indexOfFirst { row -> row.parentTitle == parent.parentTitle }
             collapseParentRow(parentPosition, false)
         }
-        if (notify) notifyDataSetChanged()
     }
 }

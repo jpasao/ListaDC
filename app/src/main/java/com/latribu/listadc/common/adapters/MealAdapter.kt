@@ -194,16 +194,16 @@ class MealAdapter(
     }
 
     class GroupViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val name = row.findViewById(R.id.parentTitle) as TextView?
-        val image = row.findViewById(R.id.downArrow) as ImageView?
+        val name: TextView? = row.findViewById(R.id.parentTitle)
+        val image: ImageView? = row.findViewById(R.id.downArrow)
     }
 
     class ChildViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val check = row.findViewById(R.id.check) as CheckBox?
-        val name = row.findViewById(R.id.name) as TextView?
-        val ingredients = row.findViewById(R.id.ingredients) as ImageView?
-        val lunch = row.findViewById(R.id.lunch) as ImageView?
-        val dinner = row.findViewById(R.id.dinner) as ImageView?
+        val check: CheckBox? = row.findViewById(R.id.check)
+        val name: TextView? = row.findViewById(R.id.name)
+        val ingredients: ImageView? = row.findViewById(R.id.ingredients)
+        val lunch: ImageView? = row.findViewById(R.id.lunch)
+        val dinner: ImageView? = row.findViewById(R.id.dinner)
     }
 
     fun updateRecyclerData(mealList: MutableList<ParentData<Meal>>) {

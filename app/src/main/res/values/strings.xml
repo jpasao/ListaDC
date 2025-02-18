@@ -38,6 +38,7 @@
     <string name="settings_suggestion">settings_suggestion</string>
     <!-- FAB -->
     <string name="FAB_description">Añadir producto</string>
+    <string name="FABtop_description">Volver arriba</string>
     <!-- Save product literals -->
     <string name="save_add">Añadir</string>
     <string name="save_edit">Editar</string>

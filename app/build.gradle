@@ -1,7 +1,6 @@
 plugins {
     alias libs.plugins.android.application
     alias libs.plugins.org.jetbrains.kotlin.android
-    alias libs.plugins.org.jetbrains.kotlin.kapt.no.version
     alias libs.plugins.google.services
     alias libs.plugins.compose.compiler
 }
@@ -96,7 +95,7 @@ dependencies {
     // live data and view model
     implementation libs.lifecycle.viewmodel.ktx
     implementation libs.lifecycle.livedata.ktx
-    kapt libs.lifecycle.common.java8
+
     //coroutines
     implementation libs.kotlinx.coroutines.core
     implementation libs.kotlinx.coroutines.android

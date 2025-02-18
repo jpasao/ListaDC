@@ -13,10 +13,11 @@
         <TextView
             android:id="@+id/headerText"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:firstBaselineToTopHeight="36dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
             android:text="@string/historic_modal_title"
             android:textSize="20sp"
             android:textStyle="bold" />

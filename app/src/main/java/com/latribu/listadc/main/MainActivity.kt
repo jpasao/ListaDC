@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = getString(TAB_TITLES[position])
             tab.orCreateBadge.number = 0
-            tab.badge?.backgroundColor = resources.getColor(R.color.teal_700)
+            tab.badge?.backgroundColor = ContextCompat.getColor(baseContext, R.color.teal_700)
             tab.badge?.clearNumber()
             tab.badge?.horizontalOffset = -20
         }.attach()

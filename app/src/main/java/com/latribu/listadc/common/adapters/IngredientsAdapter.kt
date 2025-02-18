@@ -7,7 +7,6 @@ import android.widget.CheckBox
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.latribu.listadc.R
 import com.latribu.listadc.common.models.ProductItem
@@ -23,10 +22,6 @@ class IngredientsAdapter(
         filteredIngredientList = ingredientList
     }
 
-    companion object {
-        // Observed in MealIngredientsActivity
-        val emptyList = MutableLiveData<Boolean>()
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = inflater.inflate(R.layout.ingredients_item_design, parent, false)
@@ -78,9 +73,9 @@ class IngredientsAdapter(
     }
 
     inner class IngredientsViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val checkBox = row.findViewById(R.id.check) as CheckBox
-        val name = row.findViewById(R.id.name) as TextView
-        val comment = row.findViewById(R.id.comment) as TextView
+        val checkBox: CheckBox = row.findViewById(R.id.check)
+        val name: TextView = row.findViewById(R.id.name)
+        val comment: TextView = row.findViewById(R.id.comment)
     }
 
     fun updateRecyclerData(ingredientList: List<ProductItem>) {

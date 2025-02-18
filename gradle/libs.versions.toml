@@ -17,7 +17,6 @@ junitVersion = "1.2.1"
 kotlinxCoroutinesCore = "1.3.5"
 ktx = "2.8.7"
 legacySupportV4 = "1.0.0"
-lifecycleCommonJava8 = "2.8.7"
 loggingInterceptor = "4.12.0"
 material = "1.12.0"
 picasso = "2.5.2"
@@ -56,7 +55,6 @@ junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycleCommonJava8" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "ktx" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "ktx" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "ktx" }
@@ -86,7 +84,6 @@ android-application = { id = "com.android.application", version.ref = "android" 
 android-library = { id = "com.android.library", version.ref = "android" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrainsKotlin" }
-org-jetbrains-kotlin-kapt-no-version = { id = "org.jetbrains.kotlin.kapt" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrainsKotlin" }
 
