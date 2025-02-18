@@ -1,8 +1,9 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
-    id 'com.google.gms.google-services'
+    alias libs.plugins.android.application
+    alias libs.plugins.org.jetbrains.kotlin.android
+    alias libs.plugins.org.jetbrains.kotlin.kapt.no.version
+    alias libs.plugins.google.services
+    alias libs.plugins.compose.compiler
 }
 
 android {
@@ -12,8 +13,8 @@ android {
         applicationId "com.latribu.listadc"
         minSdk 32
         targetSdk 35
-        versionCode 26
-        versionName "1.2.6"
+        versionCode 27
+        versionName "1.2.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,15 +45,11 @@ android {
         dataBinding true
         compose true
     }
-    buildToolsVersion '33.0.1'
     namespace 'com.latribu.listadc'
 
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
-    }
     packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            it.excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
     lint {
@@ -62,70 +59,60 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
-    implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-    implementation 'androidx.core:core-ktx:1.8.10'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation platform('androidx.compose:compose-bom:2023.03.00')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.activity:activity:1.10.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation "androidx.activity:activity-ktx:1.6.0-rc01"
-    implementation 'com.quiph.ui:recyclerviewfastscroller:1.0.0'
-    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
-
-    def retrofit_version = "2.9.0"
-    def lifecycle_version =  "2.6.1"
+    implementation libs.core.splashscreen
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    implementation libs.lifecycle.livedata.ktx
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.preference.ktx
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
+    implementation libs.core.ktx
+    implementation libs.firebase.auth.ktx
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.activity.compose
+    implementation platform(libs.compose.bom)
+    implementation libs.ui
+    implementation libs.ui.graphics
+    implementation libs.ui.tooling.preview
+    implementation libs.material3
+    implementation libs.activity
+    implementation libs.legacy.support.v4
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    implementation libs.recyclerview
+    implementation libs.picasso
+    implementation(libs.datastore.preferences)
+    implementation libs.swiperefreshlayout
+    implementation libs.activity.ktx
+    implementation libs.recyclerviewfastscroller
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.ui.test.junit4
+    debugImplementation libs.ui.tooling
+    debugImplementation libs.ui.test.manifest
 
     // live data and view model
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.lifecycle.livedata.ktx
+    kapt libs.lifecycle.common.java8
     //coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.5'
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
     //retrofit etc.
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.logging.interceptor
     // firebase
-    implementation platform('com.google.firebase:firebase-bom:32.0.0')
-    implementation 'com.google.firebase:firebase-messaging-ktx'
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.android.gms:play-services-auth:20.5.0'
-    implementation 'com.google.firebase:firebase-installations:17.1.3'
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.messaging.ktx
+    implementation libs.google.firebase.auth.ktx
+    implementation libs.play.services.auth
+    implementation libs.firebase.installations
     // For Firebase purposes, which uses an outdated one. Not used in the app
-    implementation "com.google.android.recaptcha:recaptcha:18.4.0"
+    implementation libs.recaptcha
 
     // Work manager to set buy mode off
-    def work_version = "2.8.1"
-    implementation("androidx.work:work-runtime-ktx:$work_version")
+    implementation(libs.work.runtime.ktx)
 }

@@ -87,7 +87,7 @@ class HistoricAdapter(
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
             val date = simpleDateFormat.parse(dateTime)
             val convertDateFormat = SimpleDateFormat("dd LLL HH:mm", Locale.getDefault())
-            return convertDateFormat.format(date)
+            return date?.let { convertDateFormat.format(it).toString() }.toString()
         } catch (e: Exception) {
             return ""
         }

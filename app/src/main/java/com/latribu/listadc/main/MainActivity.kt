@@ -18,9 +18,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.MAIN_TOPIC
@@ -130,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFirebase() {
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
 
         FirebaseMessaging
             .getInstance()
