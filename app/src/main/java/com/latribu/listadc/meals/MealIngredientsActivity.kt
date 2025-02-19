@@ -27,13 +27,15 @@ import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.MealViewModelFactory
 import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.getSerializable
+import com.latribu.listadc.common.getUserInitialCharacter
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.Meal
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.SelectedIngredient
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.product.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.viewmodels.MealViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
@@ -115,7 +117,7 @@ class MealIngredientsActivity : AppCompatActivity() {
 
     private fun readPreferences(binding: ActivityMealIngredientsBinding) {
         val userObserver = Observer<User> { data ->
-            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+            binding.toolbarContainer.user.text = getUserInitialCharacter(data)
         }
         val buyModeObserver = Observer<Boolean> { data ->
             val visible = if (data) View.VISIBLE else View.INVISIBLE
@@ -225,12 +227,8 @@ class MealIngredientsActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.mealIngredientsActivity),
-                            "Error en MealIngredientsActivity:getProducts",
-                            getString(R.string.saveError, installationId, "al obtener los ingredientes: ${it.message}"),
-                            installationId)
+                        val emailData = EmailData(this, this, findViewById(R.id.mealIngredientsActivity), "", it.message.toString(), installationId, installationId)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -254,12 +252,8 @@ class MealIngredientsActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.mealIngredientsActivity),
-                            "Error en MealIngredientsActivity:getMeals",
-                            getString(R.string.saveError, installationId, "al obtener las comidas: ${it.message}"),
-                            installationId)
+                        val emailData = EmailData(this, this, findViewById(R.id.mealIngredientsActivity), "", it.message.toString(), installationId, installationId)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -340,12 +334,8 @@ class MealIngredientsActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.mealIngredientsActivity),
-                            "Error en saveIngredients",
-                            getString(R.string.saveError, installationId, "al guardar los ingredientes: ${it.message}"),
-                            installationId)
+                        val emailData = EmailData(this, this, findViewById(R.id.mealIngredientsActivity), "", it.message.toString(), installationId, installationId)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }

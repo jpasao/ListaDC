@@ -28,6 +28,7 @@ import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.Constants.Companion.EXTRA_MEAL
 import com.latribu.listadc.common.adapters.MealAdapter
 import com.latribu.listadc.common.factories.MealViewModelFactory
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.Meal
 import com.latribu.listadc.common.models.ParentData
 import com.latribu.listadc.common.models.Status
@@ -35,7 +36,7 @@ import com.latribu.listadc.common.models.Undo
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.meal.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.MealViewModel
@@ -190,13 +191,9 @@ class MealFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
-                            val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                            sendEmail(this,
-                                viewLifecycleOwner,
-                                requireView(),
-                                "Error en getMeals",
-                                getString(R.string.saveError, savedUserName, "al obtener las comidas: ${it.message}"),
-                                installationId)
+                            val userName = savedUser.name.ifEmpty { installationId }
+                            val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                            sendMail(emailData)
                             spinner.visibility = View.GONE
                         }
                     }
@@ -278,13 +275,9 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en MealFragment:itemChecked",
-                            getString(R.string.saveError, savedUserName, "al marcar una comida: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -378,13 +371,9 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en addMeal",
-                            getString(R.string.saveError, savedUserName, "al añadir una comida: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -407,13 +396,9 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en editMeal",
-                            getString(R.string.saveError, savedUserName, "al guardar una comida: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -436,13 +421,9 @@ class MealFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en MealFragment:itemDeleted",
-                            getString(R.string.saveError, savedUserName, "al borrar una comida: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }

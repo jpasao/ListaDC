@@ -23,11 +23,13 @@ import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
 import com.latribu.listadc.common.adapters.HistoricAdapter
 import com.latribu.listadc.common.factories.HistoricViewModelFactory
 import com.latribu.listadc.common.factories.UserViewModelFactory
+import com.latribu.listadc.common.getUserInitialCharacter
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.Historic
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.historic.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.viewmodels.HistoricViewModel
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
@@ -119,7 +121,7 @@ class HistoricActivity : AppCompatActivity() {
 
     private fun readPreferences() {
         val userObserver = Observer<User> { data ->
-            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+            binding.toolbarContainer.user.text = getUserInitialCharacter(data)
         }
         val buyModeObserver = Observer<Boolean> { data ->
             val visible = if (data) View.VISIBLE else View.INVISIBLE
@@ -172,12 +174,9 @@ class HistoricActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.historic_activity),
-                            "Error en getUsers",
-                            getString(R.string.saveError, installationId, "al obtener los usuarios: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, this, findViewById(R.id.historic_activity), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -283,13 +282,9 @@ class HistoricActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.historic_activity),
-                            "Error en getHistoric",
-                            getString(R.string.saveError, savedUserName, "al obtener el histórico: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, this, findViewById(R.id.historic_activity), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }

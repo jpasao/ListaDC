@@ -21,11 +21,13 @@ import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.Constants.Companion.OPACITY_FADED
 import com.latribu.listadc.common.factories.ProductViewModelFactory
 import com.latribu.listadc.common.getSerializable
+import com.latribu.listadc.common.getUserInitialCharacter
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.product.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.settings.SettingsActivity
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
@@ -164,7 +166,7 @@ class SaveProductActivity : AppCompatActivity() {
 
     private fun readPreferences() {
         val userObserver = Observer<User> { data ->
-            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+            binding.toolbarContainer.user.text = getUserInitialCharacter(data)
         }
         val buyModeObserver = Observer<Boolean> { data ->
             val visible = if (data) View.VISIBLE else View.INVISIBLE
@@ -215,14 +217,10 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, this, findViewById(R.id.constraintLayout2), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.constraintLayout2),
-                            "Error en addProduct",
-                            getString(R.string.saveError, savedUserName, "al guardar un elemento: ${it.message}"),
-                            installationId)
                     }
                 }
             }
@@ -242,13 +240,9 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.constraintLayout2),
-                            "Error en editProduct",
-                            getString(R.string.saveError, savedUserName, "al editar un elemento: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, this, findViewById(R.id.constraintLayout2), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -269,13 +263,9 @@ class SaveProductActivity : AppCompatActivity() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            this,
-                            findViewById(R.id.constraintLayout2),
-                            "Error en SaveProductActivity:itemDeleted",
-                            getString(R.string.saveError, savedUserName, "al borrar un elemento: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, this, findViewById(R.id.constraintLayout2), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }

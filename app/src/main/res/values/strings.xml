@@ -8,10 +8,15 @@
     <string name="delete_button_text">Borrar</string>
     <string name="undo_max">Ya no hay más que deshacer, tu acción se ha perdido en el tiempo y el espacio</string>
     <string name="default_user_initial">\?</string>
+    <string name="default_user_name">Default</string>
     <!-- Mail -->
     <string name="mail_sent">Ha ocurrido un error. Que no cunda el pánico, Pablito está al tanto del error</string>
-    <string name="mail_sent_suggestion">Ya se ha enviado el correo, a ver si Pablito se pone con ello</string>
     <string name="mail_fail">Ha ocurrido un error, pero no se ha enviado. Cuéntaselo tú a Pablito</string>
+    <string name="mail_default_subject">Error en []</string>
+    <string name="mail_default_body">Ups… algo le ha salido mal a {}. Ha ocurrido un error en la línea [] de ()</string>
+    <string name="mail_empty_trace">La traza estaba vacía</string>
+    <string name="mail_trace_not_found">No había traza tras la del propio email</string>
+    <string name="saveError">Ups… algo le ha salido mal a %1$s %2$s</string>
     <!-- Firebase -->
     <string name="firebase_not_subscribed">Firebase ha fallado, dicho de otra manera, no se están recibiendo los cambios que el resto de la tribu está haciendo a la lista %1$s</string>
     <string name="firebase_installation_id">No se puede obtener el id de instalación de Firebase, con lo cual el servidor no sabrás que eres tú el que está haciendo cosas</string>
@@ -51,7 +56,6 @@
     <string name="list_fragment_label">List Fragment</string>
     <string name="validationErrorName">¿Y el nombre?</string>
     <string name="saveOk">Se ha guardado</string>
-    <string name="saveError">Ups… algo le ha salido mal a %1$s %2$s</string>
     <string name="cancel">Cancelar</string>
     <!-- Main List -->
     <string name="getProductsError">Ups… algo ha salido mal al obtener la lista</string>

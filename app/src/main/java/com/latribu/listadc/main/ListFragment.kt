@@ -26,6 +26,7 @@ import com.latribu.listadc.common.Constants.Companion.EXTRA_PRODUCT
 import com.latribu.listadc.common.Constants.Companion.TAB_MAINLIST
 import com.latribu.listadc.common.adapters.ProductAdapter
 import com.latribu.listadc.common.factories.ProductViewModelFactory
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.FirebaseData
 import com.latribu.listadc.common.models.ProductItem
 import com.latribu.listadc.common.models.Status
@@ -33,7 +34,7 @@ import com.latribu.listadc.common.models.Undo
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.product.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.ProductViewModel
@@ -238,13 +239,9 @@ class ListFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
-                            val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                            sendEmail(this,
-                                viewLifecycleOwner,
-                                requireView(),
-                                "Error en getProducts",
-                                getString(R.string.saveError, savedUserName, "al obtener la lista: ${it.message}"),
-                                installationId)
+                            val userName = savedUser.name.ifEmpty { installationId }
+                            val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                            sendMail(emailData)
                             spinner.visibility = View.GONE
                         }
                     }
@@ -282,12 +279,9 @@ class ListFragment : Fragment() {
             quantityAndItem.second.quantity = quantityAndItem.first
             editProduct(quantityAndItem.second)
         } else {
-            sendEmail(this,
-                viewLifecycleOwner,
-                requireView(),
-                "Error en saveQuantity",
-                getString(R.string.saveError, savedUser.name, "al obtener los datos del elemento"),
-                installationId)
+            val userName = savedUser.name.ifEmpty { installationId }
+            val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", "", installationId, userName)
+            sendMail(emailData)
         }
     }
 
@@ -306,13 +300,9 @@ class ListFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en editProduct",
-                            getString(R.string.saveError, savedUserName, "al editar el elemento: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -347,13 +337,9 @@ class ListFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en ListFragment:itemChecked",
-                            getString(R.string.saveError, savedUserName, "al marcar un elemento: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }

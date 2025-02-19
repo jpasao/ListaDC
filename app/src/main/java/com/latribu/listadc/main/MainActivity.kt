@@ -29,6 +29,7 @@ import com.latribu.listadc.common.Constants.Companion.TAB_MEALS
 import com.latribu.listadc.common.Constants.Companion.TAB_OTHERS
 import com.latribu.listadc.common.TAB_TITLES
 import com.latribu.listadc.common.TabsAdapter
+import com.latribu.listadc.common.getUserInitialCharacter
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.settings.SettingsActivity
@@ -167,7 +168,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun readPreferences(binding: ActivityMainBinding) {
         val userObserver = Observer<User> { data ->
-            binding.toolbarContainer.user.text = data.name.subSequence(0, 1)
+            binding.toolbarContainer.user.text = getUserInitialCharacter(data)
         }
         val buyModeObserver = Observer<Boolean> { data ->
             val visible = if (data) View.VISIBLE else View.INVISIBLE

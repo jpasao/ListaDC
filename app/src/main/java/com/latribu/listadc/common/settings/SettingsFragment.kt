@@ -14,10 +14,11 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.latribu.listadc.R
 import com.latribu.listadc.common.factories.UserViewModelFactory
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.Status
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.repositories.user.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.common.viewmodels.UserViewModel
 import com.latribu.listadc.databinding.ActivitySettingsBinding
@@ -79,12 +80,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en getUsers",
-                            getString(R.string.saveError, installationId, "al obtener los usuarios: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -123,13 +121,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         suggestionPreference?.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
             if (newValue.toString().isNotEmpty()) {
                 val userName = savedUser.name.ifEmpty { installationId }
-                sendEmail(this,
-                    viewLifecycleOwner,
-                    requireView(),
-                    "Sugerencia para listaDLC",
-                    "$userName desearía lo siguiente: $newValue",
-                    installationId,
-                    false)
+                val emailData = EmailData(this, viewLifecycleOwner, requireView(), "Sugerencia para listaDLC", "$userName desearía lo siguiente: $newValue", installationId, userName, false)
+                sendMail(emailData)
             }
             true
         }
@@ -161,12 +154,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 true
             }
         } else {
-            sendEmail(this,
-                viewLifecycleOwner,
-                requireView(),
-                "Error en SettingsFragment:loadOptions",
-                getString(R.string.saveError, savedUser.name, "al obtener los usuarios"),
-                installationId)
+            val userName = savedUser.name.ifEmpty { installationId }
+            val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", "", installationId, userName)
+            sendMail(emailData)
         }
     }
 

@@ -26,6 +26,7 @@ import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants
 import com.latribu.listadc.common.adapters.OtherAdapter
 import com.latribu.listadc.common.factories.OtherViewModelFactory
+import com.latribu.listadc.common.models.EmailData
 import com.latribu.listadc.common.models.Other
 import com.latribu.listadc.common.models.ParentData
 import com.latribu.listadc.common.models.Status
@@ -33,7 +34,7 @@ import com.latribu.listadc.common.models.Undo
 import com.latribu.listadc.common.models.User
 import com.latribu.listadc.common.network.FirebaseMessagingService
 import com.latribu.listadc.common.repositories.other.AppCreator
-import com.latribu.listadc.common.sendEmail
+import com.latribu.listadc.common.sendMail
 import com.latribu.listadc.common.showMessage
 import com.latribu.listadc.common.showYesNoDialog
 import com.latribu.listadc.common.viewmodels.OtherViewModel
@@ -189,13 +190,9 @@ class OtherFragment : Fragment() {
                             spinner.visibility = View.VISIBLE
                         }
                         Status.FAILURE -> {
-                            val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                            sendEmail(this,
-                                viewLifecycleOwner,
-                                requireView(),
-                                "Error en getOthers",
-                                getString(R.string.saveError, savedUserName, "al obtener las otras cosas: ${it.message}"),
-                                installationId)
+                            val userName = savedUser.name.ifEmpty { installationId }
+                            val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                            sendMail(emailData)
                             spinner.visibility = View.GONE
                         }
                     }
@@ -225,13 +222,9 @@ class OtherFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en saveOthers",
-                            getString(R.string.saveError, savedUserName, "con lo que acaba de hacer: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -398,13 +391,9 @@ class OtherFragment : Fragment() {
                         spinner.visibility = View.VISIBLE
                     }
                     Status.FAILURE -> {
-                        val savedUserName: String = savedUser.name.ifEmpty { installationId }
-                        sendEmail(this,
-                            viewLifecycleOwner,
-                            requireView(),
-                            "Error en OtherFragment:itemDeleted",
-                            getString(R.string.saveError, savedUserName, "al borrar el elemento: ${it.message}"),
-                            installationId)
+                        val userName = savedUser.name.ifEmpty { installationId }
+                        val emailData = EmailData(this, viewLifecycleOwner, requireView(), "", it.message.toString(), installationId, userName)
+                        sendMail(emailData)
                         spinner.visibility = View.GONE
                     }
                 }
@@ -417,5 +406,10 @@ class OtherFragment : Fragment() {
             getString(R.string.delete_dialog_title),
             getString(R.string.delete_dialog_message, item.name)
         ) { _, _ -> itemDeleted(item, alertDialog) }
+        if (item.id == 1 && item.name == getString(R.string.default_user_name)) {
+            val userName = savedUser.name.ifEmpty { installationId }
+            val emailData = EmailData(this, viewLifecycleOwner, requireView(), "InstallationId", "${installationId} ha borrado el elemento predeterminado", installationId, userName, false)
+            sendMail(emailData)
+        }
     }
 }
