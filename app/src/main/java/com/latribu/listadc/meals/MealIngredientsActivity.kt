@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -50,8 +49,8 @@ class MealIngredientsActivity : AppCompatActivity() {
     private lateinit var recyclerAdapter: IngredientsAdapter
     private var meal: Meal? = null
     private lateinit var mealName: TextView
-    private lateinit var saveButton: Button
-    private lateinit var cancelButton: Button
+    private lateinit var saveButton: ImageButton
+    private lateinit var cancelButton: ImageButton
     private lateinit var chipGroup: ChipGroup
     private lateinit var spinner: ProgressBar
     private lateinit var search: SearchView

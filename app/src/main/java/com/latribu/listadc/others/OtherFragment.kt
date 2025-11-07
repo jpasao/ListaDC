@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Spinner
@@ -334,11 +334,11 @@ class OtherFragment : Fragment() {
         val name: TextView = view.findViewById(R.id.childName)
         name.text = item.name
 
-        val cancelButton: Button = view.findViewById(R.id.cancelButton)
+        val cancelButton: ImageButton = view.findViewById(R.id.cancelButton)
         cancelButton.setOnClickListener {
             builder.dismiss()
         }
-        val saveButton: Button = view.findViewById(R.id.saveButton)
+        val saveButton: ImageButton = view.findViewById(R.id.saveButton)
         saveButton.setOnClickListener {
             val isNewParent = spinner.selectedItem == getString(R.string.others_new_parent_option)
             val isNewChild = item.id == 0
@@ -359,7 +359,7 @@ class OtherFragment : Fragment() {
             val itemEdited = Other(item.id, parent?.parentId!!, parent.parentName, name.text.toString(), isChecked)
             saveOthers(itemEdited, builder, isNewParent)
         }
-        val deleteButton: Button = view.findViewById(R.id.btnDeleteChild)
+        val deleteButton: ImageButton = view.findViewById(R.id.btnDeleteChild)
         deleteButton.setOnClickListener { askForConfirmation(item, builder) }
         deleteButton.isVisible = item.id != 0
 
@@ -406,7 +406,7 @@ class OtherFragment : Fragment() {
             getString(R.string.delete_dialog_title),
             getString(R.string.delete_dialog_message, item.name)
         ) { _, _ -> itemDeleted(item, alertDialog) }
-        if (item.id == 1 && item.name == getString(R.string.default_user_name)) {
+        if (item.name == getString(R.string.default_user_name) || item.name.isEmpty()) {
             val userName = savedUser.name.ifEmpty { installationId }
             val emailData = EmailData(this, viewLifecycleOwner, requireView(), "InstallationId", "${installationId} ha borrado el elemento predeterminado", installationId, userName, false)
             sendMail(emailData)

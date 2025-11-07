@@ -58,34 +58,44 @@
         android:inputType="text"
         android:text="@string/meal_dialog_name_placeholder" />
 
-    <Button
-        android:id="@+id/btnDeleteChild"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="@string/delete_button_text" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/cancelButton"
+        <ImageButton
+            android:id="@+id/btnDeleteChild"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/twotone_delete_24" />
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="8dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/cancelButton"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="@android:color/darker_gray"
-            android:text="@string/cancel" />
+            app:srcCompat="@drawable/twotone_cancel_24" />
 
-        <Button
-            android:id="@+id/saveButton"
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/saveButton"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/save_save_button" />
+            android:backgroundTint="@color/purple_500"
+            app:srcCompat="@drawable/twotone_check_circle_24" />
+
     </LinearLayout>
 
 </LinearLayout>

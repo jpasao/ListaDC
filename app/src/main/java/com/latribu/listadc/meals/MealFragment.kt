@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Spinner
@@ -312,11 +311,11 @@ class MealFragment : Fragment() {
         val ingredients: ImageButton = view.findViewById(R.id.btnIngredients)
         ingredients.setOnClickListener { ingredientPressed(item) }
 
-        val cancelButton: Button = view.findViewById(R.id.cancelButton)
+        val cancelButton: ImageButton = view.findViewById(R.id.cancelButton)
         cancelButton.setOnClickListener {
             builder.dismiss()
         }
-        val saveButton: Button = view.findViewById(R.id.saveButton)
+        val saveButton: ImageButton = view.findViewById(R.id.saveButton)
         saveButton.setOnClickListener {
             val itemEdited = Meal(item.mealId, name.text.toString(), selectedParent, 1)
             if (item.mealId == -1)
@@ -324,7 +323,7 @@ class MealFragment : Fragment() {
             else
                 editMeal(itemEdited, builder)
         }
-        val deleteButton: Button = view.findViewById(R.id.btnDeleteChild)
+        val deleteButton: ImageButton = view.findViewById(R.id.btnDeleteChild)
         deleteButton.setOnClickListener { askForConfirmation(item, builder) }
         deleteButton.isVisible = item.mealId != -1
 

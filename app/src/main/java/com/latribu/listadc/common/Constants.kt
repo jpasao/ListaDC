@@ -24,7 +24,7 @@ class Constants {
         // Api
         private val server = BuildConfig.SERVER_URL
         private const val apiPath = "/listacompra/api/"
-        val BASE_URL =  "http://${server}/listacompra/api/"
+        val BASE_URL =  "${server}/listacompra/api/"
         const val PRODUCT_ENDPOINT = "${apiPath}product"
         const val USER_ENDPOINT = "${apiPath}author"
         const val MEAL_ENDPOINT = "${apiPath}meal"

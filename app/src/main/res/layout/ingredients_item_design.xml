@@ -23,7 +23,6 @@
 
         <TextView
             android:id="@+id/name"
-            style="@style/Widget.AppCompat.TextView.SpinnerItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"

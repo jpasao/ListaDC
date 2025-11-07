@@ -7,7 +7,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -41,9 +40,9 @@ class SaveProductActivity : AppCompatActivity() {
     private lateinit var nameLayout: TextInputLayout
     private lateinit var quantity: TextInputEditText
     private lateinit var comment: TextInputEditText
-    private lateinit var deleteButton: Button
-    private lateinit var saveButton: Button
-    private lateinit var cancelButton: Button
+    private lateinit var deleteButton: ImageButton
+    private lateinit var saveButton: ImageButton
+    private lateinit var cancelButton: ImageButton
     private var product: ProductItem? = null
     private lateinit var mProductViewModel: ProductViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
