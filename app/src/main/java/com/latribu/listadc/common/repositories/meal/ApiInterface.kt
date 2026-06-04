@@ -18,7 +18,8 @@ interface ApiInterface {
 
     @GET(Constants.MEAL_ENDPOINT)
     suspend fun getAllMeals(
-        @Header(Constants.INSTALLATION_HEADER) installationId: String
+        @Header(Constants.INSTALLATION_HEADER) installationId: String,
+        @Query("isBreakfast") isBreakfast: Int
     ) : List<Meal>
 
     @GET(Constants.MEAL_ENDPOINT)
@@ -33,6 +34,7 @@ interface ApiInterface {
         @Field("mealId") mealId: Int,
         @Field("check") isChecked: Int,
         @Field("isLunch") isLunch: Int,
+        @Field("isBreakfast") isBreakfast: Int,
         @Field("authorId") authorId: Int,
         @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : List<Meal>
@@ -42,6 +44,7 @@ interface ApiInterface {
     suspend fun addMeal(
         @Field("name") name: String,
         @Field("isLunch") isLunch: Int,
+        @Field("isBreakfast") isBreakfast: Int,
         @Field("authorId") authorId: Int,
         @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : Meal
@@ -52,6 +55,7 @@ interface ApiInterface {
         @Field("mealId") mealId: Int,
         @Field("name") name: String,
         @Field("isLunch") isLunch: Int,
+        @Field("isBreakfast") isBreakfast: Int,
         @Field("authorId") authorId: Int,
         @Header(Constants.INSTALLATION_HEADER) installationId: String
     ) : Meal

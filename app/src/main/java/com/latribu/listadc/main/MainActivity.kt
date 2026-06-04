@@ -8,7 +8,6 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -24,10 +23,11 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.latribu.listadc.R
 import com.latribu.listadc.common.Constants.Companion.MAIN_TOPIC
 import com.latribu.listadc.common.Constants.Companion.MEAL_TOPIC
+import com.latribu.listadc.common.Constants.Companion.TAB_BREAKFASTS
 import com.latribu.listadc.common.Constants.Companion.TAB_MAINLIST
 import com.latribu.listadc.common.Constants.Companion.TAB_MEALS
 import com.latribu.listadc.common.Constants.Companion.TAB_OTHERS
-import com.latribu.listadc.common.TAB_TITLES
+import com.latribu.listadc.common.TAB_ICONS
 import com.latribu.listadc.common.TabsAdapter
 import com.latribu.listadc.common.getUserInitialCharacter
 import com.latribu.listadc.common.models.User
@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         setFirebase()
         readFirebaseMessage()
         readPreferences(binding)
-        getBadges()
     }
 
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
@@ -88,11 +87,7 @@ class MainActivity : AppCompatActivity() {
         tabLayout = binding.tabs
         viewPager.adapter = TabsAdapter(supportFragmentManager, lifecycle)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = getString(TAB_TITLES[position])
-            tab.orCreateBadge.number = 0
-            tab.badge?.backgroundColor = ContextCompat.getColor(baseContext, R.color.teal_700)
-            tab.badge?.clearNumber()
-            tab.badge?.horizontalOffset = -20
+            tab.icon = getDrawable(TAB_ICONS[position])
         }.attach()
 
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
@@ -100,7 +95,8 @@ class MainActivity : AppCompatActivity() {
                 currentTab = tab.position
                 selectedTab = when(tab.position) {
                     TAB_MAINLIST -> { ListFragment() }
-                    TAB_MEALS -> { MealFragment() }
+                    TAB_BREAKFASTS ->  { MealFragment(true) }
+                    TAB_MEALS -> { MealFragment(false) }
                     TAB_OTHERS -> { OtherFragment() }
                     else -> { ListFragment() }
                 }
@@ -177,26 +173,6 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).post {
             ListFragment.user.observeForever(userObserver)
             ListFragment.buyMode.observeForever(buyModeObserver)
-        }
-    }
-
-    private fun getBadges() {
-        val listObserver = Observer<Int> { number -> setBadges(number, TAB_MAINLIST) }
-        val mealObserver = Observer<Int> { number -> setBadges(number, TAB_MEALS) }
-        val otherObserver = Observer<Int> { number -> setBadges(number, TAB_OTHERS) }
-        ListFragment.listFragmentBadge.observeForever(listObserver)
-        MealFragment.mealFragmentBadge.observeForever(mealObserver)
-        OtherFragment.otherFragmentBadge.observeForever(otherObserver)
-    }
-
-    private fun setBadges(badgeValue: Int, selectedTab: Int) {
-        val tab = binding.tabs.getTabAt(selectedTab)
-        if (tab != null) {
-            if (badgeValue != 0) {
-                tab.orCreateBadge.number = badgeValue
-            } else {
-                tab.removeBadge()
-            }
         }
     }
 }

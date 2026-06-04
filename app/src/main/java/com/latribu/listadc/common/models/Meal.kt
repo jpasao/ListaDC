@@ -6,5 +6,6 @@ data class Meal(
     val mealId: Int,
     val name: String,
     var isLunch: Int,
-    val isChecked: Int
+    val isChecked: Int,
+    val isBreakfast: Int,
 ) : Serializable

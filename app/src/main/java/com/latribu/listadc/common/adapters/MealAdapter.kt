@@ -81,8 +81,10 @@ class MealAdapter(
             holder.apply {
                 val singleElement = item.subList?.first()
                 val isChecked =  singleElement?.isChecked == 1
+                val isBreakfast = singleElement?.isBreakfast == 1
+
                 check?.isChecked = isChecked
-                check?.isVisible = !isChecked
+                check?.isVisible = !isChecked || isBreakfast
                 check?.setOnClickListener {
                     checkBoxListener(item.subList?.first()!!)
                 }
@@ -96,11 +98,11 @@ class MealAdapter(
                 ingredients?.setOnClickListener {
                     item.subList?.first()?.let { it1 -> ingredientsClickListener(it1) }
                 }
-                lunch?.isVisible = isChecked
+                lunch?.isVisible = isChecked && !isBreakfast
                 lunch?.setOnClickListener {
                     lunchClickListener(item.subList?.first()!!)
                 }
-                dinner?.isVisible = isChecked
+                dinner?.isVisible = isChecked && !isBreakfast
                 dinner?.setOnClickListener {
                     dinnerClickListener(item.subList?.first()!!)
                 }

@@ -6,10 +6,10 @@ import com.latribu.listadc.common.network.Resource
 import com.latribu.listadc.common.repositories.meal.MealRepo
 
 class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
-    fun getAllMeals(installationId: String) = liveData {
+    fun getAllMeals(installationId: String, isBreakfast: Int) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.getAllMeals(installationId)))
+            emit(Resource.success(mMealRepo.getAllMeals(installationId, isBreakfast)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }
@@ -24,28 +24,28 @@ class MealViewModel(private val mMealRepo: MealRepo) : ViewModel() {
         }
     }
 
-    fun checkMeal(mealId: Int, isChecked: Int, isLunch: Int, authorId: Int, installationId: String) = liveData {
+    fun checkMeal(mealId: Int, isChecked: Int, isLunch: Int, isBreakfast: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.checkMeal(mealId, isChecked, isLunch, authorId, installationId)))
+            emit(Resource.success(mMealRepo.checkMeal(mealId, isChecked, isLunch, isBreakfast, authorId, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }
     }
 
-    fun addMeal(name: String, isLunch: Int, authorId: Int, installationId: String) = liveData {
+    fun addMeal(name: String, isLunch: Int, isBreakfast: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.addMeal(name, isLunch, authorId, installationId)))
+            emit(Resource.success(mMealRepo.addMeal(name, isLunch, isBreakfast, authorId, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }
     }
 
-    fun editMeal(mealId: Int, name: String, isLunch: Int, authorId: Int, installationId: String) = liveData {
+    fun editMeal(mealId: Int, name: String, isLunch: Int, isBreakfast: Int, authorId: Int, installationId: String) = liveData {
         emit(Resource.loading(null))
         try {
-            emit(Resource.success(mMealRepo.editMeal(mealId, name, isLunch, authorId, installationId)))
+            emit(Resource.success(mMealRepo.editMeal(mealId, name, isLunch, isBreakfast, authorId, installationId)))
         } catch (e: Exception) {
             emit(Resource.error(null, e.message.toString()))
         }

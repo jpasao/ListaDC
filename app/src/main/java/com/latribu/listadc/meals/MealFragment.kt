@@ -43,7 +43,10 @@ import com.latribu.listadc.common.viewmodels.PreferencesViewModel
 import com.latribu.listadc.databinding.FragmentMealBinding
 import com.latribu.listadc.main.MainActivity
 
-class MealFragment : Fragment() {
+class MealFragment(val isBreakfast: Boolean) : Fragment() {
+
+    private val breakfast: Int = if (isBreakfast) 1 else 0
+
     private var _binding: FragmentMealBinding? = null
     private var installationId: String = ""
     private val binding get() = _binding!!
@@ -92,7 +95,7 @@ class MealFragment : Fragment() {
 
     private fun setListeners() {
         fabAddMeal.setOnClickListener {
-            val item = Meal(-1, "", 0, 0)
+            val item = Meal(-1, "", 0, 0, breakfast)
             showDialog(item)
         }
         fabToTop = binding.fabToTop
@@ -164,8 +167,9 @@ class MealFragment : Fragment() {
 
     private fun getUndoAction() {
         val undoAction = Observer<Int> {tab ->
-            if (tab == Constants.TAB_MEALS) {
-                val elementToUndo = Undo.getElement(Constants.TAB_MEALS) as Meal?
+            val tabToCheck = if (isBreakfast) Constants.TAB_BREAKFASTS else Constants.TAB_MEALS
+            if (tab == tabToCheck) {
+                val elementToUndo = Undo.getElement(tabToCheck) as Meal?
                 if (elementToUndo !== null) {
                     itemChecked(elementToUndo, false)
                 } else {
@@ -179,11 +183,14 @@ class MealFragment : Fragment() {
     private fun getMeals() {
         if (view != null) {
             mMealViewModel
-                .getAllMeals(installationId)
+                .getAllMeals(installationId, breakfast)
                 .observe(viewLifecycleOwner) {
                     when(it.status) {
                         Status.SUCCESS -> {
-                            processMeals(it.data!!)
+                            if (isBreakfast)
+                                processBreakfasts(it.data!!)
+                            else
+                                processMeals(it.data!!)
                             spinner.visibility = View.GONE
                         }
                         Status.LOADING -> {
@@ -229,6 +236,26 @@ class MealFragment : Fragment() {
         mRecyclerAdapter.updateRecyclerData(mealsToAdd)
     }
 
+    private fun processBreakfasts(meals: List<Meal>) {
+        val currentBreakfasts = ParentData(
+            parentTitle = getString(R.string.meal_breakfast_name),
+            subList = meals.filter { breakfast -> breakfast.isChecked == 0 } as ArrayList<Meal>
+        )
+        val sortedMeals = meals.sortedBy { it.name }
+        val checkedBreakfasts = ParentData(
+            parentTitle = getString(R.string.meal_breakfast_lunch_name_checked),
+            subList = sortedMeals
+                .filter { it.isChecked == 1 } as ArrayList<Meal>
+        )
+
+        val mealsToAdd = ArrayList<ParentData<Meal>>()
+
+        mealsToAdd.add(currentBreakfasts)
+        mealsToAdd.add(checkedBreakfasts)
+        setTabBadge(meals)
+        mRecyclerAdapter.updateRecyclerData(mealsToAdd)
+    }
+
     private fun setTabBadge(meals: List<Meal>) {
         val uncheckedItems = meals.count { it.isChecked == 0 }
         mealFragmentBadge.postValue(uncheckedItems)
@@ -261,7 +288,7 @@ class MealFragment : Fragment() {
         val isChecked: Int = item.isChecked + 1
         val isLunch: Int = item.isLunch + 1
         mMealViewModel
-            .checkMeal(item.mealId, isChecked, isLunch, savedUser.id, installationId)
+            .checkMeal(item.mealId, isChecked, isLunch, breakfast,savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -284,26 +311,32 @@ class MealFragment : Fragment() {
     }
 
     private fun showDialog(item: Meal) {
-        val builder = AlertDialog.Builder(context)
-            .create()
+        val builder = AlertDialog.Builder(context).create()
         val view = layoutInflater.inflate(R.layout.dialog_parent_child_add,null)
-        val parents = arrayOf(getString(R.string.meal_lunch_name), getString(R.string.meal_dinner_name))
-        var selectedParent: Int = if (item.isLunch == 0) 1 else 0
 
+        var selectedParent: Int = if (item.isLunch == 0) 1 else 0
         val spinner: Spinner = view.findViewById(R.id.parentList)
-        val spAdapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, parents)
-        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        with(spinner) {
-            adapter = spAdapter
-            setSelection(selectedParent, false)
-            onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    selectedParent = position + 1
+        val spinnerLabel: TextView = view.findViewById(R.id.lblParent)
+
+        if (!isBreakfast) {
+            val parents = arrayOf(getString(R.string.meal_lunch_name), getString(R.string.meal_dinner_name))
+            val spAdapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, parents)
+            spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            with(spinner) {
+                adapter = spAdapter
+                setSelection(selectedParent, false)
+                onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        selectedParent = position + 1
+                    }
                 }
             }
+            selectedParent += 1
+        } else {
+            spinner.visibility = View.GONE
+            spinnerLabel.visibility = View.GONE
         }
-        selectedParent += 1
 
         val name: TextView = view.findViewById(R.id.childName)
         name.text = item.name
@@ -317,7 +350,7 @@ class MealFragment : Fragment() {
         }
         val saveButton: ImageButton = view.findViewById(R.id.saveButton)
         saveButton.setOnClickListener {
-            val itemEdited = Meal(item.mealId, name.text.toString(), selectedParent, 1)
+            val itemEdited = Meal(item.mealId, name.text.toString(), selectedParent, 1, 0)
             if (item.mealId == -1)
                 addMeal(itemEdited, builder)
             else
@@ -327,7 +360,10 @@ class MealFragment : Fragment() {
         deleteButton.setOnClickListener { askForConfirmation(item, builder) }
         deleteButton.isVisible = item.mealId != -1
 
-        val title: String = if (item.mealId == -1) getString(R.string.meal_dialog_title_new) else getString(R.string.meal_dialog_title_edit, item.name)
+        val newElementResource =
+            if (isBreakfast) R.string.meal_breakfast_dialog_title_new
+            else R.string.meal_dialog_title_new
+        val title: String = if (item.mealId == -1) getString(newElementResource) else getString(R.string.meal_dialog_title_edit, item.name)
         builder.setTitle(title)
         builder.setView(view)
         builder.setCanceledOnTouchOutside(true)
@@ -345,8 +381,11 @@ class MealFragment : Fragment() {
     }
 
     private fun ingredientPressed(item: Meal) {
+        val newElementResource =
+            if (isBreakfast) R.string.meal_breakfasts_not_yet_created
+            else R.string.meals_not_yet_created
         if (item.mealId == -1) {
-            showMessage(requireView(), getString(R.string.meals_not_yet_created))
+            showMessage(requireView(), getString(newElementResource))
         } else {
             val intent = Intent(requireContext(), MealIngredientsActivity::class.java)
             intent.putExtra(EXTRA_MEAL, item)
@@ -356,7 +395,7 @@ class MealFragment : Fragment() {
 
     private fun addMeal(item: Meal, alertDialog: AlertDialog) {
         mMealViewModel
-            .addMeal(item.name, item.isLunch, savedUser.id, installationId)
+            .addMeal(item.name, item.isLunch, breakfast, savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {
@@ -381,7 +420,7 @@ class MealFragment : Fragment() {
 
     private fun editMeal(item: Meal, alertDialog: AlertDialog) {
         mMealViewModel
-            .editMeal(item.mealId, item.name, item.isLunch, savedUser.id, installationId)
+            .editMeal(item.mealId, item.name, item.isLunch, breakfast,savedUser.id, installationId)
             .observe(viewLifecycleOwner) {
                 when(it.status) {
                     Status.SUCCESS -> {

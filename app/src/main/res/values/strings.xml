@@ -23,8 +23,9 @@
     <!-- Tab names -->
     <string name="app_name">ListaDLC</string>
     <string name="tab_text_1">Principal</string>
-    <string name="tab_text_2">Otros</string>
+    <string name="tab_text_2">Desayunos</string>
     <string name="tab_text_3">Comidas</string>
+    <string name="tab_text_4">Otros</string>
     <!-- Settings literals -->
     <string name="settings_text_title">Opciones</string>
     <string name="settings_text_user">¿Quién eres?</string>
@@ -64,8 +65,10 @@
     <string name="search_menu_placeholder">¿Qué estás buscando?</string>
     <string name="search_menu_noresults">Aquí no hay nada de eso. Siga buscando</string>
     <!-- Meals -->
+    <string name="meal_breakfast_name">Desayunos</string>
     <string name="meal_lunch_name">Almuerzos</string>
     <string name="meal_dinner_name">Cenas</string>
+    <string name="meal_breakfast_lunch_name_checked">Posibles Desayunos</string>
     <string name="meal_lunch_name_checked">Posibles Almuerzos</string>
     <string name="meal_dinner_name_checked">Posibles Cenas</string>
     <string name="meal_name_checked">Posibles Comidas</string>
@@ -73,6 +76,7 @@
     <string name="meal_dialog_ingredients">¿Qué lleva?</string>
     <string name="meal_dialog_name">¿Y cómo se llama?</string>
     <string name="meal_dialog_name_placeholder">Ponle un nombre bonito</string>
+    <string name="meal_breakfast_dialog_title_new">El nuevo desayuno</string>
     <string name="meal_dialog_title_new">La nueva comida</string>
     <string name="meal_dialog_title_edit">Hay que cambiar %1$s</string>
     <string name="title_activity_meal_ingredients">MealIngredientsActivity</string>
@@ -80,6 +84,7 @@
     <string name="meal_no_meal_received">No se ha recibido ninguna comida</string>
     <string name="meals_no_ingredient_received">No se ha recibido ningún ingrediente</string>
     <string name="meals_not_yet_created">Crea primero la comida, y luego elige los ingredientes</string>
+    <string name="meal_breakfasts_not_yet_created">Crea primero el desayuno, y luego elige los ingredientes</string>
     <!-- Others -->
     <string name="others_buyed_literal">comprados</string>
     <string name="others_new_parent_option">A ninguna, es un tipo nuevo</string>

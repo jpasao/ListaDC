@@ -17,9 +17,11 @@ class Constants {
         const val OPACITY_FADED =  0.54f
         const val SNACKBAR_DURATION = 5000
         const val TAB_MAINLIST = 0
-        const val TAB_MEALS = 1
-        const val TAB_OTHERS = 2
-        const val QUEUE_LIMIT = 3
+        const val TAB_MEALS = 2
+
+        const val TAB_BREAKFASTS = 1
+        const val TAB_OTHERS = 3
+        const val QUEUE_LIMIT = 4
 
         // Api
         private val server = BuildConfig.SERVER_URL
