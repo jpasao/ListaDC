@@ -92,7 +92,7 @@ fun getTraceData(originView: View, userName: String, errorMessage: String): Arra
     )
     val trace = Thread.currentThread().stackTrace
     if (trace.isNotEmpty()) {
-        val sendMailIndex = trace.indexOfFirst { it.methodName == "sendEmail" }
+        val sendMailIndex = trace.indexOfFirst { it.methodName == "sendMail" }
         if (trace.size >= sendMailIndex + 1) {
             val callerTrace = trace[sendMailIndex + 1]
             val traceSubject = response[0].replace("[]", "[${callerTrace.fileName}]")
